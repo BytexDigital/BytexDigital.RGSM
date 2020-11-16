@@ -1,3 +1,7 @@
+using System;
+
+using BytexDigital.RGSM.Panel.Server.Application.Extensions;
+using BytexDigital.RGSM.Panel.Server.Application.Services;
 using BytexDigital.RGSM.Panel.Server.Common.Filters;
 using BytexDigital.RGSM.Panel.Server.Domain.Entities;
 using BytexDigital.RGSM.Panel.Server.Persistence;
@@ -29,6 +33,8 @@ namespace BytexDigital.RGSM.Panel.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddApplicationServices();
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -114,6 +120,19 @@ namespace BytexDigital.RGSM.Panel.Server
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            using (var scope = app.ApplicationServices.GetRequiredService<IServiceProvider>().CreateScope())
+            {
+                var dbDefaultsService = scope.ServiceProvider.GetRequiredService<DatabaseDefaultsService>();
+                var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+                if (!env.IsDevelopment())
+                {
+                    db.Database.Migrate();
+                }
+
+                dbDefaultsService.EnsureRootAccountExistsAsync().GetAwaiter().GetResult();
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

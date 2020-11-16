@@ -13,5 +13,8 @@ namespace BytexDigital.RGSM.Panel.Server.Domain.Entities
 
         [Required]
         public DateTimeOffset TimeCreated { get; set; }
+
+        [Timestamp]
+        public byte[] Version { get; set; }
     }
 }
