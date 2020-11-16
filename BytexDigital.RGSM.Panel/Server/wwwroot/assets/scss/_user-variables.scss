@@ -1,0 +1,70 @@
+// user-variables.scss
+// Use this to overwrite Bootstrap and Front variables
+//
+
+/* ############### FONTS IMPORT ############### */
+@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900");
+@import url("https://fonts.googleapis.com/css?family=Roboto+Mono");
+@import url("https://fonts.googleapis.com/css?family=Lato:300,400,700,900");
+@import url("https://fonts.googleapis.com/css?family=Rubik:300,400");
+
+// Example of a variable override to change Front's primary color and font size
+// Remove the "//" to comment it in and see it in action!
+// $primary: $red;
+// $font-size-base: .875rem;
+
+$gray-900: null !default;
+
+// The color of the SVG loader should be modified manually.
+// See assets/svg/components/circle-preloader.svg
+
+$font-family-base: "Segoe UI", sans-serif;
+
+$font-weight-normal: 400;
+$font-weight-bold: 500;
+$font-weight-bolder: 500;
+
+$body-color: $gray-900;
+$card-body-color: $gray-900;
+$dark: #333333;
+
+$font-size-base: 1rem; // Assumes the browser default, typically 16px
+$font-size-xs: $font-size-base * .75;
+$font-size-sm: $font-size-base * .875;
+$font-size-lg: $font-size-base * 1.25;
+$font-size-1: $font-size-base * .875;
+$font-size-2: $font-size-base * 1.5;
+$font-size-3: $font-size-base * 2;
+$font-size-4: $font-size-base * 2.5;
+$font-size-5: $font-size-base * 3;
+//$font-family-base: 'Roboto', sans-serif;
+
+//$font-weight-normal: 400;
+//$font-weight-bold: 500;
+
+// Paddings
+$input-btn-padding-y: $font-size-base * .5;
+$input-btn-padding-y-sm: $font-size-base * .4;
+$input-btn-padding-y-lg: $font-size-base * .8;
+$input-btn-padding-y-xs: $font-size-base * .275;
+
+$input-btn-padding-x: $font-size-base * 1 * 1.125;
+$input-btn-padding-x-sm: $font-size-base * 1 * 1;
+$input-btn-padding-x-lg: $font-size-base * 1 * 1.125;
+$input-btn-padding-x-xs: $font-size-base * 1 * .75;
+
+$card-spacer-y: 1.5rem;
+
+// Type
+$btn-font-weight: $font-weight-normal;
+$btn-font-weight-xs: $font-weight-normal;
+$btn-white-font-weight: $font-weight-normal;
+$btn-font-size-xs: $font-size-xs;
+$btn-link-font-weight: $font-weight-normal;
+$btn-icon-font-weight: $font-weight-normal;
+$btn-icon-font-size: $font-size-base;
+$btn-icon-font-size-xs: $font-size-xs;
+$btn-icon-font-size-sm: $font-size-base * .8125;
+$btn-icon-font-size-lg: $font-size-lg;
+$btn-status-font-size: $font-size-base * .625;
+$btn-status-line-height: 1;

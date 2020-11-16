@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>BytexDigital.RGSM.Panel.Server-BA2EC335-D958-400F-90A4-C4FC2273CAF0</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="wwwroot\assets\vendor\pwstrength-bootstrap\.vscode\settings.json" />
+    <Content Include="wwwroot\assets\vendor\quill\node_modules\eventemitter3\package.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\BytexDigital.RGSM.Panel.Server.Application\BytexDigital.RGSM.Panel.Server.Application.csproj" />
+    <ProjectReference Include="..\..\BytexDigital.RGSM.Panel.Server.Common\BytexDigital.RGSM.Panel.Server.Common.csproj" />
+    <ProjectReference Include="..\..\BytexDigital.RGSM.Panel.Server.Domain\BytexDigital.RGSM.Panel.Server.Domain.csproj" />
+    <ProjectReference Include="..\..\BytexDigital.RGSM.Panel.Server.Persistence\BytexDigital.RGSM.Panel.Server.Persistence.csproj" />
+    <ProjectReference Include="..\..\BytexDigital.RGSM.Shared.TransferObjects\BytexDigital.RGSM.Shared.TransferObjects.csproj" />
+    <ProjectReference Include="..\Client\BytexDigital.RGSM.Panel.Client.csproj" />
+    <ProjectReference Include="..\Shared\BytexDigital.RGSM.Panel.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="5.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\assets\vendor\fancybox\.github\ISSUE_TEMPLATE\bug_report.md" />
+    <None Include="wwwroot\assets\vendor\fancybox\.github\ISSUE_TEMPLATE\feature_request.md" />
+    <None Include="wwwroot\assets\vendor\fancybox\.github\ISSUE_TEMPLATE\question.md" />
+    <None Include="wwwroot\assets\vendor\quill\node_modules\eventemitter3\index.js" />
+    <None Include="wwwroot\assets\vendor\quill\node_modules\eventemitter3\LICENSE" />
+    <None Include="wwwroot\assets\vendor\quill\node_modules\eventemitter3\README.md" />
+    <None Include="wwwroot\assets\vendor\quill\node_modules\eventemitter3\umd\eventemitter3.min.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="wwwroot\assets\vendor\quill\node_modules\eventemitter3\index.d.ts" />
+  </ItemGroup>
+
+</Project>

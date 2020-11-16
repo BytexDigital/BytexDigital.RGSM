@@ -1,0 +1,98 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30711.63
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BytexDigital.RGSM.Panel.Server", "BytexDigital.RGSM.Panel\Server\BytexDigital.RGSM.Panel.Server.csproj", "{7B236FF3-8C2B-448F-8E26-B98DB1903C0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BytexDigital.RGSM.Panel.Client", "BytexDigital.RGSM.Panel\Client\BytexDigital.RGSM.Panel.Client.csproj", "{0A28F281-6CE6-474F-B970-F29B3DED7A6D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BytexDigital.RGSM.Panel.Shared", "BytexDigital.RGSM.Panel\Shared\BytexDigital.RGSM.Panel.Shared.csproj", "{46D73282-EB8A-48D2-920A-3A512D1665C9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Panel", "Panel", "{957807AF-5DED-44B2-B4F7-FCD09AA7B76B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Node", "Node", "{BA9A4D12-2AE4-4293-B930-B43C056647A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BytexDigital.RGSM.Shared.TransferObjects", "BytexDigital.RGSM.Shared.TransferObjects\BytexDigital.RGSM.Shared.TransferObjects.csproj", "{3CC41653-F4C2-4B8D-9BF1-D831C3D8B424}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{B08C1F75-82EE-46A5-AA88-7EDE208245E9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{2C87B08C-02FF-498C-B652-B38AD7BC3BAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BytexDigital.RGSM.Panel.Server.Persistence", "BytexDigital.RGSM.Panel.Server.Persistence\BytexDigital.RGSM.Panel.Server.Persistence.csproj", "{B716DF01-75FE-40E3-AE49-EF8C56456FD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BytexDigital.RGSM.Panel.Server.Domain", "BytexDigital.RGSM.Panel.Server.Domain\BytexDigital.RGSM.Panel.Server.Domain.csproj", "{6AA3F7CE-EC71-4072-92D7-861017336A3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BytexDigital.RGSM.Panel.Server.Application", "BytexDigital.RGSM.Panel.Server.Application\BytexDigital.RGSM.Panel.Server.Application.csproj", "{51CCC957-2F57-41C4-9CB1-FE04F648DD21}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7DD8AA9C-7504-4C01-B204-93A594461F72}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BytexDigital.RGSM.Panel.Client.Common", "BytexDigital.RGSM.Panel.Client.Common\BytexDigital.RGSM.Panel.Client.Common.csproj", "{866ACBA7-C529-4D27-8CCF-030FE68BEDEE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BytexDigital.RGSM.Panel.Server.Common", "BytexDigital.RGSM.Panel.Server.Common\BytexDigital.RGSM.Panel.Server.Common.csproj", "{3E984694-0C69-4A8D-88CE-04432FFA9EA9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7B236FF3-8C2B-448F-8E26-B98DB1903C0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B236FF3-8C2B-448F-8E26-B98DB1903C0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B236FF3-8C2B-448F-8E26-B98DB1903C0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B236FF3-8C2B-448F-8E26-B98DB1903C0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A28F281-6CE6-474F-B970-F29B3DED7A6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A28F281-6CE6-474F-B970-F29B3DED7A6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A28F281-6CE6-474F-B970-F29B3DED7A6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A28F281-6CE6-474F-B970-F29B3DED7A6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46D73282-EB8A-48D2-920A-3A512D1665C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46D73282-EB8A-48D2-920A-3A512D1665C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46D73282-EB8A-48D2-920A-3A512D1665C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46D73282-EB8A-48D2-920A-3A512D1665C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CC41653-F4C2-4B8D-9BF1-D831C3D8B424}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CC41653-F4C2-4B8D-9BF1-D831C3D8B424}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CC41653-F4C2-4B8D-9BF1-D831C3D8B424}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CC41653-F4C2-4B8D-9BF1-D831C3D8B424}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B716DF01-75FE-40E3-AE49-EF8C56456FD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B716DF01-75FE-40E3-AE49-EF8C56456FD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B716DF01-75FE-40E3-AE49-EF8C56456FD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B716DF01-75FE-40E3-AE49-EF8C56456FD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AA3F7CE-EC71-4072-92D7-861017336A3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AA3F7CE-EC71-4072-92D7-861017336A3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AA3F7CE-EC71-4072-92D7-861017336A3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AA3F7CE-EC71-4072-92D7-861017336A3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51CCC957-2F57-41C4-9CB1-FE04F648DD21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51CCC957-2F57-41C4-9CB1-FE04F648DD21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51CCC957-2F57-41C4-9CB1-FE04F648DD21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51CCC957-2F57-41C4-9CB1-FE04F648DD21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{866ACBA7-C529-4D27-8CCF-030FE68BEDEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{866ACBA7-C529-4D27-8CCF-030FE68BEDEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{866ACBA7-C529-4D27-8CCF-030FE68BEDEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{866ACBA7-C529-4D27-8CCF-030FE68BEDEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E984694-0C69-4A8D-88CE-04432FFA9EA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E984694-0C69-4A8D-88CE-04432FFA9EA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E984694-0C69-4A8D-88CE-04432FFA9EA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E984694-0C69-4A8D-88CE-04432FFA9EA9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7B236FF3-8C2B-448F-8E26-B98DB1903C0C} = {2C87B08C-02FF-498C-B652-B38AD7BC3BAB}
+		{0A28F281-6CE6-474F-B970-F29B3DED7A6D} = {B08C1F75-82EE-46A5-AA88-7EDE208245E9}
+		{46D73282-EB8A-48D2-920A-3A512D1665C9} = {957807AF-5DED-44B2-B4F7-FCD09AA7B76B}
+		{B08C1F75-82EE-46A5-AA88-7EDE208245E9} = {957807AF-5DED-44B2-B4F7-FCD09AA7B76B}
+		{2C87B08C-02FF-498C-B652-B38AD7BC3BAB} = {957807AF-5DED-44B2-B4F7-FCD09AA7B76B}
+		{B716DF01-75FE-40E3-AE49-EF8C56456FD1} = {2C87B08C-02FF-498C-B652-B38AD7BC3BAB}
+		{6AA3F7CE-EC71-4072-92D7-861017336A3B} = {2C87B08C-02FF-498C-B652-B38AD7BC3BAB}
+		{51CCC957-2F57-41C4-9CB1-FE04F648DD21} = {2C87B08C-02FF-498C-B652-B38AD7BC3BAB}
+		{866ACBA7-C529-4D27-8CCF-030FE68BEDEE} = {B08C1F75-82EE-46A5-AA88-7EDE208245E9}
+		{3E984694-0C69-4A8D-88CE-04432FFA9EA9} = {2C87B08C-02FF-498C-B652-B38AD7BC3BAB}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {420AF76E-6626-4D27-AC5C-F195F3DB2854}
+	EndGlobalSection
+EndGlobal
