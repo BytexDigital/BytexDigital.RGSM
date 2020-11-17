@@ -28,6 +28,9 @@ namespace BytexDigital.RGSM.Panel.Client
             // Supply HttpClient instances that include access tokens when making requests to the server project
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("BytexDigital.RGSM.Panel.ServerAPI"));
 
+            builder.Services.AddOptions();
+            builder.Services.AddAuthorizationCore();
+
             // Authorization with our API
             builder.Services.AddApiAuthorization(options =>
             {

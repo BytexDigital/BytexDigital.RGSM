@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,11 +41,26 @@ namespace BytexDigital.RGSM.Panel.Server
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddIdentityCore<ApplicationUser>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = false;
+                options.SignIn.RequireConfirmedEmail = false;
+            })
+                .AddSignInManager()
+                .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/_/signin";
+            });
+
             services
-                .AddIdentityServer()
+                .AddIdentityServer(options =>
+                {
+                    options.UserInteraction.LoginUrl = "/_/login";
+                    options.UserInteraction.LogoutUrl = "/_/logout";
+                })
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options =>
                 {
                     options.ApiResources.Clear(); // Remove default resources ("BytexDigital.RGSM.Panel.ServerAPI")
@@ -100,8 +116,13 @@ namespace BytexDigital.RGSM.Panel.Server
                     //options.Clients.Add(userClient);
                 });
             services
-                .AddAuthentication()
-                .AddIdentityServerJwt();
+                .AddAuthentication(options =>
+                {
+                    options.DefaultScheme = IdentityConstants.ApplicationScheme;
+                    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+                })
+                .AddIdentityServerJwt()
+                .AddIdentityCookies();
 
             // We need to post configure the JWT options because "AddIdentityServerJwt" adds an Audience value, which we do not want to use.
             services.PostConfigureAll<JwtBearerOptions>(options =>

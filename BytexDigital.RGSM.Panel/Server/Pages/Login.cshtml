@@ -1,0 +1,53 @@
+﻿@page "/_/login"
+@model BytexDigital.RGSM.Panel.Server.Pages.LoginModel
+
+<div class="d-flex align-items-center position-relative vh-lg-100">
+    <div class="col-lg-5 col-xl-4 d-none d-lg-flex align-items-center bg-navy vh-lg-100 px-0" style="background-image: url(../../assets/svg/components/abstract-shapes-20.svg);">
+        <div class="w-100 p-5">
+            <h2 class="text-center">
+                <span class="text-white">RGSM</span><br />
+                <small class="text-muted">Remote Game Server Management</small>
+            </h2>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row no-gutters">
+            <div class="col-md-8 col-lg-7 col-xl-6 offset-md-2 offset-lg-2 offset-xl-3 space-top-3 space-lg-0">
+                <!-- Form -->
+                <form class="js-validate" novalidate="novalidate">
+                    <!-- Title -->
+                    <div class="mb-5 mb-md-7">
+                        <h1 class="h2">Welcome</h1>
+                        <p>Login to view the panel.</p>
+                    </div>
+                    <!-- End Title -->
+                    <!-- Form Group -->
+                    <div class="js-form-message form-group">
+                        <label class="input-label">Username</label>
+                        <input class="form-control" asp-for="LoginViewModelData.Username" />
+                        <span asp-validation-for="LoginViewModelData.Username"></span>
+                    </div>
+                    <!-- End Form Group -->
+                    <!-- Form Group -->
+                    <div class="js-form-message form-group">
+                        <label class="input-label" tabindex="0">
+                            <span class="d-flex justify-content-between align-items-center">
+                                Password
+                                <a class="link-underline text-capitalize font-weight-normal" href="/account/forgot-password">Forgot Password?</a>
+                            </span>
+                        </label>
+                        <input class="form-control" type="password" asp-for="LoginViewModelData.Password" placeholder="********" />
+                        <span asp-validation-for="LoginViewModelData.Password"></span>
+                    </div>
+                    <!-- End Form Group -->
+
+                    <div class="d-flex">
+                        <button type="submit" class="btn btn-wide btn-primary transition-3d-hover ml-auto"><strong>Sign In</strong></button>
+                    </div>
+                </form>
+                <!-- End Form -->
+            </div>
+        </div>
+    </div>
+</div>

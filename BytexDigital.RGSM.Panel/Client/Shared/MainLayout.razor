@@ -1,18 +1,78 @@
 ﻿@inherits LayoutComponentBase
+@attribute [Authorize]
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<header id="header" class="header">
+    <div class="header-section bg-light">
+        <!-- Topbar -->
+        <div class="bg-primary text-white">
+            <div class="container header-hide-content pt-2 pb-2">
+                <div class="d-flex align-items-center">
+                    <div class="ml-auto">
+                        <div class="nav nav-sm nav-y-0 d-none d-sm-flex ml-sm-auto">
+                            <a class="nav-link text-white-50" href="https://bytex.market/">Customer Support</a>
+                        </div>
+                    </div>
 
-    <div class="main">
-        <div class="top-row px-4 auth">
-            <LoginDisplay />
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+                    <div class="list-inline ml-2 mb-0">
+                        <div class="list-inline-item">
+                            <span class="badge badge-soft-light badge-pill font-weight-normal py-2 px-3">@AuthenticationState?.User.Identity.Name <a href="#" class="text-white" @onclick="SignoutAsync" @onclick:preventDefault><i class="fas fa-sign-out-alt ml-2"></i></a></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+        <!-- End Topbar -->
 
-        <div class="content px-4">
-            @Body
+        <div id="logoAndNav" class="container">
+            <!-- Nav -->
+            <nav class="js-mega-menu navbar navbar-expand-lg">
+                <!-- Responsive Toggle Button -->
+                <button type="button" class="navbar-toggler btn btn-icon btn-sm rounded-circle ml-auto"
+                        aria-label="Toggle navigation"
+                        aria-expanded="false"
+                        aria-controls="navBarWithBSDropdownMegaMenu"
+                        data-toggle="collapse"
+                        data-target="#navBarWithBSDropdownMegaMenu">
+                    <span class="navbar-toggler-default">
+                        <svg width="14" height="14" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                            <path fill="currentColor" d="M17.4,6.2H0.6C0.3,6.2,0,5.9,0,5.5V4.1c0-0.4,0.3-0.7,0.6-0.7h16.9c0.3,0,0.6,0.3,0.6,0.7v1.4C18,5.9,17.7,6.2,17.4,6.2z M17.4,14.1H0.6c-0.3,0-0.6-0.3-0.6-0.7V12c0-0.4,0.3-0.7,0.6-0.7h16.9c0.3,0,0.6,0.3,0.6,0.7v1.4C18,13.7,17.7,14.1,17.4,14.1z" />
+                        </svg>
+                    </span>
+                    <span class="navbar-toggler-toggled">
+                        <svg width="14" height="14" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                            <path fill="currentColor" d="M11.5,9.5l5-5c0.2-0.2,0.2-0.6-0.1-0.9l-1-1c-0.3-0.3-0.7-0.3-0.9-0.1l-5,5l-5-5C4.3,2.3,3.9,2.4,3.6,2.6l-1,1 C2.4,3.9,2.3,4.3,2.5,4.5l5,5l-5,5c-0.2,0.2-0.2,0.6,0.1,0.9l1,1c0.3,0.3,0.7,0.3,0.9,0.1l5-5l5,5c0.2,0.2,0.6,0.2,0.9-0.1l1-1 c0.3-0.3,0.3-0.7,0.1-0.9L11.5,9.5z" />
+                        </svg>
+                    </span>
+                </button>
+                <!-- End Responsive Toggle Button -->
+                <!-- Navigation -->
+                <div id="navBarWithBSDropdownMegaMenu" class="collapse navbar-collapse">
+                    <ul class="navbar-nav nav flex-grow-1">
+                        <li class="navbar-nav-item nav-item">
+                            <NavLink class="nav-link" href="/panel" Match="NavLinkMatch.All" ActiveClass="active">Home</NavLink>
+                        </li>
+
+                        <li class="navbar-nav-item nav-item">
+                            <NavLink class="nav-link" href="/panel/account" Match="NavLinkMatch.All" ActiveClass="active">Account</NavLink>
+                        </li>
+
+                        <!-- Button -->
+                        <li class="nav-item navbar-nav-last-item ml-auto">
+                            <a class="btn btn-sm btn-primary transition-3d-hover" href="/panel/new-project" target="_blank">
+                                <i class="fas fa-plus mr-2"></i> New Project
+                            </a>
+                        </li>
+                        <!-- End Button -->
+                    </ul>
+                </div>
+                <!-- End Navigation -->
+            </nav>
+            <!-- End Nav -->
         </div>
     </div>
+</header>
+<!-- ========== END HEADER ========== -->
+
+<div class="container mt-5">
+    @Body
 </div>
