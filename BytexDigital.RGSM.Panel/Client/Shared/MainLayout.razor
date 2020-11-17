@@ -41,22 +41,30 @@
                 <!-- End Responsive Toggle Button -->
                 <!-- Navigation -->
                 <div id="navBarWithBSDropdownMegaMenu" class="collapse navbar-collapse">
-                    <ul class="navbar-nav nav flex-grow-1">
-                        <li class="navbar-nav-item nav-item">
-                            <NavLink class="nav-link" href="/panel" Match="NavLinkMatch.All" ActiveClass="active">Home</NavLink>
+                    <ul class="navbar-nav nav navbar-nav-underlined flex-grow-1">
+                        <li class="navbar-nav-item nav-item mr-lg-3">
+                            <NavLink class="nav-link" href="/" Match="NavLinkMatch.All" ActiveClass="active font-weight-bold"><i class="fas fa-home mr-2"></i> Home</NavLink>
                         </li>
-
-                        <li class="navbar-nav-item nav-item">
-                            <NavLink class="nav-link" href="/panel/account" Match="NavLinkMatch.All" ActiveClass="active">Account</NavLink>
+                        <li class="navbar-nav-item nav-item mr-lg-3">
+                            <NavLink class="nav-link" href="/servers" Match="NavLinkMatch.All" ActiveClass="active font-weight-bold"><i class="fas fa-server mr-2"></i> Servers</NavLink>
                         </li>
-
-                        <!-- Button -->
-                        <li class="nav-item navbar-nav-last-item ml-auto">
-                            <a class="btn btn-sm btn-primary transition-3d-hover" href="/panel/new-project" target="_blank">
-                                <i class="fas fa-plus mr-2"></i> New Project
+                        <li class="navbar-nav-item nav-item mr-lg-3">
+                            <NavLink class="nav-link" href="/nodes" Match="NavLinkMatch.All" ActiveClass="active font-weight-bold"><i class="fas fa-network-wired mr-2"></i> Nodes</NavLink>
+                        </li>
+                        <li class="navbar-nav-item nav-item mr-lg-3">
+                            <NavLink class="nav-link" href="/settings" Match="NavLinkMatch.All" ActiveClass="active font-weight-bold"><i class="fas fa-cog mr-2"></i> Global Settings</NavLink>
+                        </li>
+                        @*<li class="navbar-nav-item  nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Dropdown
                             </a>
-                        </li>
-                        <!-- End Button -->
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </li>*@
                     </ul>
                 </div>
                 <!-- End Navigation -->

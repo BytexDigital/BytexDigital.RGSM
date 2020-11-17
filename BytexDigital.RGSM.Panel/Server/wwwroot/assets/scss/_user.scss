@@ -2,10 +2,41 @@
     _user.scss
 */
 $red: null !default;
+$blue: null !default;
 
 .validation-message, .field-validation-error {
     display: inline-block;
     margin-top: 5px;
     color: $red !important;
     font-size: 0.875rem;
+}
+
+.header {
+    .navbar-nav.navbar-nav-underlined {
+        margin-bottom: 0.3rem;
+
+        .navbar-nav-item {
+            margin-bottom: 0.5rem;
+
+            .nav-link {
+                padding-left: 0.75rem !important;
+                padding-bottom: 0.6rem;
+                border-bottom: 3px solid rgba(0,0,0,0);
+            }
+
+            .nav-link.active {
+                border-bottom: 3px solid $blue;
+            }
+        }
+
+        .navbar-nav-item.dropdown.show {
+            .nav-link.active {
+                border-bottom: 3px solid rgba(0,0,0,0);
+            }
+        }
+
+        .navbar-nav-item:first-child .nav-link {
+            padding-left: 0.75rem !important;
+        }
+    }
 }

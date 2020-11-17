@@ -16965,3 +16965,18 @@ a:hover .text-hover-primary {
   margin-top: 5px;
   color: #ed4c78 !important;
   font-size: 0.875rem; }
+
+.header .navbar-nav.navbar-nav-underlined {
+  margin-bottom: 0.3rem; }
+  .header .navbar-nav.navbar-nav-underlined .navbar-nav-item {
+    margin-bottom: 0.5rem; }
+    .header .navbar-nav.navbar-nav-underlined .navbar-nav-item .nav-link {
+      padding-left: 0.75rem !important;
+      padding-bottom: 0.6rem;
+      border-bottom: 3px solid transparent; }
+    .header .navbar-nav.navbar-nav-underlined .navbar-nav-item .nav-link.active {
+      border-bottom: 3px solid #377dff; }
+  .header .navbar-nav.navbar-nav-underlined .navbar-nav-item.dropdown.show .nav-link.active {
+    border-bottom: 3px solid transparent; }
+  .header .navbar-nav.navbar-nav-underlined .navbar-nav-item:first-child .nav-link {
+    padding-left: 0.75rem !important; }
