@@ -47,7 +47,7 @@ namespace BytexDigital.RGSM.Panel.Server
             //services.AddAutoMapper(typeof(DefaultProfile).Assembly);
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")).UseLazyLoadingProxies());
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -162,6 +162,7 @@ namespace BytexDigital.RGSM.Panel.Server
                     db.Database.Migrate();
                 }
 
+                dbDefaultsService.EnsureSystemAdministratorGroupExistsAsync().GetAwaiter().GetResult();
                 dbDefaultsService.EnsureRootAccountExistsAsync().GetAwaiter().GetResult();
             }
 
