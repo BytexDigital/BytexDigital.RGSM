@@ -62,7 +62,8 @@ namespace BytexDigital.RGSM.Panel.Server
 
             services.ConfigureApplicationCookie(options =>
             {
-                options.LoginPath = "/_/signin";
+                options.LoginPath = "/_/login";
+                options.LogoutPath = "/_/logout";
             });
 
             services

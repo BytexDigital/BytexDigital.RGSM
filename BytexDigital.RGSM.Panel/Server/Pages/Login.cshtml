@@ -16,6 +16,8 @@
             <div class="col-md-8 col-lg-7 col-xl-6 offset-md-2 offset-lg-2 offset-xl-3 space-top-3 space-lg-0">
                 <!-- Form -->
                 <form method="post">
+                    @Html.HiddenFor(x => x.LoginViewModelData.ReturnUrl)
+
                     <!-- Title -->
                     <div class="mb-5 mb-md-7">
                         <h1 class="h2">Welcome</h1>
@@ -23,14 +25,14 @@
                     </div>
                     <!-- End Title -->
                     <!-- Form Group -->
-                    <div class="js-form-message form-group">
+                    <div class="form-group">
                         <label class="input-label">Username</label>
                         <input class="form-control" asp-for="LoginViewModelData.Username" />
                         <span asp-validation-for="LoginViewModelData.Username"></span>
                     </div>
                     <!-- End Form Group -->
                     <!-- Form Group -->
-                    <div class="js-form-message form-group">
+                    <div class="form-group">
                         <label class="input-label" tabindex="0">
                             <span class="d-flex justify-content-between align-items-center">
                                 Password

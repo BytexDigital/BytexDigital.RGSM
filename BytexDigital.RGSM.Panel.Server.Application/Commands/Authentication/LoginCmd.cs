@@ -38,9 +38,9 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Commands.Authentication
                 if (response.Succeeded) return Unit.Value;
 
                 if (response.IsLockedOut) throw new ServiceValidationException(nameof(request.Username), "This user is locked out.");
-                if (response.IsNotAllowed) throw new ServiceValidationException(nameof(request.Password), "This provided credentials are invalid.");
+                if (response.IsNotAllowed) throw new ServiceValidationException(nameof(request.Password), "This user is not allowed to sign in.");
 
-                throw new ServiceValidationException(nameof(request.Username), "An error occurred while singing in.");
+                throw new ServiceValidationException(nameof(request.Password), "This provided credentials are invalid.");
             }
         }
     }
