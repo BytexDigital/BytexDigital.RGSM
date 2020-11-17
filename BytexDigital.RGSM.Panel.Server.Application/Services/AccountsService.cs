@@ -21,5 +21,10 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Services
 
             return _storage.Users.Where(x => x.Id == userId);
         }
+
+        public IQueryable<Group> GetAssignedGroups(ApplicationUser applicationUser)
+        {
+            return _storage.Groups.Where(x => x.Users.Any(y => y.ApplicationUserId == applicationUser.Id));
+        }
     }
 }

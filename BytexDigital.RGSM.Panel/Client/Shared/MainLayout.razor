@@ -4,17 +4,7 @@
 <header id="header" class="header">
     <div class="header-section bg-light">
         <!-- Topbar -->
-        <div class="bg-primary text-white">
-            <div class="container header-hide-content pt-2 pb-2">
-                <div class="d-flex align-items-center">
-                    <div class="list-inline ml-2 mb-0 ml-auto">
-                        <div class="list-inline-item">
-                            <span class="badge badge-soft-light badge-pill font-weight-normal py-2 px-3">@AuthenticationState?.User.Identity.Name <a href="#" class="text-white" @onclick="SignoutAsync" @onclick:preventDefault><i class="fas fa-sign-out-alt ml-2"></i></a></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <BytexDigital.RGSM.Panel.Client.Shared.Layout.SessionHeader />
         <!-- End Topbar -->
 
         <div id="logoAndNav" class="container">
@@ -55,16 +45,16 @@
                             <NavLink class="nav-link" href="/settings" Match="NavLinkMatch.All" ActiveClass="active font-weight-bold"><i class="fas fa-cog mr-2"></i> Global Settings</NavLink>
                         </li>
                         @*<li class="navbar-nav-item  nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Dropdown
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                            </div>
-                        </li>*@
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Dropdown
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="#">Action</a>
+                                    <a class="dropdown-item" href="#">Another action</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                </div>
+                            </li>*@
                     </ul>
                 </div>
                 <!-- End Navigation -->

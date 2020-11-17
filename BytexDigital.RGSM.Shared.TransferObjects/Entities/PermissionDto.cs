@@ -1,8 +1,8 @@
 ﻿namespace BytexDigital.RGSM.Shared.TransferObjects.Entities
 {
-    public class GroupDto : EntityDto
+    public class PermissionDto : EntityDto
     {
         public string Name { get; set; }
-        public string DisplayName { get; set; }
+        public string ResourceName { get; set; }
     }
 }

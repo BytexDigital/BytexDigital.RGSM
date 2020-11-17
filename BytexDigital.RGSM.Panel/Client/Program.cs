@@ -1,7 +1,12 @@
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using BytexDigital.RGSM.Panel.Client.Common.Authorization;
+using BytexDigital.RGSM.Panel.Client.Common.Services;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,8 +33,11 @@ namespace BytexDigital.RGSM.Panel.Client
             // Supply HttpClient instances that include access tokens when making requests to the server project
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("BytexDigital.RGSM.Panel.ServerAPI"));
 
+            // Add custom services
+            builder.Services.AddScoped<AccountService>();
+
+            // Enable options pattern
             builder.Services.AddOptions();
-            builder.Services.AddAuthorizationCore();
 
             // Authorization with our API
             builder.Services.AddApiAuthorization(options =>
@@ -38,6 +46,15 @@ namespace BytexDigital.RGSM.Panel.Client
                 string clientId = "rgsm-panel";
                 options.ProviderOptions.ConfigurationEndpoint = $"_configuration/{clientId}";
             });
+
+            // Add authorization services
+            builder.Services.AddAuthorizationCore();
+
+            // Add AuthorizationHandlers
+            foreach (var handlerType in typeof(UserGroupRequirement.Handler).Assembly.GetTypes().Where(x => x.IsAssignableTo(typeof(IAuthorizationHandler))))
+            {
+                builder.Services.AddScoped(typeof(IAuthorizationHandler), handlerType);
+            }
 
             await builder.Build().RunAsync();
         }

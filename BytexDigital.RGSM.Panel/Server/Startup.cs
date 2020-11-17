@@ -1,15 +1,21 @@
 using System;
+using System.Collections.Generic;
+
+using AutoMapper;
 
 using BytexDigital.RGSM.Panel.Server.Application.Behaviors;
 using BytexDigital.RGSM.Panel.Server.Application.Commands.Authentication;
 using BytexDigital.RGSM.Panel.Server.Application.Extensions;
 using BytexDigital.RGSM.Panel.Server.Application.Services;
 using BytexDigital.RGSM.Panel.Server.Common.Filters;
+using BytexDigital.RGSM.Panel.Server.Common.IdentityServer;
+using BytexDigital.RGSM.Panel.Server.Common.MappingProfiles;
 using BytexDigital.RGSM.Panel.Server.Domain.Entities;
 using BytexDigital.RGSM.Panel.Server.Persistence;
 
 using IdentityServer4;
 using IdentityServer4.Models;
+using IdentityServer4.Validation;
 
 using MediatR;
 
@@ -22,6 +28,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 namespace BytexDigital.RGSM.Panel.Server
 {
@@ -44,10 +51,49 @@ namespace BytexDigital.RGSM.Panel.Server
 
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(DbTransactionBehavior<,>));
 
-            //services.AddAutoMapper(typeof(DefaultProfile).Assembly);
+            services.AddAutoMapper(typeof(DefaultProfile).Assembly);
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")).UseLazyLoadingProxies());
+
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("rgsm-panel-api", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "RGSM Panel API", Version = "v1" });
+
+                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new OpenApiOAuthFlows
+                    {
+                        AuthorizationCode = new OpenApiOAuthFlow
+                        {
+                            AuthorizationUrl = new Uri($"{Configuration["BaseUri"]}/connect/authorize"),
+                            TokenUrl = new Uri($"{Configuration["BaseUri"]}/connect/token"),
+                            Scopes = new Dictionary<string, string>
+                            {
+                                { "openid", "ID" },
+                                { "profile", "User profile data" },
+                                { "rgsm", "Audience scope" },
+                                { "rgsm.user", "Access to the RGSM panel as a user" }
+                            }
+                        }
+                    }
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    [
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "oauth2"
+                            }
+                        }
+                    ] = new[] { "rgsm-panel" }
+                });
+            });
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -66,12 +112,15 @@ namespace BytexDigital.RGSM.Panel.Server
                 options.LogoutPath = "/_/logout";
             });
 
+            services.AddHttpContextAccessor();
+
             services
                 .AddIdentityServer(options =>
                 {
                     options.UserInteraction.LoginUrl = "/_/login";
                     options.UserInteraction.LogoutUrl = "/_/logout";
                 })
+                .AddRedirectUriValidator<RedirectUriValidator>()
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options =>
                 {
                     options.ApiResources.Clear(); // Remove default resources ("BytexDigital.RGSM.Panel.ServerAPI")
@@ -85,11 +134,9 @@ namespace BytexDigital.RGSM.Panel.Server
                     {
                         options
                             .WithRedirectUri("/authentication/login-callback")
+                            .WithRedirectUri($"{Configuration["BaseUri"]}/swagger/oauth2-redirect.html")
                             .WithLogoutRedirectUri("/authentication/logout-callback")
-                            .WithScopes(
-                            "rgsm",
-                                "rgsm.user",
-                                "rgsm.app");
+                            .WithScopes("rgsm", "rgsm.user", "rgsm.app");
                     });
 
                     options.ApiScopes.Add(new ApiScope(IdentityServerConstants.StandardScopes.OfflineAccess));
@@ -126,6 +173,7 @@ namespace BytexDigital.RGSM.Panel.Server
 
                     //options.Clients.Add(userClient);
                 });
+
             services
                 .AddAuthentication(options =>
                 {
@@ -135,10 +183,13 @@ namespace BytexDigital.RGSM.Panel.Server
                 .AddIdentityServerJwt()
                 .AddIdentityCookies();
 
+            services.AddTransient<IRedirectUriValidator, RedirectUriValidator>();
+
             // We need to post configure the JWT options because "AddIdentityServerJwt" adds an Audience value, which we do not want to use.
             services.PostConfigureAll<JwtBearerOptions>(options =>
             {
                 options.Audience = "rgsm";
+                options.TokenValidationParameters.ValidAudience = "rgsm";
             });
 
             services.AddControllers(options =>
@@ -182,6 +233,16 @@ namespace BytexDigital.RGSM.Panel.Server
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/rgsm-panel-api/swagger.json", "RGSM Panel API");
+                options.OAuthClientId("rgsm-panel");
+                options.OAuthClientSecret("");
+                options.OAuthAppName("RGSM Panel - Swagger");
+                options.OAuthUsePkce();
+            });
 
             app.UseRouting();
 

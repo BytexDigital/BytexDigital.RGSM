@@ -8,8 +8,10 @@ using BytexDigital.RGSM.Shared.Extensions;
 
 using MediatR;
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Options;
 
 namespace BytexDigital.RGSM.Panel.Server.Pages
 {
@@ -20,7 +22,7 @@ namespace BytexDigital.RGSM.Panel.Server.Pages
         [BindProperty]
         public LoginViewModel LoginViewModelData { get; set; }
 
-        public LoginModel(IMediator mediator)
+        public LoginModel(IMediator mediator, IOptions<JwtBearerOptions> options)
         {
             _mediator = mediator;
         }

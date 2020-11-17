@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-
-using IdentityServer4.Extensions;
+﻿
+using System;
 
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BytexDigital.RGSM.Panel.Server.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class OidcConfigurationController : Controller
     {
         private readonly ILogger<OidcConfigurationController> _logger;
@@ -23,8 +23,15 @@ namespace BytexDigital.RGSM.Panel.Server.Controllers
         [HttpGet("_configuration/{clientId}")]
         public IActionResult GetClientRequestParameters([FromRoute] string clientId)
         {
-            var parameters = ClientRequestParametersProvider.GetClientParameters(HttpContext, clientId);
-            return Ok(parameters);
+            try
+            {
+                var parameters = ClientRequestParametersProvider.GetClientParameters(HttpContext, clientId);
+                return Ok(parameters);
+            }
+            catch (InvalidOperationException)
+            {
+                return BadRequest();
+            }
 
             //return Ok(new Dictionary<string, string>
             //{
