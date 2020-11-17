@@ -17,8 +17,4 @@
     <ProjectReference Include="..\Shared\BytexDigital.RGSM.Panel.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Shared\Components\" />
-  </ItemGroup>
-
 </Project>

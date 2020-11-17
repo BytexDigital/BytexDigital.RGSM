@@ -16,7 +16,7 @@
                     </span>
                 </div>
 
-                <p class="m-0 text-muted">Signing in..</p>
+                <p class="m-0 text-muted">Redirecting to sign in..</p>
             </LoggingIn>
 
             <CompletingLoggingIn>
@@ -30,7 +30,10 @@
             </CompletingLoggingIn>
 
             <LogInFailed>
-                <!-- todo -->
+                <div class="text-center">
+                    <p class="lead m-0">Login failed</p>
+                    <p class="m-0 text-muted">You could not be signed in</p>
+                </div>
             </LogInFailed>
 
             <LogOut>
@@ -44,7 +47,12 @@
             </LogOut>
 
             <LogOutSucceeded>
-                <!-- todo -->
+                <div class="text-center">
+                    <p class="lead m-0">Successfully logged out</p>
+                    <p class="m-0 text-muted">You will be redirected shortly</p>
+                </div>
+
+                <Redirect Target="/" Delay="TimeSpan.FromSeconds(4)" />
             </LogOutSucceeded>
 
             <LogOutFailed>

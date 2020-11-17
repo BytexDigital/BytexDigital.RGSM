@@ -1,0 +1,45 @@
+﻿@implements IDisposable
+
+@code {
+    [Inject]
+    public NavigationManager Navigation { get; set; }
+
+    [Parameter]
+    public string Target { get; set; }
+
+    [Parameter]
+    public TimeSpan? Delay { get; set; }
+
+    private Task _delayTask;
+    private System.Threading.CancellationTokenSource _delayTaskToken;
+
+    protected override Task OnInitializedAsync()
+    {
+        if (Delay.HasValue)
+        {
+            _delayTaskToken = new System.Threading.CancellationTokenSource();
+            _delayTask = Task.Run(async () =>
+            {
+                await Task.Delay(Delay.Value);
+
+                if (_delayTaskToken.IsCancellationRequested) return;
+
+                await InvokeAsync(() =>
+                {
+                    Navigation.NavigateTo(Target);
+                });
+            });
+        }
+        else
+        {
+            Navigation.NavigateTo(Target);
+        }
+
+        return base.OnInitializedAsync();
+    }
+
+    public void Dispose()
+    {
+        _delayTaskToken.Cancel();
+    }
+} 
