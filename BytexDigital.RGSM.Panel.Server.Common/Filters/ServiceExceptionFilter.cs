@@ -2,7 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 
-using BytexDigital.RGSM.Panel.Server.Application.Exceptions;
+using BytexDigital.RGSM.Application.Exceptions;
 using BytexDigital.RGSM.Shared.TransferObjects.Models.Errors;
 
 using Microsoft.AspNetCore.Mvc;

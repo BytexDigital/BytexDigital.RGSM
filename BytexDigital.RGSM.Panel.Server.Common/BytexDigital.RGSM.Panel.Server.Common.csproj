@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BytexDigital.RGSM.Panel.Server.Application\BytexDigital.RGSM.Panel.Server.Application.csproj" />
+    <ProjectReference Include="..\BytexDigital.RGSM.Application\BytexDigital.RGSM.Application.csproj" />
     <ProjectReference Include="..\BytexDigital.RGSM.Shared.TransferObjects\BytexDigital.RGSM.Shared.TransferObjects.csproj" />
   </ItemGroup>
 

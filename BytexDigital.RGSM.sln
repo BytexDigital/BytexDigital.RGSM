@@ -19,11 +19,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{B08C1F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{2C87B08C-02FF-498C-B652-B38AD7BC3BAB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BytexDigital.RGSM.Panel.Server.Persistence", "BytexDigital.RGSM.Panel.Server.Persistence\BytexDigital.RGSM.Panel.Server.Persistence.csproj", "{B716DF01-75FE-40E3-AE49-EF8C56456FD1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BytexDigital.RGSM.Persistence", "BytexDigital.RGSM.Persistence\BytexDigital.RGSM.Persistence.csproj", "{B716DF01-75FE-40E3-AE49-EF8C56456FD1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BytexDigital.RGSM.Panel.Server.Domain", "BytexDigital.RGSM.Panel.Server.Domain\BytexDigital.RGSM.Panel.Server.Domain.csproj", "{6AA3F7CE-EC71-4072-92D7-861017336A3B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BytexDigital.RGSM.Domain", "BytexDigital.RGSM.Domain\BytexDigital.RGSM.Domain.csproj", "{6AA3F7CE-EC71-4072-92D7-861017336A3B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BytexDigital.RGSM.Panel.Server.Application", "BytexDigital.RGSM.Panel.Server.Application\BytexDigital.RGSM.Panel.Server.Application.csproj", "{51CCC957-2F57-41C4-9CB1-FE04F648DD21}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BytexDigital.RGSM.Application", "BytexDigital.RGSM.Application\BytexDigital.RGSM.Application.csproj", "{51CCC957-2F57-41C4-9CB1-FE04F648DD21}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7DD8AA9C-7504-4C01-B204-93A594461F72}"
 	ProjectSection(SolutionItems) = preProject

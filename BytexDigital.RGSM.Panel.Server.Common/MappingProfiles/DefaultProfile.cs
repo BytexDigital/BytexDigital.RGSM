@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-using BytexDigital.RGSM.Panel.Server.Domain.Entities;
+using BytexDigital.RGSM.Domain.Entities;
 using BytexDigital.RGSM.Shared.TransferObjects.Entities;
 
 namespace BytexDigital.RGSM.Panel.Server.Common.MappingProfiles

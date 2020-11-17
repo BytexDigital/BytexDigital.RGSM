@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BytexDigital.RGSM.Domain\BytexDigital.RGSM.Domain.csproj" />
+    <ProjectReference Include="..\BytexDigital.RGSM.Persistence\BytexDigital.RGSM.Persistence.csproj" />
+    <ProjectReference Include="..\BytexDigital.RGSM.Shared\BytexDigital.RGSM.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
