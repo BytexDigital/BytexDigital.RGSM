@@ -14,6 +14,11 @@ namespace BytexDigital.RGSM.Panel.Server.Pages
         {
         }
 
+        public void OnPost()
+        {
+
+        }
+
         public class LoginViewModel
         {
             [Required]

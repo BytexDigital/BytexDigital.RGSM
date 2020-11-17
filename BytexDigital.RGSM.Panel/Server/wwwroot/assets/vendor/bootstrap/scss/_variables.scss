@@ -679,6 +679,10 @@ $form-validation-states: map-merge(
       "color": $form-feedback-invalid-color,
       "icon": $form-feedback-icon-invalid
     ),
+    "input-validation-error": (
+        "color": $form-feedback-invalid-color,
+        "icon": $form-feedback-icon-invalid
+    )
   ),
   $form-validation-states
 );
