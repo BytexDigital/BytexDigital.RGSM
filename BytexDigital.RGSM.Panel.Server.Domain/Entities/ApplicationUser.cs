@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 using BytexDigital.RGSM.Panel.Server.Domain.Interfaces;
@@ -12,5 +13,7 @@ namespace BytexDigital.RGSM.Panel.Server.Domain.Entities
     {
         [Required]
         public DateTimeOffset TimeCreated { get; set; }
+
+        public virtual ICollection<ApplicationUserGroup> Groups { get; set; }
     }
 }

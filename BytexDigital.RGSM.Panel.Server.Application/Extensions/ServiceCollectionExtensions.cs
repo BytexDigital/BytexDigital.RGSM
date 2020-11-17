@@ -9,7 +9,8 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Extensions
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services
-                .AddScoped<DatabaseDefaultsService>();
+                .AddScoped<DatabaseDefaultsService>()
+                .AddScoped<AccountsService>();
 
             return services;
         }

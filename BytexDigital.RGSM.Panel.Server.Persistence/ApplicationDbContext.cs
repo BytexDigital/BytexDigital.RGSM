@@ -20,6 +20,9 @@ namespace BytexDigital.RGSM.Panel.Server.Persistence
         {
         }
 
+        public DbSet<ApplicationUserGroup> ApplicationUserGroups { get; set; }
+        public DbSet<Group> Groups { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder); // Ensure IdentityServer adds its settings

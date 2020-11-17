@@ -2,8 +2,6 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-using BytexDigital.RGSM.Panel.Client.Common.Authorization;
-
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
