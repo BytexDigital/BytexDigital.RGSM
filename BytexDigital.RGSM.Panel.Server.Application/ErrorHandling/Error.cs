@@ -1,6 +1,8 @@
-﻿namespace BytexDigital.RGSM.Panel.Server.Application.ErrorHandling
+﻿using BytexDigital.RGSM.Shared.Interfaces;
+
+namespace BytexDigital.RGSM.Panel.Server.Application.ErrorHandling
 {
-    public class Error
+    public class Error : IError
     {
         public string Identifier { get; set; }
         public string Field { get; set; }

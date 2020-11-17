@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using BytexDigital.RGSM.Panel.Server.Application.ErrorHandling;
+using BytexDigital.RGSM.Shared.Interfaces;
 
 namespace BytexDigital.RGSM.Panel.Server.Application.Exceptions
 {
-    public class ServiceValidationException : Exception
+    public class ServiceValidationException : Exception, IErrorCollection
     {
         public List<Error> Errors { get; set; }
+
+        IReadOnlyCollection<IError> IErrorCollection.Errors => Errors.Cast<IError>().ToList();
 
         public ServiceValidationException(string field) : this(new List<Error> { new Error { Field = field } })
         {
