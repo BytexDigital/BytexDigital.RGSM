@@ -30,7 +30,7 @@ namespace BytexDigital.RGSM.Panel.Server.Persistence
             builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         }
 
-        public T CreateEntity<T>(Expression<Func<ApplicationDbContext, DbSet<T>>> dbSetAccessor, bool attach = false) where T : class, new()
+        public T CreateEntity<T>(Expression<Func<ApplicationDbContext, DbSet<T>>> dbSetAccessor, bool attach = true) where T : class, new()
         {
             T model = null;
 
