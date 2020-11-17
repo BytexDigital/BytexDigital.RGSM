@@ -1,5 +1,7 @@
 using System;
 
+using BytexDigital.RGSM.Panel.Server.Application.Behaviors;
+using BytexDigital.RGSM.Panel.Server.Application.Commands.Authentication;
 using BytexDigital.RGSM.Panel.Server.Application.Extensions;
 using BytexDigital.RGSM.Panel.Server.Application.Services;
 using BytexDigital.RGSM.Panel.Server.Common.Filters;
@@ -8,6 +10,8 @@ using BytexDigital.RGSM.Panel.Server.Persistence;
 
 using IdentityServer4;
 using IdentityServer4.Models;
+
+using MediatR;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -35,6 +39,12 @@ namespace BytexDigital.RGSM.Panel.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddApplicationServices();
+
+            services.AddMediatR(typeof(LoginCmd).Assembly);
+
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(DbTransactionBehavior<,>));
+
+            //services.AddAutoMapper(typeof(DefaultProfile).Assembly);
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
