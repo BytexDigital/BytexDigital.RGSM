@@ -671,10 +671,10 @@ $form-validation-states: () !default;
 // stylelint-disable-next-line scss/dollar-variable-default
 $form-validation-states: map-merge(
   (
-    "valid": (
-      "color": $form-feedback-valid-color,
-      "icon": $form-feedback-icon-valid
-    ),
+    //"valid": (
+    //  "color": $form-feedback-valid-color,
+    //  "icon": $form-feedback-icon-valid
+    //),
     "invalid": (
       "color": $form-feedback-invalid-color,
       "icon": $form-feedback-icon-invalid

@@ -1623,86 +1623,6 @@ textarea.form-control {
     margin-right: 0.3125rem;
     margin-left: 0; }
 
-.valid-feedback {
-  display: none;
-  width: 100%;
-  margin-top: 0.25rem;
-  font-size: 80%;
-  color: #00c9a7; }
-
-.valid-tooltip {
-  position: absolute;
-  top: 100%;
-  z-index: 5;
-  display: none;
-  max-width: 100%;
-  padding: 0.25rem 0.5rem;
-  margin-top: .1rem;
-  font-size: 0.875rem;
-  line-height: 1.6;
-  color: #fff;
-  background-color: #00c9a7;
-  border-radius: 0.3125rem; }
-
-.was-validated :valid ~ .valid-feedback,
-.was-validated :valid ~ .valid-tooltip,
-.valid ~ .valid-feedback,
-.valid ~ .valid-tooltip {
-  display: block; }
-
-.was-validated .form-control:valid, .form-control.valid {
-  border-color: #00c9a7;
-  padding-right: calc(1.6em + 1rem);
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath fill='%2300c9a7' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
-  background-repeat: no-repeat;
-  background-position: right calc(0.4em + 0.25rem) center;
-  background-size: calc(0.8em + 0.5rem) calc(0.8em + 0.5rem); }
-  .was-validated .form-control:valid:focus, .form-control.valid:focus {
-    border-color: #00c9a7;
-    box-shadow: 0 0 0 0.2rem rgba(0, 201, 167, 0.25); }
-
-.was-validated textarea.form-control:valid, textarea.form-control.valid {
-  padding-right: calc(1.6em + 1rem);
-  background-position: top calc(0.4em + 0.25rem) right calc(0.4em + 0.25rem); }
-
-.was-validated .custom-select:valid, .custom-select.valid {
-  border-color: #00c9a7;
-  padding-right: calc(0.75em + 2.875rem);
-  background: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='%2371869d' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.72,15.78a.75.75,0,0,1-.53.22h-.38a.77.77,0,0,1-.53-.22L6.15,10.64a.5.5,0,0,1,0-.71l.71-.71a.49.49,0,0,1,.7,0L12,13.67l4.44-4.45a.5.5,0,0,1,.71,0l.7.71a.5.5,0,0,1,0,.71Z'/%3E%3C/svg%3E") no-repeat right 0.5rem center/1rem 1rem, url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath fill='%2300c9a7' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e") #fff no-repeat center right 2.125rem/calc(0.8em + 0.5rem) calc(0.8em + 0.5rem); }
-  .was-validated .custom-select:valid:focus, .custom-select.valid:focus {
-    border-color: #00c9a7;
-    box-shadow: 0 0 0 0.2rem rgba(0, 201, 167, 0.25); }
-
-.was-validated .form-check-input:valid ~ .form-check-label, .form-check-input.valid ~ .form-check-label {
-  color: #00c9a7; }
-
-.was-validated .form-check-input:valid ~ .valid-feedback,
-.was-validated .form-check-input:valid ~ .valid-tooltip, .form-check-input.valid ~ .valid-feedback,
-.form-check-input.valid ~ .valid-tooltip {
-  display: block; }
-
-.was-validated .custom-control-input:valid ~ .custom-control-label, .custom-control-input.valid ~ .custom-control-label {
-  color: #00c9a7; }
-  .was-validated .custom-control-input:valid ~ .custom-control-label::before, .custom-control-input.valid ~ .custom-control-label::before {
-    border-color: #00c9a7; }
-
-.was-validated .custom-control-input:valid:checked ~ .custom-control-label::before, .custom-control-input.valid:checked ~ .custom-control-label::before {
-  border-color: #00fcd1;
-  background-color: #00fcd1; }
-
-.was-validated .custom-control-input:valid:focus ~ .custom-control-label::before, .custom-control-input.valid:focus ~ .custom-control-label::before {
-  box-shadow: 0 0 0 0.2rem rgba(0, 201, 167, 0.25); }
-
-.was-validated .custom-control-input:valid:focus:not(:checked) ~ .custom-control-label::before, .custom-control-input.valid:focus:not(:checked) ~ .custom-control-label::before {
-  border-color: #00c9a7; }
-
-.was-validated .custom-file-input:valid ~ .custom-file-label, .custom-file-input.valid ~ .custom-file-label {
-  border-color: #00c9a7; }
-
-.was-validated .custom-file-input:valid:focus ~ .custom-file-label, .custom-file-input.valid:focus ~ .custom-file-label {
-  border-color: #00c9a7;
-  box-shadow: 0 0 0 0.2rem rgba(0, 201, 167, 0.25); }
-
 .invalid-feedback {
   display: none;
   width: 100%;
@@ -17040,3 +16960,8 @@ a:hover .text-hover-primary {
 /*
     _user.scss
 */
+.validation-message, .field-validation-error {
+  display: inline-block;
+  margin-top: 5px;
+  color: #ed4c78 !important;
+  font-size: 0.875rem; }

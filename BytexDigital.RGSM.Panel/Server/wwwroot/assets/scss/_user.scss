@@ -1,3 +1,11 @@
 /*
     _user.scss
 */
+$red: null !default;
+
+.validation-message, .field-validation-error {
+    display: inline-block;
+    margin-top: 5px;
+    color: $red !important;
+    font-size: 0.875rem;
+}
