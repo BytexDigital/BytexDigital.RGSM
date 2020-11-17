@@ -1,16 +1,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BytexDigital.RGSM.Node
 {
@@ -26,11 +19,20 @@ namespace BytexDigital.RGSM.Node
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication()
+                .AddJwtBearer(options =>
+                {
+                    options.MetadataAddress = $"{Configuration["Panel:BaseUri"]}/.well-known/openid-configuration";
+                    options.Audience = "rgsm";
+
+                    options.TokenValidationParameters.ValidIssuer = Configuration["Panel:BaseUri"];
+                    options.TokenValidationParameters.ValidAudience = "rgsm";
+                });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "BytexDigital.RGSM.Node", Version = "v1" });
+                c.SwaggerDoc("rgsm-node", new OpenApiInfo { Title = "RGSM Node API", Version = "v1" });
             });
         }
 
@@ -41,12 +43,14 @@ namespace BytexDigital.RGSM.Node
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BytexDigital.RGSM.Node v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/rgsm-node/swagger.json", "RGSM Node API"));
             }
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
