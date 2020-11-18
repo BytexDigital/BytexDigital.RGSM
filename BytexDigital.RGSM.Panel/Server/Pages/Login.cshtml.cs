@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
-using BytexDigital.RGSM.Application.Commands.Authentication;
 using BytexDigital.RGSM.Application.Exceptions;
+using BytexDigital.RGSM.Panel.Server.Application.Commands.Authentication;
 using BytexDigital.RGSM.Panel.Server.Common.Helpers;
 using BytexDigital.RGSM.Shared.Extensions;
 

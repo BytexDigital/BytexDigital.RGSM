@@ -14,4 +14,9 @@
     <ProjectReference Include="..\BytexDigital.RGSM.Shared\BytexDigital.RGSM.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Commands\" />
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
 </Project>

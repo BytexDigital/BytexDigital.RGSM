@@ -2,7 +2,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BytexDigital.RGSM.Application.Extensions
+namespace BytexDigital.RGSM.Panel.Server.Application.Extensions
 {
     public static class ServiceCollectionExtensions
     {

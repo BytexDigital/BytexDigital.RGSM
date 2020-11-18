@@ -8,7 +8,7 @@ using MediatR;
 
 using Microsoft.AspNetCore.Identity;
 
-namespace BytexDigital.RGSM.Application.Commands.Authentication
+namespace BytexDigital.RGSM.Panel.Server.Application.Commands.Authentication
 {
 
     public class LoginCmd : IRequest
