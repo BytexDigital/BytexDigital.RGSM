@@ -1,3 +1,7 @@
+using System;
+
+using BytexDigital.RGSM.Node.Application.Shared.Services;
+using BytexDigital.RGSM.Node.Persistence;
 using BytexDigital.RGSM.Persistence;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -23,8 +27,13 @@ namespace BytexDigital.RGSM.Node
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Connection to global db
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")).UseLazyLoadingProxies());
+                options.UseSqlite(Configuration.GetConnectionString("PanelConnection")).UseLazyLoadingProxies());
+
+            // Connection to local db
+            services.AddDbContext<NodeDbContext>(options =>
+                options.UseSqlite(Configuration.GetConnectionString("NodeConnection")).UseLazyLoadingProxies());
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -46,6 +55,20 @@ namespace BytexDigital.RGSM.Node
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            using (var scope = app.ApplicationServices.GetRequiredService<IServiceProvider>().CreateScope())
+            {
+                var nodeService = scope.ServiceProvider.GetRequiredService<NodeService>();
+                var db = scope.ServiceProvider.GetRequiredService<NodeDbContext>();
+
+                if (!env.IsDevelopment())
+                {
+                    db.Database.Migrate();
+                }
+
+                nodeService.EnsureLocalSettingsCreatedAsync().GetAwaiter().GetResult();
+                nodeService.EnsureNodeRegisteredAsync().GetAwaiter().GetResult();
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

@@ -1,7 +1,24 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Folder Include="Games\Arma3\" />
+		<Folder Include="Games\DayZ\" />
+		<Folder Include="Games\Shared\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="MediatR" Version="9.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\BytexDigital.RGSM.Domain\BytexDigital.RGSM.Domain.csproj" />
+		<ProjectReference Include="..\BytexDigital.RGSM.Node.Domain\BytexDigital.RGSM.Node.Domain.csproj" />
+		<ProjectReference Include="..\BytexDigital.RGSM.Node.Persistence\BytexDigital.RGSM.Node.Persistence.csproj" />
+		<ProjectReference Include="..\BytexDigital.RGSM.Persistence\BytexDigital.RGSM.Persistence.csproj" />
+	</ItemGroup>
 
 </Project>

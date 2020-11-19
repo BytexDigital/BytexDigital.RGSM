@@ -40,7 +40,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BytexDigital.RGSM.Node", "B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BytexDigital.RGSM.Node.Application", "BytexDigital.RGSM.Node.Application\BytexDigital.RGSM.Node.Application.csproj", "{63DE3A8B-04F8-4001-98FD-A47ACFE606A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BytexDigital.RGSM.Panel.Server.Application", "BytexDigital.RGSM.Panel.Server.Application\BytexDigital.RGSM.Panel.Server.Application.csproj", "{1ED05228-6DD8-4439-8D1E-873628DD58D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BytexDigital.RGSM.Panel.Server.Application", "BytexDigital.RGSM.Panel.Server.Application\BytexDigital.RGSM.Panel.Server.Application.csproj", "{1ED05228-6DD8-4439-8D1E-873628DD58D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BytexDigital.RGSM.Node.Persistence", "BytexDigital.RGSM.Node.Persistence\BytexDigital.RGSM.Node.Persistence.csproj", "{0D7FE390-2802-4676-8699-7ABC4E7CC50C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BytexDigital.RGSM.Node.Domain", "BytexDigital.RGSM.Node.Domain\BytexDigital.RGSM.Node.Domain.csproj", "{B77A41B3-9BED-435D-8270-1FF3AE485F4A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -100,6 +104,14 @@ Global
 		{1ED05228-6DD8-4439-8D1E-873628DD58D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1ED05228-6DD8-4439-8D1E-873628DD58D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1ED05228-6DD8-4439-8D1E-873628DD58D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D7FE390-2802-4676-8699-7ABC4E7CC50C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D7FE390-2802-4676-8699-7ABC4E7CC50C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D7FE390-2802-4676-8699-7ABC4E7CC50C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D7FE390-2802-4676-8699-7ABC4E7CC50C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B77A41B3-9BED-435D-8270-1FF3AE485F4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B77A41B3-9BED-435D-8270-1FF3AE485F4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B77A41B3-9BED-435D-8270-1FF3AE485F4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B77A41B3-9BED-435D-8270-1FF3AE485F4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -115,6 +127,8 @@ Global
 		{C7946868-EDCB-4834-BF73-B82ABFDC602F} = {BA9A4D12-2AE4-4293-B930-B43C056647A0}
 		{63DE3A8B-04F8-4001-98FD-A47ACFE606A8} = {BA9A4D12-2AE4-4293-B930-B43C056647A0}
 		{1ED05228-6DD8-4439-8D1E-873628DD58D0} = {2C87B08C-02FF-498C-B652-B38AD7BC3BAB}
+		{0D7FE390-2802-4676-8699-7ABC4E7CC50C} = {BA9A4D12-2AE4-4293-B930-B43C056647A0}
+		{B77A41B3-9BED-435D-8270-1FF3AE485F4A} = {BA9A4D12-2AE4-4293-B930-B43C056647A0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {420AF76E-6626-4D27-AC5C-F195F3DB2854}

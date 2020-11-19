@@ -3,15 +3,17 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BytexDigital.RGSM.Domain.Entities
 {
-    public class Permission : Entity
+    public class Node : Entity
     {
         [Required]
         public string Name { get; set; }
 
         [Required]
-        public string ServerId { get; set; }
+        public string DisplayName { get; set; }
 
-        public virtual ICollection<GroupPermission> Groups { get; set; }
-        public virtual Server Server { get; set; }
+        [Required]
+        public string BaseUri { get; set; }
+
+        public virtual ICollection<Server> Servers { get; set; }
     }
 }

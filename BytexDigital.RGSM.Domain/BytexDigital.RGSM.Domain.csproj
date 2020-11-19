@@ -8,4 +8,8 @@
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="5.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Games\Arma3\Enumerations\" />
+  </ItemGroup>
+
 </Project>

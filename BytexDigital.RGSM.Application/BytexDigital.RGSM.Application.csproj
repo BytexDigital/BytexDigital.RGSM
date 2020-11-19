@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BytexDigital.Steam" Version="0.7.43-beta" />
     <PackageReference Include="MediatR" Version="9.0.0" />
   </ItemGroup>
 

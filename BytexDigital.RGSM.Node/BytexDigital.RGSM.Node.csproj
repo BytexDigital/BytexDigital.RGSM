@@ -14,6 +14,8 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\BytexDigital.RGSM.Application\BytexDigital.RGSM.Application.csproj" />
 	  <ProjectReference Include="..\BytexDigital.RGSM.Domain\BytexDigital.RGSM.Domain.csproj" />
+	  <ProjectReference Include="..\BytexDigital.RGSM.Node.Application\BytexDigital.RGSM.Node.Application.csproj" />
+	  <ProjectReference Include="..\BytexDigital.RGSM.Node.Persistence\BytexDigital.RGSM.Node.Persistence.csproj" />
 	  <ProjectReference Include="..\BytexDigital.RGSM.Persistence\BytexDigital.RGSM.Persistence.csproj" />
 	</ItemGroup>
 
