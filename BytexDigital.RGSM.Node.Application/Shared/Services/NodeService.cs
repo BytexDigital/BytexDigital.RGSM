@@ -53,7 +53,9 @@ namespace BytexDigital.RGSM.Node.Application.Shared.Services
             var node = _applicationDbContext.CreateEntity(x => x.Nodes);
 
             node.Id = nodeId;
-            node.Name = $"Node {nodeId}";
+            node.Name = $"network-node-{nodeId}";
+            node.DisplayName = $"Node {nodeId}";
+            node.BaseUri = _nodeOptions.Value.BaseUri;
 
             _applicationDbContext.Nodes.Add(node);
             await _applicationDbContext.SaveChangesAsync();

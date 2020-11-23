@@ -3,7 +3,7 @@
 using BytexDigital.RGSM.Domain.Entities;
 using BytexDigital.RGSM.Shared.TransferObjects.Entities;
 
-namespace BytexDigital.RGSM.Panel.Server.Common.MappingProfiles
+namespace BytexDigital.RGSM.Application.Mapping
 {
     public class DefaultProfile : Profile
     {

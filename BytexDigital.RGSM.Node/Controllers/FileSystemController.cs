@@ -1,19 +1,17 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 
 using AutoMapper;
 
 using BytexDigital.RGSM.Node.Application.Shared.Services;
 using BytexDigital.RGSM.Shared.TransferObjects.Models.Services.NodeFileSystemService;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BytexDigital.RGSM.Node.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("API/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class FileSystemController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -25,10 +23,10 @@ namespace BytexDigital.RGSM.Node.Controllers
             _nodeFileSystemService = nodeFileSystemService;
         }
 
-        [HttpGet]
-        public List<DirectoryDto> GetDirectory([FromQuery] string path)
+        [HttpGet("GetDirectoryInfo")]
+        public DirectoryDto GetDirectory([FromQuery] string path)
         {
-            return _mapper.Map<List<DirectoryDto>>(_nodeFileSystemService.GetDirectory(path));
+            return _mapper.Map<DirectoryDto>(_nodeFileSystemService.GetDirectory(path));
         }
     }
 }

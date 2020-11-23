@@ -21,6 +21,7 @@ namespace BytexDigital.RGSM.Node.Application.Shared.Services
             {
                 return new Domain.Models.Services.NodeFileSystemService.Directory
                 {
+                    Path = "/",
                     SubDirectories = DriveInfo.GetDrives().Select(x => new Domain.Models.Services.NodeFileSystemService.DirectoryReference
                     {
                         Path = x.RootDirectory.FullName

@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using AutoMapper;
 
 using BytexDigital.RGSM.Application.Behaviors;
+using BytexDigital.RGSM.Application.Mapping;
 using BytexDigital.RGSM.Application.Services;
 using BytexDigital.RGSM.Domain.Entities;
 using BytexDigital.RGSM.Panel.Server.Application.Commands.Authentication;
 using BytexDigital.RGSM.Panel.Server.Application.Extensions;
 using BytexDigital.RGSM.Panel.Server.Common.Filters;
 using BytexDigital.RGSM.Panel.Server.Common.IdentityServer;
-using BytexDigital.RGSM.Panel.Server.Common.MappingProfiles;
 using BytexDigital.RGSM.Persistence;
 
 using IdentityServer4;

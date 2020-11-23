@@ -1,5 +1,10 @@
 using System;
 
+using AutoMapper;
+
+using BytexDigital.RGSM.Application.Mapping;
+using BytexDigital.RGSM.Node.Application.Mapping;
+using BytexDigital.RGSM.Node.Application.Shared.Options;
 using BytexDigital.RGSM.Node.Application.Shared.Services;
 using BytexDigital.RGSM.Node.Persistence;
 using BytexDigital.RGSM.Persistence;
@@ -33,6 +38,12 @@ namespace BytexDigital.RGSM.Node
                 .AddScoped<ServerService>()
                 .AddScoped<NodeSettingsService>()
                 .AddScoped<NodeService>();
+
+            // Automapper
+            services.AddAutoMapper(typeof(DefaultProfile).Assembly, typeof(NodeProfile).Assembly);
+
+            // Settings
+            services.Configure<NodeOptions>(Configuration.GetSection("Node"));
 
             // Connection to global db
             services.AddDbContext<ApplicationDbContext>(options =>
