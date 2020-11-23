@@ -43,7 +43,7 @@ namespace BytexDigital.RGSM.Panel.Server.Pages
             {
                 await _mediator.Send(new LoginCmd { Username = LoginViewModelData.Username, Password = LoginViewModelData.Password });
             }
-            catch (ServiceValidationException ex)
+            catch (ServiceException ex)
             {
                 ex
                     .ForField(nameof(LoginCmd.Username), x => ModelState.AddModelError(NameOf<LoginModel>.Property(p => p.LoginViewModelData.Username), x.Message))

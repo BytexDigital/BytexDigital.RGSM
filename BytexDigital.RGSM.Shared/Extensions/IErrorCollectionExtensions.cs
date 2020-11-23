@@ -27,7 +27,7 @@ namespace BytexDigital.RGSM.Shared.Extensions
 
         public static bool FieldHasIdentifier(this IErrorCollection errorCollection, string field, string identifier)
         {
-            return errorCollection.Errors.Any(x => x.Field.ToLowerInvariant() == field.ToLowerInvariant() && x.Identifier?.ToLowerInvariant() == identifier.ToLowerInvariant());
+            return errorCollection.Errors.Any(x => x.Field.ToLowerInvariant() == field.ToLowerInvariant() && x.Code?.ToLowerInvariant() == identifier.ToLowerInvariant());
         }
     }
 }

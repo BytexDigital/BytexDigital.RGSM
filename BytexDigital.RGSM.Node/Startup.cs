@@ -64,7 +64,7 @@ namespace BytexDigital.RGSM.Node
                     options.TokenValidationParameters.ValidAudience = "rgsm";
                 });
 
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.IgnoreNullValues = true);
 
             services.AddCors(options =>
             {

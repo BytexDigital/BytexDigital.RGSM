@@ -14,11 +14,11 @@ namespace BytexDigital.RGSM.Panel.Server.Common.Filters
     {
         public Task OnExceptionAsync(ExceptionContext context)
         {
-            if (context.Exception is ServiceValidationException serviceValidationException)
+            if (context.Exception is ServiceException serviceValidationException)
             {
                 var errorDto = new FailureDto
                 {
-                    Errors = serviceValidationException.Errors.Select(x => new ErrorDto { Field = x.Field, Message = x.Message, Identifier = x.Identifier }).ToList()
+                    Errors = serviceValidationException.Errors.Select(x => new ErrorDto { Field = x.Field, Message = x.Message, Code = x.Code }).ToList()
                 };
 
                 context.Result = new ObjectResult(errorDto)

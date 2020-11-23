@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
 
 using AutoMapper;
 
+using BytexDigital.RGSM.Application.Exceptions;
 using BytexDigital.RGSM.Node.Application.Shared.Services;
 using BytexDigital.RGSM.Shared.TransferObjects.Models.Services.NodeFileSystemService;
 
@@ -27,7 +28,15 @@ namespace BytexDigital.RGSM.Node.Controllers
         [HttpGet("GetDirectoryInfo")]
         public DirectoryDto GetDirectory([FromQuery] string path)
         {
-            return _mapper.Map<DirectoryDto>(_nodeFileSystemService.GetDirectory(path));
+            try
+            {
+                return _mapper.Map<DirectoryDto>(_nodeFileSystemService.GetDirectory(path));
+
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                throw ServiceException.AddError().WithCode(nameof(UnauthorizedAccessException)).WithMessage(ex.Message).Build();
+            }
         }
     }
 }

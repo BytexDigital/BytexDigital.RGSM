@@ -31,16 +31,16 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Commands.Authentication
             {
                 var user = await _userManager.FindByNameAsync(request.Username);
 
-                if (user == null) throw new ServiceValidationException(nameof(request.Username), "This user does not exist.");
+                if (user == null) throw new ServiceException(nameof(request.Username), "This user does not exist.");
 
                 var response = await _signInManager.PasswordSignInAsync(user, request.Password, true, true);
 
                 if (response.Succeeded) return Unit.Value;
 
-                if (response.IsLockedOut) throw new ServiceValidationException(nameof(request.Username), "This user is locked out.");
-                if (response.IsNotAllowed) throw new ServiceValidationException(nameof(request.Password), "This user is not allowed to sign in.");
+                if (response.IsLockedOut) throw new ServiceException(nameof(request.Username), "This user is locked out.");
+                if (response.IsNotAllowed) throw new ServiceException(nameof(request.Password), "This user is not allowed to sign in.");
 
-                throw new ServiceValidationException(nameof(request.Password), "This provided credentials are invalid.");
+                throw new ServiceException(nameof(request.Password), "This provided credentials are invalid.");
             }
         }
     }
