@@ -5,13 +5,14 @@ using AutoMapper;
 using BytexDigital.RGSM.Node.Application.Shared.Services;
 using BytexDigital.RGSM.Shared.TransferObjects.Models.Services.NodeFileSystemService;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BytexDigital.RGSM.Node.Controllers
 {
     [Route("API/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class FileSystemController : ControllerBase
     {
         private readonly IMapper _mapper;
