@@ -29,6 +29,7 @@ namespace BytexDigital.RGSM.Node
         {
             services
                 .AddSingleton<LocalInstanceCreationService>()
+                .AddSingleton<NodeFileSystemService>()
                 .AddScoped<ServerService>()
                 .AddScoped<NodeSettingsService>()
                 .AddScoped<NodeService>();

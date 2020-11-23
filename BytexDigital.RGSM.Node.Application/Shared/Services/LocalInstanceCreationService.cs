@@ -43,6 +43,7 @@ namespace BytexDigital.RGSM.Node.Application.Shared.Services
                     };
 
                     instance.GlobalId = server.Id;
+                    instance.Directory = server.Directory;
 
                     _ = _localServerInstances.TryAdd(server.Id, instance);
                 }
