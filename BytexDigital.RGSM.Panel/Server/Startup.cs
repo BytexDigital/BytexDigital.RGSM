@@ -97,6 +97,8 @@ namespace BytexDigital.RGSM.Panel.Server
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
+            services.AddCors(o => o.AddDefaultPolicy(p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+
             services.AddIdentityCore<ApplicationUser>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = false;
@@ -142,36 +144,6 @@ namespace BytexDigital.RGSM.Panel.Server
                     options.ApiScopes.Add(new ApiScope(IdentityServerConstants.StandardScopes.OfflineAccess));
                     options.ApiScopes.Add(new ApiScope("rgsm.user", "Identifies the token holder as a user."));
                     options.ApiScopes.Add(new ApiScope("rgsm.app", "Identifies the token holder as an application."));
-
-                    //var userClient = new IdentityServer4.Models.Client
-                    //{
-                    //    ClientId = "BytexDigital.RGSM.Panel.Client",
-                    //    RedirectUris = new[] { "/authentication/login-callback" },
-                    //    PostLogoutRedirectUris = new[] { "/authentication/logout-callback" },
-                    //    RequirePkce = true,
-                    //    AllowAccessTokensViaBrowser = true,
-                    //    RequireConsent = false,
-                    //    AllowedGrantTypes = GrantTypes.Code,
-                    //    RequireClientSecret = false,
-                    //    AllowPlainTextPkce = false,
-                    //    AllowedCorsOrigins = Array.Empty<string>(),
-                    //    ClientSecrets = new List<Secret>(),
-                    //    AllowedScopes = new List<string> {
-                    //        IdentityServerConstants.StandardScopes.OpenId,
-                    //        IdentityServerConstants.StandardScopes.Profile,
-                    //        //"BytexDigital.RGSM.Panel.ServerAPI"
-                    //        "rgsm"
-                    //        //"rgsm.user"
-                    //    }
-                    //};
-
-                    // Add this so "DefaultClientRequestParametersProvider" can resolve our client to a response type
-                    // (Usually this would be done automatically through configuring the client via the appsettings.json or a 
-                    // AddIdentityServerSPA, but since we're manually adding a client, this step needs to be done manually.
-                    //userClient.Properties.Add(ApplicationProfilesPropertyNames.Profile, "IdentityServerSPA");
-                    //userClient.Properties.Add(ApplicationProfilesPropertyNames.Source, ApplicationProfilesPropertyValues.Configuration);
-
-                    //options.Clients.Add(userClient);
                 });
 
             services
@@ -230,6 +202,7 @@ namespace BytexDigital.RGSM.Panel.Server
                 app.UseHsts();
             }
 
+            app.UseCors();
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();

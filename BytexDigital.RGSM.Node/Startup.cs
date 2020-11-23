@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using AutoMapper;
 
@@ -64,9 +65,49 @@ namespace BytexDigital.RGSM.Node
                 });
 
             services.AddControllers();
-            services.AddSwaggerGen(c =>
+
+            services.AddCors(options =>
             {
-                c.SwaggerDoc("rgsm-node", new OpenApiInfo { Title = "RGSM Node API", Version = "v1" });
+                options.AddDefaultPolicy(policy => policy.WithOrigins(Configuration["Panel:BaseUri"]));
+            });
+
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("rgsm-node", new OpenApiInfo { Title = "RGSM Node API", Version = "v1" });
+
+                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new OpenApiOAuthFlows
+                    {
+                        AuthorizationCode = new OpenApiOAuthFlow
+                        {
+                            AuthorizationUrl = new Uri($"{Configuration["Panel:BaseUri"]}/connect/authorize"),
+                            TokenUrl = new Uri($"{Configuration["Panel:BaseUri"]}/connect/token"),
+                            Scopes = new Dictionary<string, string>
+                            {
+                                { "openid", "ID" },
+                                { "profile", "User profile data" },
+                                { "rgsm", "Audience scope" },
+                                { "rgsm.user", "Access to the RGSM panel as a user" }
+                            }
+                        }
+                    }
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    [
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "oauth2"
+                            }
+                        }
+                    ] = new[] { "rgsm-node" }
+                });
             });
         }
 
@@ -91,7 +132,14 @@ namespace BytexDigital.RGSM.Node
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/rgsm-node/swagger.json", "RGSM Node API"));
+                app.UseSwaggerUI(options =>
+                {
+                    options.SwaggerEndpoint("/swagger/rgsm-node/swagger.json", "RGSM Node API"); ;
+                    options.OAuthClientId("rgsm-panel");
+                    options.OAuthClientSecret("");
+                    options.OAuthAppName("RGSM Node - Swagger");
+                    options.OAuthUsePkce();
+                });
             }
 
             app.UseHttpsRedirection();
