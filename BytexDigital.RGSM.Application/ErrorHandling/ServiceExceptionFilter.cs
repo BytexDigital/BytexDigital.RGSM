@@ -8,7 +8,7 @@ using BytexDigital.RGSM.Shared.TransferObjects.Models.Errors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace BytexDigital.RGSM.Panel.Server.Common.Filters
+namespace BytexDigital.RGSM.Application.ErrorHandling
 {
     public class ServiceExceptionFilter : IAsyncExceptionFilter
     {
@@ -18,6 +18,9 @@ namespace BytexDigital.RGSM.Panel.Server.Common.Filters
             {
                 var errorDto = new FailureDto
                 {
+                    Title = "An exception occurred.",
+                    TraceIdentifier = context.HttpContext.TraceIdentifier,
+                    Status = (int)HttpStatusCode.Conflict,
                     Errors = serviceValidationException.Errors.Select(x => new ErrorDto { Field = x.Field, Message = x.Message, Code = x.Code }).ToList()
                 };
 

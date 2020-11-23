@@ -3,12 +3,18 @@ using System.Collections.Generic;
 
 using AutoMapper;
 
+using BytexDigital.RGSM.Application.ErrorHandling;
 using BytexDigital.RGSM.Application.Mapping;
+using BytexDigital.RGSM.Node.Application.Commands.NodeFileSystemService;
 using BytexDigital.RGSM.Node.Application.Mapping;
 using BytexDigital.RGSM.Node.Application.Shared.Options;
 using BytexDigital.RGSM.Node.Application.Shared.Services;
 using BytexDigital.RGSM.Node.Persistence;
 using BytexDigital.RGSM.Persistence;
+
+using FluentValidation.AspNetCore;
+
+using MediatR;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -46,6 +52,9 @@ namespace BytexDigital.RGSM.Node
             // Settings
             services.Configure<NodeOptions>(Configuration.GetSection("Node"));
 
+            // Mediator
+            services.AddMediatR(typeof(GetDirectoryQuery).Assembly);
+
             // Connection to global db
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("PanelConnection")).UseLazyLoadingProxies());
@@ -64,7 +73,13 @@ namespace BytexDigital.RGSM.Node
                     options.TokenValidationParameters.ValidAudience = "rgsm";
                 });
 
-            services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.IgnoreNullValues = true);
+            services.AddControllers(options =>
+            {
+                options.Filters.Add<ServiceExceptionFilter>();
+            })
+                .AddFluentValidation(options => options
+                    .RegisterValidatorsFromAssemblyContaining<GetDirectoryQuery.Validator>())
+                .AddJsonOptions(options => options.JsonSerializerOptions.IgnoreNullValues = true);
 
             services.AddCors(options =>
             {

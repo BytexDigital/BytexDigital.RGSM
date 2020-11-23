@@ -5,16 +5,17 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Folder Include="Commands\" />
 		<Folder Include="Games\DayZ\" />
 		<Folder Include="Shared\Commands\" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="FluentValidation" Version="9.3.0" />
 		<PackageReference Include="MediatR" Version="9.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\BytexDigital.RGSM.Application\BytexDigital.RGSM.Application.csproj" />
 		<ProjectReference Include="..\BytexDigital.RGSM.Domain\BytexDigital.RGSM.Domain.csproj" />
 		<ProjectReference Include="..\BytexDigital.RGSM.Node.Domain\BytexDigital.RGSM.Node.Domain.csproj" />
 		<ProjectReference Include="..\BytexDigital.RGSM.Node.Persistence\BytexDigital.RGSM.Node.Persistence.csproj" />
