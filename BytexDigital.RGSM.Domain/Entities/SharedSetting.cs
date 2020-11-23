@@ -2,7 +2,7 @@
 
 namespace BytexDigital.RGSM.Domain.Entities
 {
-    public class SharedSetting
+    public class SharedSetting : Entity
     {
         [Required]
         public string Key { get; set; }
