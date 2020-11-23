@@ -18,6 +18,7 @@ namespace BytexDigital.RGSM.Domain.Entities
 
         public string Directory { get; set; }
 
+        public virtual Node Node { get; set; }
         public virtual ICollection<Permission> Permissions { get; set; }
     }
 }

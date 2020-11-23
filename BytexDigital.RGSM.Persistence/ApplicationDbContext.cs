@@ -31,7 +31,7 @@ namespace BytexDigital.RGSM.Persistence
         public DbSet<SharedSetting> SharedSettings { get; set; }
         public DbSet<SteamCredential> SteamCredentials { get; set; }
         public DbSet<SteamCredentialSupportedApp> SteamCredentialSupportedApps { get; set; }
-        public DbSet<Task> Tasks { get; set; }
+        public DbSet<WorkTask> Tasks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

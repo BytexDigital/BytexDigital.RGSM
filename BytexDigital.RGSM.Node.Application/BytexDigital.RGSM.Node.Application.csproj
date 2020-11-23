@@ -5,9 +5,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Folder Include="Games\Arma3\" />
 		<Folder Include="Games\DayZ\" />
-		<Folder Include="Games\Shared\" />
+		<Folder Include="Shared\Commands\" />
 	</ItemGroup>
 
 	<ItemGroup>
