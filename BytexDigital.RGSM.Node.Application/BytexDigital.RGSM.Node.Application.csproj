@@ -5,13 +5,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Folder Include="Games\Arma3\Commands\" />
-		<Folder Include="Games\DayZ\" />
-		<Folder Include="Shared\Commands\" />
-	</ItemGroup>
-
-	<ItemGroup>
+		<PackageReference Include="BytexDigital.BattlEye.Rcon" Version="1.0.3-beta.2" />
 		<PackageReference Include="BytexDigital.Common.Errors" Version="1.0.3" />
+		<PackageReference Include="BytexDigital.Steam" Version="0.7.43-beta" />
 		<PackageReference Include="FluentValidation" Version="9.3.0" />
 		<PackageReference Include="MediatR" Version="9.0.0" />
 	</ItemGroup>

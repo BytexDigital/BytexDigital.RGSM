@@ -7,10 +7,6 @@ using BytexDigital.Common.Errors.AspNetCore.Extensions;
 using BytexDigital.Common.Errors.MediatR;
 using BytexDigital.RGSM.Application.Behaviors;
 using BytexDigital.RGSM.Application.Mapping;
-using BytexDigital.RGSM.Node.Application.Commands.NodeFileSystemService;
-using BytexDigital.RGSM.Node.Application.Mapping;
-using BytexDigital.RGSM.Node.Application.Shared.Options;
-using BytexDigital.RGSM.Node.Application.Shared.Services;
 using BytexDigital.RGSM.Node.Persistence;
 using BytexDigital.RGSM.Persistence;
 
@@ -41,29 +37,29 @@ namespace BytexDigital.RGSM.Node
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services
-                .AddSingleton<ServerContainerService>()
-                .AddSingleton<NodeFileSystemService>()
-                .AddScoped<WorkTasksService>()
-                .AddScoped<NodeSettingsService>()
-                .AddScoped<NodeService>()
+            //services
+            //    .AddSingleton<ServerStateService>()
+            //    .AddSingleton<FileSystemService>()
+            //    .AddScoped<WorkTasksService>()
+            //    .AddScoped<NodeSettingsService>()
+            //    .AddScoped<NodeService>()
 
-                // Arma 3
-                .AddScoped<Application.Games.Arma3.Services.CreationService>()
-                .AddScoped<Application.Games.Arma3.Services.StatusService>();
+            //    // Arma 3
+            //    .AddScoped<Application.Games.Arma3.Services.CreationService>()
+            //    .AddScoped<Application.Games.Arma3.Services.StatusService>();
 
             services.AddUniformCommonErrorResponses();
 
             // Automapper
-            services.AddAutoMapper(typeof(DefaultProfile).Assembly, typeof(NodeProfile).Assembly);
+            //services.AddAutoMapper(typeof(DefaultProfile).Assembly, typeof(NodeProfile).Assembly);
 
             // Settings
-            services.Configure<NodeOptions>(Configuration.GetSection("Node"));
+            //services.Configure<NodeOptions>(Configuration.GetSection("Node"));
 
             // Mediator
-            services.AddMediatR(typeof(GetDirectoryQuery).Assembly)
-                .AddScoped(typeof(IPipelineBehavior<,>), typeof(DbTransactionBehavior<,>))
-                .AddScoped(typeof(IPipelineBehavior<,>), typeof(FluentValidationPipelineBehavior<,>));
+            //services.AddMediatR(typeof(GetDirectoryQuery).Assembly)
+            //    .AddScoped(typeof(IPipelineBehavior<,>), typeof(DbTransactionBehavior<,>))
+            //    .AddScoped(typeof(IPipelineBehavior<,>), typeof(FluentValidationPipelineBehavior<,>));
 
             // Connection to global db
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -84,8 +80,8 @@ namespace BytexDigital.RGSM.Node
                 });
 
             services.AddControllers()
-                .AddFluentValidation(options => options
-                    .RegisterValidatorsFromAssemblyContaining<GetDirectoryQuery.Validator>())
+                /*.AddFluentValidation(options => options
+                    .RegisterValidatorsFromAssemblyContaining<GetDirectoryQuery.Validator>())*/
                 .AddJsonOptions(options => options.JsonSerializerOptions.IgnoreNullValues = true);
 
             services.AddCors(options =>
@@ -136,19 +132,19 @@ namespace BytexDigital.RGSM.Node
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            using (var scope = app.ApplicationServices.GetRequiredService<IServiceProvider>().CreateScope())
-            {
-                var nodeService = scope.ServiceProvider.GetRequiredService<NodeService>();
-                var db = scope.ServiceProvider.GetRequiredService<NodeDbContext>();
+            //using (var scope = app.ApplicationServices.GetRequiredService<IServiceProvider>().CreateScope())
+            //{
+            //    var nodeService = scope.ServiceProvider.GetRequiredService<NodeService>();
+            //    var db = scope.ServiceProvider.GetRequiredService<NodeDbContext>();
 
-                if (!env.IsDevelopment())
-                {
-                    db.Database.Migrate();
-                }
+            //    if (!env.IsDevelopment())
+            //    {
+            //        db.Database.Migrate();
+            //    }
 
-                nodeService.EnsureLocalSettingsCreatedAsync().GetAwaiter().GetResult();
-                nodeService.EnsureNodeRegisteredAsync().GetAwaiter().GetResult();
-            }
+            //    nodeService.EnsureLocalSettingsCreatedAsync().GetAwaiter().GetResult();
+            //    nodeService.EnsureNodeRegisteredAsync().GetAwaiter().GetResult();
+            //}
 
             if (env.IsDevelopment())
             {
