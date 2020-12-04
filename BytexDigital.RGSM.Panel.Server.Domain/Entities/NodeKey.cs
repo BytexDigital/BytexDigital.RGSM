@@ -9,5 +9,7 @@ namespace BytexDigital.RGSM.Panel.Server.Domain.Entities
 
         [Required]
         public string ApiKey { get; set; }
+
+        public virtual Node Node { get; set; }
     }
 }
