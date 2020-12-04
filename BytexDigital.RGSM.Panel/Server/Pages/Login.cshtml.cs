@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using BytexDigital.Common.Errors;
 using BytexDigital.Common.Errors.Exceptions;
-using BytexDigital.RGSM.Panel.Server.Application.Commands.Authentication;
+using BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Authentication;
 using BytexDigital.RGSM.Panel.Server.Common.Helpers;
 
 using MediatR;

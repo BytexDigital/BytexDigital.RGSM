@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 
 using BytexDigital.RGSM.Panel.Server.Application.Core;
-using BytexDigital.RGSM.Shared.TransferObjects.Entities;
+using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

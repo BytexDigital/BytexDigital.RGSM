@@ -12,5 +12,8 @@ namespace BytexDigital.RGSM.Panel.Server.Domain.Entities
 
         [Required]
         public string BaseUri { get; set; }
+
+        [Required]
+        public string ApiKey { get; set; }
     }
 }

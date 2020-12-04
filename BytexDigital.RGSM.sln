@@ -13,8 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Panel", "Panel", "{957807AF
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Node", "Node", "{BA9A4D12-2AE4-4293-B930-B43C056647A0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BytexDigital.RGSM.Shared.TransferObjects", "BytexDigital.RGSM.Shared.TransferObjects\BytexDigital.RGSM.Shared.TransferObjects.csproj", "{3CC41653-F4C2-4B8D-9BF1-D831C3D8B424}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{B08C1F75-82EE-46A5-AA88-7EDE208245E9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{2C87B08C-02FF-498C-B652-B38AD7BC3BAB}"
@@ -42,6 +40,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BytexDigital.RGSM.Node.Pers
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BytexDigital.RGSM.Node.Domain", "BytexDigital.RGSM.Node.Domain\BytexDigital.RGSM.Node.Domain.csproj", "{B77A41B3-9BED-435D-8270-1FF3AE485F4A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BytexDigital.RGSM.Panel.Server.TransferObjects", "BytexDigital.RGSM.Panel.Server.TransferObjects\BytexDigital.RGSM.Panel.Server.TransferObjects.csproj", "{3F508770-9D92-489F-B877-BE3CA67B2980}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,10 +60,6 @@ Global
 		{46D73282-EB8A-48D2-920A-3A512D1665C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46D73282-EB8A-48D2-920A-3A512D1665C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46D73282-EB8A-48D2-920A-3A512D1665C9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3CC41653-F4C2-4B8D-9BF1-D831C3D8B424}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3CC41653-F4C2-4B8D-9BF1-D831C3D8B424}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3CC41653-F4C2-4B8D-9BF1-D831C3D8B424}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3CC41653-F4C2-4B8D-9BF1-D831C3D8B424}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B716DF01-75FE-40E3-AE49-EF8C56456FD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B716DF01-75FE-40E3-AE49-EF8C56456FD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B716DF01-75FE-40E3-AE49-EF8C56456FD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -100,6 +96,10 @@ Global
 		{B77A41B3-9BED-435D-8270-1FF3AE485F4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B77A41B3-9BED-435D-8270-1FF3AE485F4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B77A41B3-9BED-435D-8270-1FF3AE485F4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F508770-9D92-489F-B877-BE3CA67B2980}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F508770-9D92-489F-B877-BE3CA67B2980}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F508770-9D92-489F-B877-BE3CA67B2980}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F508770-9D92-489F-B877-BE3CA67B2980}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -119,6 +119,7 @@ Global
 		{1ED05228-6DD8-4439-8D1E-873628DD58D0} = {2C87B08C-02FF-498C-B652-B38AD7BC3BAB}
 		{0D7FE390-2802-4676-8699-7ABC4E7CC50C} = {BA9A4D12-2AE4-4293-B930-B43C056647A0}
 		{B77A41B3-9BED-435D-8270-1FF3AE485F4A} = {BA9A4D12-2AE4-4293-B930-B43C056647A0}
+		{3F508770-9D92-489F-B877-BE3CA67B2980} = {2C87B08C-02FF-498C-B652-B38AD7BC3BAB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {420AF76E-6626-4D27-AC5C-F195F3DB2854}

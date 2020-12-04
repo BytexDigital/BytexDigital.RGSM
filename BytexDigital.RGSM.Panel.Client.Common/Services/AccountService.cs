@@ -4,7 +4,7 @@ using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-using BytexDigital.RGSM.Shared.TransferObjects.Entities;
+using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
 
 namespace BytexDigital.RGSM.Panel.Client.Common.Services
 {

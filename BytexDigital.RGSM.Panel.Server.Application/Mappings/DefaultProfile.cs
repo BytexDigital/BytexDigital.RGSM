@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 
 using BytexDigital.RGSM.Panel.Server.Domain.Entities;
-using BytexDigital.RGSM.Shared.TransferObjects.Entities;
+using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
 
 namespace BytexDigital.RGSM.Panel.Server.Application.Mappings
 {

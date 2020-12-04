@@ -5,12 +5,13 @@ using AutoMapper;
 
 using BytexDigital.Common.Errors.AspNetCore.Extensions;
 using BytexDigital.Common.Errors.MediatR;
-using BytexDigital.RGSM.Panel.Server.Domain.Entities;
-using BytexDigital.RGSM.Panel.Server.Application.Commands.Authentication;
+using BytexDigital.RGSM.Panel.Server.Application.Core;
+using BytexDigital.RGSM.Panel.Server.Application.Core.Authentication;
+using BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Authentication;
 using BytexDigital.RGSM.Panel.Server.Application.Extensions;
 using BytexDigital.RGSM.Panel.Server.Application.Mappings;
-using BytexDigital.RGSM.Panel.Server.Application.Core;
 using BytexDigital.RGSM.Panel.Server.Common.IdentityServer;
+using BytexDigital.RGSM.Panel.Server.Domain.Entities;
 using BytexDigital.RGSM.Panel.Server.Persistence;
 
 using IdentityServer4;
@@ -156,6 +157,7 @@ namespace BytexDigital.RGSM.Panel.Server
                     options.DefaultScheme = IdentityConstants.ApplicationScheme;
                     options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
                 })
+                .AddScheme<NodeAuthenticationOptions, NodeAuthenticationHandler>(NodeAuthenticationOptions.NODE_AUTHENTICATION_SCHEME, null)
                 .AddIdentityServerJwt()
                 .AddIdentityCookies();
 

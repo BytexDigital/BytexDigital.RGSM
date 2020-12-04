@@ -13,6 +13,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\BytexDigital.RGSM.Panel.Server.Domain\BytexDigital.RGSM.Panel.Server.Domain.csproj" />
 		<ProjectReference Include="..\BytexDigital.RGSM.Node.Application\BytexDigital.RGSM.Node.Application.csproj" />
+		<ProjectReference Include="..\BytexDigital.RGSM.Panel.Server.TransferObjects\BytexDigital.RGSM.Panel.Server.TransferObjects.csproj" />
 	</ItemGroup>
 
 </Project>
