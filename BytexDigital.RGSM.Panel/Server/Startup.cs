@@ -7,12 +7,16 @@ using BytexDigital.Common.Errors.AspNetCore.Extensions;
 using BytexDigital.Common.Errors.MediatR;
 using BytexDigital.RGSM.Panel.Server.Application.Core;
 using BytexDigital.RGSM.Panel.Server.Application.Core.Authentication;
+using BytexDigital.RGSM.Panel.Server.Application.Core.Authorization.Requirements;
 using BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Authentication;
+using BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Nodes;
 using BytexDigital.RGSM.Panel.Server.Application.Extensions;
 using BytexDigital.RGSM.Panel.Server.Application.Mappings;
 using BytexDigital.RGSM.Panel.Server.Common.IdentityServer;
 using BytexDigital.RGSM.Panel.Server.Domain.Entities;
 using BytexDigital.RGSM.Panel.Server.Persistence;
+
+using FluentValidation.AspNetCore;
 
 using IdentityServer4;
 using IdentityServer4.Models;
@@ -22,6 +26,7 @@ using MediatR;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -55,6 +60,8 @@ namespace BytexDigital.RGSM.Panel.Server
             services
                 //.AddScoped(typeof(IPipelineBehavior<,>), typeof(DbTransactionBehavior<,>))
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(FluentValidationPipelineBehavior<,>));
+
+            services.AddScoped<IAuthorizationHandler, SystemAdministratorRequirement.Handler>();
 
             services.AddAutoMapper(typeof(DefaultProfile).Assembly);
 
@@ -170,7 +177,10 @@ namespace BytexDigital.RGSM.Panel.Server
                 options.TokenValidationParameters.ValidAudience = "rgsm";
             });
 
-            services.AddControllers();
+            services
+                .AddControllers()
+                .AddFluentValidation(options => options
+                    .RegisterValidatorsFromAssemblyContaining<RegisterNodeCmd.Validator>());
 
             services.AddRazorPages();
         }

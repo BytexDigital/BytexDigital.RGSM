@@ -12,6 +12,7 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Mappings
             CreateMap<ApplicationUser, ApplicationUserDto>().ReverseMap();
             CreateMap<ApplicationUserGroup, ApplicationUserGroupDto>().ReverseMap();
             CreateMap<Group, GroupDto>().ReverseMap();
+            CreateMap<Domain.Entities.Node, NodeDto>().ReverseMap();
         }
     }
 }

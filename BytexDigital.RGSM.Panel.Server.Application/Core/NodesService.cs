@@ -32,7 +32,24 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core
             return GetNode(node.Id);
         }
 
+        public async Task UpdateNodeAsync(Domain.Entities.Node node, string name, string displayName, string baseUri)
+        {
+            node.Name = name;
+            node.DisplayName = displayName;
+            node.BaseUri = baseUri;
+
+            await _applicationDbContext.SaveChangesAsync();
+        }
+
+        public async Task UnregisterNodeAsync(Domain.Entities.Node node)
+        {
+            _applicationDbContext.Remove(node);
+            await _applicationDbContext.SaveChangesAsync();
+        }
+
         public IQueryable<Domain.Entities.Node> GetNode(string id) => _applicationDbContext.Nodes.Where(x => x.Id == id);
+
+        public IQueryable<Domain.Entities.Node> GetNodes() => _applicationDbContext.Nodes;
 
         public IQueryable<Domain.Entities.Node> GetNodeByName(string name) => _applicationDbContext.Nodes.Where(x => x.Name == name);
     }

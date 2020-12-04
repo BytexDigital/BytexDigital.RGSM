@@ -51,7 +51,9 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Nodes
                 RuleFor(x => x.BaseUri)
                     .Must((instance, uri) =>
                     {
-                        return Uri.TryCreate(uri, UriKind.Absolute, out var parsedUri);
+                        Uri.TryCreate(uri, UriKind.Absolute, out var parsedUri);
+
+                        return parsedUri != null;
                     })
                     .WithMessage("The base uri must be a valid absolute uri.");
 
