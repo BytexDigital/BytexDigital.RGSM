@@ -9,11 +9,11 @@ using Newtonsoft.Json;
 
 namespace BytexDigital.RGSM.Panel.Server.Application.Core
 {
-    public class SharedSettingsService
+    public class SettingsService
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
-        public SharedSettingsService(ApplicationDbContext applicationDbContext)
+        public SettingsService(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
         }

@@ -32,7 +32,6 @@
     <ProjectReference Include="..\..\BytexDigital.RGSM.Panel.Server.Persistence\BytexDigital.RGSM.Panel.Server.Persistence.csproj" />
     <ProjectReference Include="..\..\BytexDigital.RGSM.Panel.Server.TransferObjects\BytexDigital.RGSM.Panel.Server.TransferObjects.csproj" />
     <ProjectReference Include="..\Client\BytexDigital.RGSM.Panel.Client.csproj" />
-    <ProjectReference Include="..\Shared\BytexDigital.RGSM.Panel.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
