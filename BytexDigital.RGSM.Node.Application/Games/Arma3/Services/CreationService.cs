@@ -14,12 +14,13 @@ namespace BytexDigital.RGSM.Node.Application.Games.Arma3.Services
             _applicationDbContext = applicationDbContext;
         }
 
-        public async Task<Server> CreateServerAsync(string displayName, string directory)
+        public async Task<Server> CreateServerAsync(RGSM.Domain.Entities.Node node, string displayName, string directory)
         {
             var server = _applicationDbContext.CreateEntity(x => x.Servers);
 
             server.DisplayName = displayName;
             server.Directory = directory;
+            server.NodeId = node.Id;
 
             server.Arma3Server = _applicationDbContext.CreateEntity(x => x.Arma3Servers);
 

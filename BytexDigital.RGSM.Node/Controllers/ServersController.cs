@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BytexDigital.RGSM.Node.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("API/[controller]/[action]")]
     [ApiController]
     [Authorize]
     public class ServersController : ControllerBase

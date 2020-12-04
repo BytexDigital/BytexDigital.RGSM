@@ -44,6 +44,8 @@ namespace BytexDigital.RGSM.Node.Application.Shared.Services
             return _applicationDbContext.Nodes.Where(x => x.Id == id);
         }
 
+        public async Task<IQueryable<RGSM.Domain.Entities.Node>> GetLocalNodeAsync() => GetNode(await GetLocalNodeIdAsync());
+
         public async Task<IQueryable<RGSM.Domain.Entities.Node>> CreateFromLocalNodeAsync()
         {
             string nodeId = await GetLocalNodeIdAsync();

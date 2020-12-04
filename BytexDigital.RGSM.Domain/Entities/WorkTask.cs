@@ -20,6 +20,6 @@ namespace BytexDigital.RGSM.Domain.Entities
         [Required]
         public string Description { get; set; }
 
-        public Server Server { get; set; }
+        public virtual Server Server { get; set; }
     }
 }

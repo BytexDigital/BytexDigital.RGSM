@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BytexDigital.RGSM.Node.Application.Shared.Services
 {
-    public class NodeWorkTasksService
+    public class WorkTasksService
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
-        public NodeWorkTasksService(ApplicationDbContext applicationDbContext)
+        public WorkTasksService(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
         }

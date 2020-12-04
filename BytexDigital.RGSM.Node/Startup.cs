@@ -42,9 +42,9 @@ namespace BytexDigital.RGSM.Node
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddSingleton<PermanentInstanceService>()
+                .AddSingleton<ServerContainerService>()
                 .AddSingleton<NodeFileSystemService>()
-                .AddScoped<NodeServerService>()
+                .AddScoped<WorkTasksService>()
                 .AddScoped<NodeSettingsService>()
                 .AddScoped<NodeService>()
 

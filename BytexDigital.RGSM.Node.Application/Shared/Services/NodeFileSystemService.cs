@@ -60,7 +60,7 @@ namespace BytexDigital.RGSM.Node.Application.Shared.Services
         {
             Directory.CreateDirectory(directory);
 
-            return Directory.GetFiles(directory).Count() > 0;
+            return Directory.GetFiles(directory).Count() == 0;
         }
     }
 }

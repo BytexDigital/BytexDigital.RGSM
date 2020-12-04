@@ -11,9 +11,9 @@ namespace BytexDigital.RGSM.Node.Application.Games.Arma3.Services
     {
         public const string TASK_SERVER_UPDATING = nameof(TASK_SERVER_UPDATING);
 
-        private readonly NodeWorkTasksService _nodeWorkTasksService;
+        private readonly WorkTasksService _nodeWorkTasksService;
 
-        public StatusService(NodeWorkTasksService nodeWorkTasksService)
+        public StatusService(WorkTasksService nodeWorkTasksService)
         {
             _nodeWorkTasksService = nodeWorkTasksService;
         }

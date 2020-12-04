@@ -11,15 +11,15 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace BytexDigital.RGSM.Node.Application.Shared.Services
 {
-    public class PermanentInstanceService
+    public class ServerContainerService
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly ConcurrentDictionary<string, ServerBase> _localServerInstances;
+        private readonly ConcurrentDictionary<string, ServerContainerBase> _localContainers;
 
-        public PermanentInstanceService(IServiceProvider serviceProvider)
+        public ServerContainerService(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
-            _localServerInstances = new ConcurrentDictionary<string, ServerBase>();
+            _localContainers = new ConcurrentDictionary<string, ServerContainerBase>();
         }
 
         public async Task CreateLocalInstancesAsync()
@@ -33,11 +33,11 @@ namespace BytexDigital.RGSM.Node.Application.Shared.Services
 
                 foreach (var server in servers)
                 {
-                    if (_localServerInstances.ContainsKey(server.Id)) continue;
+                    if (_localContainers.ContainsKey(server.Id)) continue;
 
-                    ServerBase instance = server.Type switch
+                    ServerContainerBase instance = server.Type switch
                     {
-                        RGSM.Domain.Enumerations.ServerType.Arma3 => new LocalArma3Server(),
+                        RGSM.Domain.Enumerations.ServerType.Arma3 => new Arma3ServerContainer(),
                         RGSM.Domain.Enumerations.ServerType.DayZ => throw new NotImplementedException(),
                         _ => throw new NotImplementedException()
                     };
@@ -45,14 +45,14 @@ namespace BytexDigital.RGSM.Node.Application.Shared.Services
                     instance.GlobalId = server.Id;
                     instance.Directory = server.Directory;
 
-                    _ = _localServerInstances.TryAdd(server.Id, instance);
+                    _ = _localContainers.TryAdd(server.Id, instance);
                 }
             }
         }
 
-        public T GetInstanceOrDefault<T>(string id, T defaultValue = default) where T : ServerBase
+        public T GetInstanceOrDefault<T>(string id, T defaultValue = default) where T : ServerContainerBase
         {
-            _localServerInstances.TryGetValue(id, out var ret);
+            _localContainers.TryGetValue(id, out var ret);
 
             return (T)ret ?? defaultValue;
         }

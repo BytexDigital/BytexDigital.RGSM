@@ -11,6 +11,7 @@ using FluentValidation;
 
 using MediatR;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BytexDigital.RGSM.Node.Application.Commands.Servers
@@ -24,14 +25,14 @@ namespace BytexDigital.RGSM.Node.Application.Commands.Servers
 
         public class Handler : IRequestHandler<CreateServerCmd, Response>
         {
-            private readonly NodeServerService _nodeServerService;
             private readonly Shared.Services.NodeFileSystemService _nodeFileSystemService;
+            private readonly NodeService _nodeService;
             private readonly IServiceProvider _serviceProvider;
 
-            public Handler(NodeServerService nodeServerService, Shared.Services.NodeFileSystemService nodeFileSystemService, IServiceProvider serviceProvider)
+            public Handler(Shared.Services.NodeFileSystemService nodeFileSystemService, NodeService nodeService, IServiceProvider serviceProvider)
             {
-                _nodeServerService = nodeServerService;
                 _nodeFileSystemService = nodeFileSystemService;
+                _nodeService = nodeService;
                 _serviceProvider = serviceProvider;
             }
 
@@ -39,13 +40,21 @@ namespace BytexDigital.RGSM.Node.Application.Commands.Servers
             {
                 if (!_nodeFileSystemService.IsDirectoryUsableForServer(request.Directory))
                 {
-                    throw new ServiceException().WithField(request.Directory).WithMessage($"The directory '{request.Directory}' is not usable for a server installation.");
+                    throw new ServiceException()
+                        .WithField(nameof(request.Directory))
+                        .WithMessage($"The directory '{request.Directory}' is not usable for a server installation.");
                 }
+
+                var localNode = await (await _nodeService.GetLocalNodeAsync()).FirstAsync();
 
                 var server = request.ServerType switch
                 {
-                    ServerType.Arma3 => await _serviceProvider.GetRequiredService<Games.Arma3.Services.CreationService>().CreateServerAsync(request.DisplayName, request.Directory),
+                    ServerType.Arma3 => await _serviceProvider
+                                            .GetRequiredService<Games.Arma3.Services.CreationService>()
+                                            .CreateServerAsync(localNode, request.DisplayName, request.Directory),
+
                     ServerType.DayZ => throw new NotImplementedException(),
+
                     _ => throw new NotImplementedException()
                 };
 
