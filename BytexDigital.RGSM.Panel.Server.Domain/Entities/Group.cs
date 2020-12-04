@@ -16,6 +16,5 @@ namespace BytexDigital.RGSM.Panel.Server.Domain.Entities
         public string DisplayName { get; set; }
 
         public virtual ICollection<ApplicationUserGroup> Users { get; set; }
-        public virtual ICollection<GroupPermission> Permissions { get; set; }
     }
 }

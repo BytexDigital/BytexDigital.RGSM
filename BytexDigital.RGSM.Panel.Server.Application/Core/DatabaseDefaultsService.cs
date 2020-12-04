@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace BytexDigital.RGSM.Panel.Server.Application.Services
+namespace BytexDigital.RGSM.Panel.Server.Application.Core
 {
     public class DatabaseDefaultsService
     {

@@ -23,8 +23,6 @@ namespace BytexDigital.RGSM.Panel.Server.Persistence
         public DbSet<ApplicationUserGroup> ApplicationUserGroups { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Node> Nodes { get; set; }
-        public DbSet<Permission> Permissions { get; set; }
-        public DbSet<GroupPermission> GroupPermissions { get; set; }
         public DbSet<Setting> SharedSettings { get; set; }
         public DbSet<SteamCredential> SteamCredentials { get; set; }
         public DbSet<SteamCredentialSupportedApp> SteamCredentialSupportedApps { get; set; }

@@ -17,9 +17,6 @@ namespace BytexDigital.RGSM.Node.Domain.Entities
         [Required]
         public ServerType Type { get; set; }
 
-        [Required]
-        public ServerStatus Status { get; set; }
-
         public string Directory { get; set; }
 
 

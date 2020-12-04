@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using BytexDigital.RGSM.Panel.Server.Domain.Entities;
 using BytexDigital.RGSM.Panel.Server.Persistence;
 
-namespace BytexDigital.RGSM.Panel.Server.Application.Services
+namespace BytexDigital.RGSM.Panel.Server.Application.Core
 {
     public class SteamCredentialsService
     {

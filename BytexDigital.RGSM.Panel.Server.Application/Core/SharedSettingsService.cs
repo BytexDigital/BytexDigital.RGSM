@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 using Newtonsoft.Json;
 
-namespace BytexDigital.RGSM.Panel.Server.Application.Services
+namespace BytexDigital.RGSM.Panel.Server.Application.Core
 {
     public class SharedSettingsService
     {

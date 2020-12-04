@@ -1,4 +1,4 @@
-﻿using BytexDigital.RGSM.Panel.Server.Application.Services;
+﻿using BytexDigital.RGSM.Panel.Server.Application.Core;
 
 using Microsoft.Extensions.DependencyInjection;
 
