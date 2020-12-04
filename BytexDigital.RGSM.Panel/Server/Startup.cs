@@ -3,8 +3,9 @@ using System.Collections.Generic;
 
 using AutoMapper;
 
+using BytexDigital.Common.Errors.AspNetCore.Extensions;
+using BytexDigital.Common.Errors.MediatR;
 using BytexDigital.RGSM.Application.Behaviors;
-using BytexDigital.RGSM.Application.ErrorHandling;
 using BytexDigital.RGSM.Application.Mapping;
 using BytexDigital.RGSM.Application.Services;
 using BytexDigital.RGSM.Domain.Entities;
@@ -47,9 +48,13 @@ namespace BytexDigital.RGSM.Panel.Server
         {
             services.AddApplicationServices();
 
+            services.AddUniformCommonErrorResponses();
+
             services.AddMediatR(typeof(LoginCmd).Assembly);
 
-            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(DbTransactionBehavior<,>));
+            services
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(DbTransactionBehavior<,>))
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(FluentValidationPipelineBehavior<,>));
 
             services.AddAutoMapper(typeof(DefaultProfile).Assembly);
 
@@ -164,10 +169,7 @@ namespace BytexDigital.RGSM.Panel.Server
                 options.TokenValidationParameters.ValidAudience = "rgsm";
             });
 
-            services.AddControllers(options =>
-            {
-                options.Filters.Add<ServiceExceptionFilter>();
-            });
+            services.AddControllers();
 
             services.AddRazorPages();
         }

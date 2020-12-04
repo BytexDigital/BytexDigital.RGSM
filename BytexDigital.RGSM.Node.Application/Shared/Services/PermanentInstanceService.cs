@@ -11,12 +11,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace BytexDigital.RGSM.Node.Application.Shared.Services
 {
-    public class LocalInstanceCreationService
+    public class PermanentInstanceService
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ConcurrentDictionary<string, ServerBase> _localServerInstances;
 
-        public LocalInstanceCreationService(IServiceProvider serviceProvider)
+        public PermanentInstanceService(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
             _localServerInstances = new ConcurrentDictionary<string, ServerBase>();
@@ -48,6 +48,13 @@ namespace BytexDigital.RGSM.Node.Application.Shared.Services
                     _ = _localServerInstances.TryAdd(server.Id, instance);
                 }
             }
+        }
+
+        public T GetInstanceOrDefault<T>(string id, T defaultValue = default) where T : ServerBase
+        {
+            _localServerInstances.TryGetValue(id, out var ret);
+
+            return (T)ret ?? defaultValue;
         }
     }
 }

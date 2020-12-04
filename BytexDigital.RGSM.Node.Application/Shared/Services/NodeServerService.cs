@@ -2,11 +2,11 @@
 
 namespace BytexDigital.RGSM.Node.Application.Shared.Services
 {
-    public class ServerService
+    public class NodeServerService
     {
         private readonly ApplicationDbContext _storage;
 
-        public ServerService(ApplicationDbContext storage)
+        public NodeServerService(ApplicationDbContext storage)
         {
             _storage = storage;
         }

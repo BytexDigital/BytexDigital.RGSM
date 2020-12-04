@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-using BytexDigital.RGSM.Application.Exceptions;
+using BytexDigital.Common.Errors.Exceptions;
 using BytexDigital.RGSM.Domain.Entities;
 
 using MediatR;
@@ -31,16 +31,16 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Commands.Authentication
             {
                 var user = await _userManager.FindByNameAsync(request.Username);
 
-                if (user == null) throw new ServiceException(nameof(request.Username), "This user does not exist.");
+                if (user == null) throw new ServiceException().WithField(nameof(request.Username)).WithMessage("This user does not exist.").Build();
 
                 var response = await _signInManager.PasswordSignInAsync(user, request.Password, true, true);
 
                 if (response.Succeeded) return Unit.Value;
 
-                if (response.IsLockedOut) throw new ServiceException(nameof(request.Username), "This user is locked out.");
-                if (response.IsNotAllowed) throw new ServiceException(nameof(request.Password), "This user is not allowed to sign in.");
+                if (response.IsLockedOut) throw new ServiceException().WithField(nameof(request.Username)).WithMessage("The user is locked out").Build();
+                if (response.IsNotAllowed) throw new ServiceException().WithField(nameof(request.Username)).WithMessage("This user does not exist.").Build();
 
-                throw new ServiceException(nameof(request.Password), "This provided credentials are invalid.");
+                throw new ServiceException().WithField(nameof(request.Password)).WithMessage("This provided credentials are invalid.");
             }
         }
     }

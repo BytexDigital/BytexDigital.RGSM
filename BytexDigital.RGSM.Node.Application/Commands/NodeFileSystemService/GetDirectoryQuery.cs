@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using BytexDigital.RGSM.Application.Exceptions;
+using BytexDigital.Common.Errors.Exceptions;
 using BytexDigital.RGSM.Node.Domain.Models.Services.NodeFileSystemService;
 
 using FluentValidation;
@@ -34,7 +34,7 @@ namespace BytexDigital.RGSM.Node.Application.Commands.NodeFileSystemService
                 }
                 catch (UnauthorizedAccessException ex)
                 {
-                    throw ServiceException.AddError().WithCode(nameof(UnauthorizedAccessException)).WithMessage(ex.Message).Build();
+                    throw new ServiceException().WithCode(nameof(UnauthorizedAccessException)).WithMessage(ex.Message).Build();
                 }
             }
         }

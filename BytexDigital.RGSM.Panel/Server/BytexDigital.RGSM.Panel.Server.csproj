@@ -16,6 +16,9 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
+    <PackageReference Include="BytexDigital.Common.Errors" Version="1.0.2" />
+    <PackageReference Include="BytexDigital.Common.Errors.AspNetCore" Version="1.0.0" />
+    <PackageReference Include="BytexDigital.Common.Errors.MediatR" Version="1.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.0" />

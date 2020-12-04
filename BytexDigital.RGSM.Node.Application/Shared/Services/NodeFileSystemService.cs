@@ -55,5 +55,12 @@ namespace BytexDigital.RGSM.Node.Application.Shared.Services
                 SubDirectories = directoryPaths.Select(x => new Domain.Models.Services.NodeFileSystemService.DirectoryReference { Path = x }).ToList()
             };
         }
+
+        public bool IsDirectoryUsableForServer(string directory)
+        {
+            Directory.CreateDirectory(directory);
+
+            return Directory.GetFiles(directory).Count() > 0;
+        }
     }
 }

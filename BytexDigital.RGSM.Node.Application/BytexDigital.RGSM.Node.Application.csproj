@@ -5,11 +5,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Folder Include="Games\Arma3\Commands\" />
 		<Folder Include="Games\DayZ\" />
 		<Folder Include="Shared\Commands\" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="BytexDigital.Common.Errors" Version="1.0.2" />
 		<PackageReference Include="FluentValidation" Version="9.3.0" />
 		<PackageReference Include="MediatR" Version="9.0.0" />
 	</ItemGroup>

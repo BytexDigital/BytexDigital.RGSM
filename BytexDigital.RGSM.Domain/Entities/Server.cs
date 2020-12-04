@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 
 using BytexDigital.RGSM.Domain.Enumerations;
+using BytexDigital.RGSM.Domain.Games.Arma3.Entities;
 
 namespace BytexDigital.RGSM.Domain.Entities
 {
@@ -11,6 +12,9 @@ namespace BytexDigital.RGSM.Domain.Entities
         public string DisplayName { get; set; }
 
         [Required]
+        public string NodeId { get; set; }
+
+        [Required]
         public ServerType Type { get; set; }
 
         [Required]
@@ -18,7 +22,11 @@ namespace BytexDigital.RGSM.Domain.Entities
 
         public string Directory { get; set; }
 
+
+        public virtual Arma3Server Arma3Server { get; set; }
+
         public virtual Node Node { get; set; }
         public virtual ICollection<Permission> Permissions { get; set; }
+        public virtual ICollection<WorkTask> Tasks { get; set; }
     }
 }

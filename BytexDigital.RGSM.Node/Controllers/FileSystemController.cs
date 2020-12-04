@@ -4,9 +4,8 @@ using System.Threading.Tasks;
 
 using AutoMapper;
 
-using BytexDigital.RGSM.Application.Exceptions;
+using BytexDigital.Common.Errors.Exceptions;
 using BytexDigital.RGSM.Node.Application.Commands.NodeFileSystemService;
-using BytexDigital.RGSM.Node.Application.Shared.Services;
 using BytexDigital.RGSM.Shared.TransferObjects.Models.Services.NodeFileSystemService;
 
 using MediatR;
@@ -23,7 +22,6 @@ namespace BytexDigital.RGSM.Node.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
-        private readonly NodeFileSystemService _nodeFileSystemService;
 
         public FileSystemController(IMapper mapper, IMediator mediator)
         {
@@ -46,7 +44,7 @@ namespace BytexDigital.RGSM.Node.Controllers
             }
             catch (UnauthorizedAccessException ex)
             {
-                throw ServiceException.AddError().WithCode(nameof(UnauthorizedAccessException)).WithMessage(ex.Message).Build();
+                throw new ServiceException().WithCode(nameof(UnauthorizedAccessException)).WithMessage(ex.Message);
             }
         }
     }

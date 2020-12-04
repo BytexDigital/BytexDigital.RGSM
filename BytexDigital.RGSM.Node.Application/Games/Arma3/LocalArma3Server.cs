@@ -9,22 +9,12 @@ namespace BytexDigital.RGSM.Node.Application.Games.Arma3
         public override string GlobalId { get; set; }
         public override string Directory { get; set; }
 
-        public override Task<bool> CanStartAsync()
+        public override Task OnStartAsync()
         {
             throw new System.NotImplementedException();
         }
 
-        public override Task<bool> CanStopAsync()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override Task StartAsync()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override Task StopAsync()
+        public override Task OnStopAsync()
         {
             throw new System.NotImplementedException();
         }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq.Expressions;
 
+using BytexDigital.RGSM.Domain.Entities;
 using BytexDigital.RGSM.Domain.Interfaces;
-using BytexDigital.RGSM.Node.Domain.Entities;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -10,12 +10,11 @@ namespace BytexDigital.RGSM.Node.Persistence
 {
     public class NodeDbContext : DbContext
     {
-        public NodeDbContext(
-            DbContextOptions<NodeDbContext> options) : base(options)
+        public NodeDbContext(DbContextOptions<NodeDbContext> options) : base(options)
         {
         }
 
-        public DbSet<NodeSetting> NodeSettings { get; set; }
+        public DbSet<Setting> NodeSettings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
