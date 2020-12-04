@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using AutoMapper;
 
-using BytexDigital.RGSM.Application.Services;
+using BytexDigital.RGSM.Panel.Server.Application.Services;
 using BytexDigital.RGSM.Shared.TransferObjects.Entities;
 
 using Microsoft.AspNetCore.Authorization;

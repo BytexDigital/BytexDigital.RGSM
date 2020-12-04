@@ -5,7 +5,6 @@ using BytexDigital.Common.Errors;
 using BytexDigital.Common.Errors.Exceptions;
 using BytexDigital.RGSM.Panel.Server.Application.Commands.Authentication;
 using BytexDigital.RGSM.Panel.Server.Common.Helpers;
-using BytexDigital.RGSM.Shared.Extensions;
 
 using MediatR;
 

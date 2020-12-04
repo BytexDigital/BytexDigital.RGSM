@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 
 using BytexDigital.Common.Errors.Exceptions;
-using BytexDigital.RGSM.Domain.Entities;
+using BytexDigital.RGSM.Panel.Server.Domain.Entities;
 
 using MediatR;
 

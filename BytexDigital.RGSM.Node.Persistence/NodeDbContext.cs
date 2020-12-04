@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-using BytexDigital.RGSM.Domain.Entities;
-using BytexDigital.RGSM.Domain.Interfaces;
+using BytexDigital.RGSM.Panel.Server.Domain.Entities;
+using BytexDigital.RGSM.Panel.Server.Domain.Interfaces;
+using BytexDigital.RGSM.Node.Domain.Entities.Arma3;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,7 @@ namespace BytexDigital.RGSM.Node.Persistence
         }
 
         public DbSet<Setting> NodeSettings { get; set; }
+        public DbSet<Arma3Server> Arma3Server { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

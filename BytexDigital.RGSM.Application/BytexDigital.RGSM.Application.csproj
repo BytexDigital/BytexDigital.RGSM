@@ -12,14 +12,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BytexDigital.RGSM.Domain\BytexDigital.RGSM.Domain.csproj" />
-    <ProjectReference Include="..\BytexDigital.RGSM.Persistence\BytexDigital.RGSM.Persistence.csproj" />
+    <ProjectReference Include="..\BytexDigital.RGSM.Panel.Server.Domain\BytexDigital.RGSM.Panel.Server.Domain.csproj" />
+    <ProjectReference Include="..\BytexDigital.RGSM.Panel.Server.Persistence\BytexDigital.RGSM.Panel.Server.Persistence.csproj" />
     <ProjectReference Include="..\BytexDigital.RGSM.Shared.TransferObjects\BytexDigital.RGSM.Shared.TransferObjects.csproj" />
     <ProjectReference Include="..\BytexDigital.RGSM.Shared\BytexDigital.RGSM.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\" />
     <Folder Include="Extensions\" />
   </ItemGroup>
 

@@ -5,6 +5,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Autofac" Version="6.0.0" />
 		<PackageReference Include="BytexDigital.BattlEye.Rcon" Version="1.0.3-beta.2" />
 		<PackageReference Include="BytexDigital.Common.Errors" Version="1.0.3" />
 		<PackageReference Include="BytexDigital.Steam" Version="0.7.43-beta" />
@@ -13,11 +14,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\BytexDigital.RGSM.Application\BytexDigital.RGSM.Application.csproj" />
-		<ProjectReference Include="..\BytexDigital.RGSM.Domain\BytexDigital.RGSM.Domain.csproj" />
+		<ProjectReference Include="..\BytexDigital.RGSM.Panel.Server.Domain\BytexDigital.RGSM.Panel.Server.Domain.csproj" />
 		<ProjectReference Include="..\BytexDigital.RGSM.Node.Domain\BytexDigital.RGSM.Node.Domain.csproj" />
 		<ProjectReference Include="..\BytexDigital.RGSM.Node.Persistence\BytexDigital.RGSM.Node.Persistence.csproj" />
-		<ProjectReference Include="..\BytexDigital.RGSM.Persistence\BytexDigital.RGSM.Persistence.csproj" />
+		<ProjectReference Include="..\BytexDigital.RGSM.Panel.Server.Persistence\BytexDigital.RGSM.Panel.Server.Persistence.csproj" />
 		<ProjectReference Include="..\BytexDigital.RGSM.Shared.TransferObjects\BytexDigital.RGSM.Shared.TransferObjects.csproj" />
 	</ItemGroup>
 

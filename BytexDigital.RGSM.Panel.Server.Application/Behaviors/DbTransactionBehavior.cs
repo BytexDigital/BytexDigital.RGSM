@@ -5,7 +5,7 @@ using BytexDigital.RGSM.Panel.Server.Persistence;
 
 using MediatR;
 
-namespace BytexDigital.RGSM.Application.Behaviors
+namespace BytexDigital.RGSM.Panel.Server.Application.Behaviors
 {
     public class DbTransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {

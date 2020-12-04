@@ -1,18 +1,10 @@
 using System;
 using System.Collections.Generic;
 
-using AutoMapper;
-
 using BytexDigital.Common.Errors.AspNetCore.Extensions;
-using BytexDigital.Common.Errors.MediatR;
-using BytexDigital.RGSM.Application.Behaviors;
-using BytexDigital.RGSM.Application.Mapping;
+using BytexDigital.RGSM.Node.Application.Services;
 using BytexDigital.RGSM.Node.Persistence;
-using BytexDigital.RGSM.Persistence;
-
-using FluentValidation.AspNetCore;
-
-using MediatR;
+using BytexDigital.RGSM.Panel.Server.Persistence;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;

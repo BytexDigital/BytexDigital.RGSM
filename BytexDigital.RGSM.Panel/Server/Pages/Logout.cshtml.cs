@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-using BytexDigital.RGSM.Domain.Entities;
+using BytexDigital.RGSM.Panel.Server.Domain.Entities;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

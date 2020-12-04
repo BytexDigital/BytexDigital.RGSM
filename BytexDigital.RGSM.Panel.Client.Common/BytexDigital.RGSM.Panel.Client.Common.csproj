@@ -10,6 +10,5 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BytexDigital.RGSM.Shared.TransferObjects\BytexDigital.RGSM.Shared.TransferObjects.csproj" />
-    <ProjectReference Include="..\BytexDigital.RGSM.Shared\BytexDigital.RGSM.Shared.csproj" />
   </ItemGroup>
 </Project>

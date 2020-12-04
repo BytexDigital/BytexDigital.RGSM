@@ -5,14 +5,13 @@ using AutoMapper;
 
 using BytexDigital.Common.Errors.AspNetCore.Extensions;
 using BytexDigital.Common.Errors.MediatR;
-using BytexDigital.RGSM.Application.Behaviors;
-using BytexDigital.RGSM.Application.Mapping;
-using BytexDigital.RGSM.Application.Services;
-using BytexDigital.RGSM.Domain.Entities;
+using BytexDigital.RGSM.Panel.Server.Domain.Entities;
 using BytexDigital.RGSM.Panel.Server.Application.Commands.Authentication;
 using BytexDigital.RGSM.Panel.Server.Application.Extensions;
+using BytexDigital.RGSM.Panel.Server.Application.Mappings;
+using BytexDigital.RGSM.Panel.Server.Application.Services;
 using BytexDigital.RGSM.Panel.Server.Common.IdentityServer;
-using BytexDigital.RGSM.Persistence;
+using BytexDigital.RGSM.Panel.Server.Persistence;
 
 using IdentityServer4;
 using IdentityServer4.Models;
@@ -53,7 +52,7 @@ namespace BytexDigital.RGSM.Panel.Server
             services.AddMediatR(typeof(LoginCmd).Assembly);
 
             services
-                .AddScoped(typeof(IPipelineBehavior<,>), typeof(DbTransactionBehavior<,>))
+                //.AddScoped(typeof(IPipelineBehavior<,>), typeof(DbTransactionBehavior<,>))
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(FluentValidationPipelineBehavior<,>));
 
             services.AddAutoMapper(typeof(DefaultProfile).Assembly);
