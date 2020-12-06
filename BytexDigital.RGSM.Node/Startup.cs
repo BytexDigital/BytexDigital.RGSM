@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using BytexDigital.Common.Errors.AspNetCore.Extensions;
-using BytexDigital.RGSM.Node.Application.Services;
 using BytexDigital.RGSM.Node.Persistence;
-using BytexDigital.RGSM.Panel.Server.Persistence;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -53,13 +51,9 @@ namespace BytexDigital.RGSM.Node
             //    .AddScoped(typeof(IPipelineBehavior<,>), typeof(DbTransactionBehavior<,>))
             //    .AddScoped(typeof(IPipelineBehavior<,>), typeof(FluentValidationPipelineBehavior<,>));
 
-            // Connection to global db
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("PanelConnection")).UseLazyLoadingProxies());
-
             // Connection to local db
             services.AddDbContext<NodeDbContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("NodeConnection")).UseLazyLoadingProxies());
+                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")).UseLazyLoadingProxies());
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

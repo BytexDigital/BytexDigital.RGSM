@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-using BytexDigital.RGSM.Panel.Server.Domain.Entities;
-
 namespace BytexDigital.RGSM.Node.Domain.Entities.Arma3
 {
     public class Arma3Server : Entity

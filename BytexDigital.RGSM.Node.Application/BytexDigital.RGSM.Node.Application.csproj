@@ -14,10 +14,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\BytexDigital.RGSM.Panel.Server.Domain\BytexDigital.RGSM.Panel.Server.Domain.csproj" />
 		<ProjectReference Include="..\BytexDigital.RGSM.Node.Domain\BytexDigital.RGSM.Node.Domain.csproj" />
 		<ProjectReference Include="..\BytexDigital.RGSM.Node.Persistence\BytexDigital.RGSM.Node.Persistence.csproj" />
-		<ProjectReference Include="..\BytexDigital.RGSM.Panel.Server.Persistence\BytexDigital.RGSM.Panel.Server.Persistence.csproj" />
 	</ItemGroup>
 
 </Project>

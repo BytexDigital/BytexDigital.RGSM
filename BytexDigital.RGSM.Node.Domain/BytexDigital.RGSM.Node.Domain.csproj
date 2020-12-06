@@ -8,8 +8,4 @@
 	  <PackageReference Include="AutoMapper" Version="10.1.1" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\BytexDigital.RGSM.Panel.Server.Domain\BytexDigital.RGSM.Panel.Server.Domain.csproj" />
-	</ItemGroup>
-
 </Project>

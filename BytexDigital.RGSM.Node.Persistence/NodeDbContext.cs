@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-using BytexDigital.RGSM.Panel.Server.Domain.Entities;
-using BytexDigital.RGSM.Panel.Server.Domain.Interfaces;
+using BytexDigital.RGSM.Node.Domain.Entities;
 using BytexDigital.RGSM.Node.Domain.Entities.Arma3;
+using BytexDigital.RGSM.Node.Domain.Interfaces;
 
 using Microsoft.EntityFrameworkCore;
 
