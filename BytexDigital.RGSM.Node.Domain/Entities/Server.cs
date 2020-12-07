@@ -18,7 +18,6 @@ namespace BytexDigital.RGSM.Node.Domain.Entities
 
         public string Directory { get; set; }
 
-
         public virtual Arma3Server Arma3Server { get; set; }
     }
 }

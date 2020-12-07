@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 
+using Autofac;
+
 using BytexDigital.Common.Errors.AspNetCore.Extensions;
+using BytexDigital.RGSM.Node.Application.Core.Generic;
 using BytexDigital.RGSM.Node.Persistence;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -58,10 +61,10 @@ namespace BytexDigital.RGSM.Node
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                    options.MetadataAddress = $"{Configuration["Panel:BaseUri"]}/.well-known/openid-configuration";
+                    options.MetadataAddress = $"{Configuration["NodeSettings:Master:BaseUri"]}/.well-known/openid-configuration";
                     options.Audience = "rgsm";
 
-                    options.TokenValidationParameters.ValidIssuer = Configuration["Panel:BaseUri"];
+                    options.TokenValidationParameters.ValidIssuer = Configuration["NodeSettings:Master:BaseUri"];
                     options.TokenValidationParameters.ValidAudience = "rgsm";
                 });
 
@@ -72,7 +75,7 @@ namespace BytexDigital.RGSM.Node
 
             services.AddCors(options =>
             {
-                options.AddDefaultPolicy(policy => policy.WithOrigins(Configuration["Panel:BaseUri"]));
+                options.AddDefaultPolicy(policy => policy.WithOrigins(Configuration["NodeSettings:Master:BaseUri"]));
             });
 
             services.AddSwaggerGen(options =>
@@ -113,6 +116,11 @@ namespace BytexDigital.RGSM.Node
                     ] = new[] { "rgsm-node" }
                 });
             });
+        }
+
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

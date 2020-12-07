@@ -38,7 +38,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BytexDigital.RGSM.Node.Pers
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BytexDigital.RGSM.Node.Domain", "BytexDigital.RGSM.Node.Domain\BytexDigital.RGSM.Node.Domain.csproj", "{B77A41B3-9BED-435D-8270-1FF3AE485F4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BytexDigital.RGSM.Panel.Server.TransferObjects", "BytexDigital.RGSM.Panel.Server.TransferObjects\BytexDigital.RGSM.Panel.Server.TransferObjects.csproj", "{3F508770-9D92-489F-B877-BE3CA67B2980}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BytexDigital.RGSM.Panel.Server.TransferObjects", "BytexDigital.RGSM.Panel.Server.TransferObjects\BytexDigital.RGSM.Panel.Server.TransferObjects.csproj", "{3F508770-9D92-489F-B877-BE3CA67B2980}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BytexDigital.RGSM.Node.TransferObjects", "BytexDigital.RGSM.Node.TransferObjects\BytexDigital.RGSM.Node.TransferObjects.csproj", "{DADE6B86-BE22-43D9-943B-5034CB38DD8F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -94,6 +96,10 @@ Global
 		{3F508770-9D92-489F-B877-BE3CA67B2980}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F508770-9D92-489F-B877-BE3CA67B2980}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F508770-9D92-489F-B877-BE3CA67B2980}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DADE6B86-BE22-43D9-943B-5034CB38DD8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DADE6B86-BE22-43D9-943B-5034CB38DD8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DADE6B86-BE22-43D9-943B-5034CB38DD8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DADE6B86-BE22-43D9-943B-5034CB38DD8F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -113,6 +119,7 @@ Global
 		{0D7FE390-2802-4676-8699-7ABC4E7CC50C} = {BA9A4D12-2AE4-4293-B930-B43C056647A0}
 		{B77A41B3-9BED-435D-8270-1FF3AE485F4A} = {BA9A4D12-2AE4-4293-B930-B43C056647A0}
 		{3F508770-9D92-489F-B877-BE3CA67B2980} = {2C87B08C-02FF-498C-B652-B38AD7BC3BAB}
+		{DADE6B86-BE22-43D9-943B-5034CB38DD8F} = {BA9A4D12-2AE4-4293-B930-B43C056647A0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {420AF76E-6626-4D27-AC5C-F195F3DB2854}

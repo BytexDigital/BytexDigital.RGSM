@@ -16,6 +16,7 @@ namespace BytexDigital.RGSM.Node.Persistence
         }
 
         public DbSet<Setting> NodeSettings { get; set; }
+        public DbSet<Server> Servers { get; set; }
         public DbSet<Arma3Server> Arma3Server { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

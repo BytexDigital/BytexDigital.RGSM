@@ -9,13 +9,13 @@ using Newtonsoft.Json;
 
 namespace BytexDigital.RGSM.Node.Application.Options
 {
-    public class NodeSettingsService
+    public class SettingsService
     {
         public const string KEY_SETTING_NODEID = "node_id";
 
         private readonly NodeDbContext _nodeDbContext;
 
-        public NodeSettingsService(NodeDbContext nodeDbContext)
+        public SettingsService(NodeDbContext nodeDbContext)
         {
             _nodeDbContext = nodeDbContext;
         }
