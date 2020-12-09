@@ -191,7 +191,8 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
                 IsInstalled = Settings.IsInstalled,
                 RequiresUpdate = false, // TODO: Make dynamic,
                 IsUpdating = IsUpdating,
-                UpdateProgress = ServerUpdateState?.Progress ?? 0
+                UpdateProgress = ServerUpdateState?.Progress ?? 0,
+                FailureReason = ServerUpdateState.FailureException?.Message
             });
         }
 
@@ -229,6 +230,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
                 await ServerUpdateState.ProcessedEvent.WaitAsync(cancellationToken);
 
                 if (ServerUpdateState.CancellationToken.IsCancellationRequested) return;
+                if (ServerUpdateState.FailureException != default) return;
 
                 await Mediator.Send(new MarkArmaServerAsInstalledCmd { Id = Id });
             });

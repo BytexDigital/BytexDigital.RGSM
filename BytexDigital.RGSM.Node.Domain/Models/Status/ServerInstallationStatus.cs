@@ -8,5 +8,6 @@
 
         public bool IsUpdating { get; set; }
         public double UpdateProgress { get; set; }
+        public string FailureReason { get; set; }
     }
 }
