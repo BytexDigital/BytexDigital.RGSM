@@ -1,8 +1,12 @@
 ﻿
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 using AutoMapper;
+
+using BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Authentication;
+using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
 
 using MediatR;
 
@@ -26,9 +30,10 @@ namespace BytexDigital.RGSM.Panel.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetUserGroup([FromQuery, Required] string userId)
+        [Authorize(Policy = "AppOrAdmin")]
+        public async Task<ActionResult<List<ApplicationUserGroupDto>>> GetUsersGroupsAsync([FromQuery, Required] string userId)
         {
-
+            return _mapper.Map<List<ApplicationUserGroupDto>>((await _mediator.Send(new GetUserGroupsQuery { UserId = userId })).GroupLinks);
         }
     }
 }

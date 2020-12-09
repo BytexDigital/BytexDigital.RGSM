@@ -40,6 +40,7 @@ namespace BytexDigital.RGSM.Panel.Server.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "Admin")]
         public async Task<ActionResult<NodeDto>> RegisterNodeAsync([FromBody, Required] NodeDto nodeDto)
         {
             if (!(await _authorizationService.AuthorizeAsync(HttpContext.User, null, new SystemAdministratorRequirement())).Succeeded)
@@ -64,6 +65,7 @@ namespace BytexDigital.RGSM.Panel.Server.Controllers
         }
 
         [HttpGet("{nodeId}")]
+        [Authorize(Policy = "Admin")]
         public async Task<ActionResult<NodeKeyDto>> GetNodeKeyAsync([FromRoute, Required] string nodeId)
         {
             if (!(await _authorizationService.AuthorizeAsync(HttpContext.User, null, new SystemAdministratorRequirement())).Succeeded)
@@ -75,6 +77,7 @@ namespace BytexDigital.RGSM.Panel.Server.Controllers
         }
 
         [HttpDelete("{nodeId}")]
+        [Authorize(Policy = "Admin")]
         public async Task<ActionResult> DeleteAsync([FromRoute, Required] string nodeId)
         {
             if (!(await _authorizationService.AuthorizeAsync(HttpContext.User, null, new SystemAdministratorRequirement())).Succeeded)
@@ -88,6 +91,7 @@ namespace BytexDigital.RGSM.Panel.Server.Controllers
         }
 
         [HttpPut("{nodeId}")]
+        [Authorize(Policy = "Admin")]
         public async Task<ActionResult> UpdateAsync([FromRoute, Required] string nodeId, [FromBody, Required] NodeDto nodeDto)
         {
             if (!(await _authorizationService.AuthorizeAsync(HttpContext.User, null, new SystemAdministratorRequirement())).Succeeded)

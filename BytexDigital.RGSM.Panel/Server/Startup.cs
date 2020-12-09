@@ -24,6 +24,7 @@ using IdentityServer4.Validation;
 
 using MediatR;
 
+using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -40,12 +41,14 @@ namespace BytexDigital.RGSM.Panel.Server
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             Configuration = configuration;
+            WebHostEnvironment = webHostEnvironment;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment WebHostEnvironment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -62,6 +65,7 @@ namespace BytexDigital.RGSM.Panel.Server
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(FluentValidationPipelineBehavior<,>));
 
             services.AddScoped<IAuthorizationHandler, SystemAdministratorRequirement.Handler>();
+            services.AddScoped<IAuthorizationHandler, SystemAdministratorOrAppRequirement.Handler>();
 
             services.AddAutoMapper(typeof(MasterProfile).Assembly);
 
@@ -86,7 +90,8 @@ namespace BytexDigital.RGSM.Panel.Server
                                 { "openid", "ID" },
                                 { "profile", "User profile data" },
                                 { "rgsm", "Audience scope" },
-                                { "rgsm.user", "Access to the RGSM panel as a user" }
+                                { "rgsm.user", "Access to the RGSM panel as a user" },
+                                { "rgsm.app", "Access to the RGSM panel as an application" }
                             }
                         }
                     }
@@ -149,8 +154,16 @@ namespace BytexDigital.RGSM.Panel.Server
                         options
                             .WithRedirectUri("/authentication/login-callback")
                             .WithRedirectUri($"{Configuration["BaseUri"]}/swagger/oauth2-redirect.html")
-                            .WithLogoutRedirectUri("/authentication/logout-callback")
-                            .WithScopes("rgsm", "rgsm.user", "rgsm.app");
+                            .WithLogoutRedirectUri("/authentication/logout-callback");
+
+                        if (WebHostEnvironment.IsDevelopment())
+                        {
+                            options.WithScopes("rgsm", "rgsm.user", "rgsm.app");
+                        }
+                        else
+                        {
+                            options.WithScopes("rgsm", "rgsm.user");
+                        }
                     });
 
                     options.ApiScopes.Add(new ApiScope(IdentityServerConstants.StandardScopes.OfflineAccess));
@@ -161,11 +174,25 @@ namespace BytexDigital.RGSM.Panel.Server
             services
                 .AddAuthentication(options =>
                 {
-                    options.DefaultScheme = NodeAuthenticationOptions.NODE_AUTHENTICATION_SCHEME;
+                    options.DefaultScheme = "API_KEY_OR_JWT";
                     options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
                 })
                 .AddScheme<NodeAuthenticationOptions, NodeAuthenticationHandler>(NodeAuthenticationOptions.NODE_AUTHENTICATION_SCHEME, null)
                 .AddIdentityServerJwt()
+                .AddPolicyScheme("API_KEY_OR_JWT", "API_KEY_OR_JWT", options =>
+                {
+                    options.ForwardDefaultSelector = context =>
+                    {
+                        if (context.Request.Headers.ContainsKey(NodeAuthenticationHandler.HEADER_NAME))
+                        {
+                            return NodeAuthenticationOptions.NODE_AUTHENTICATION_SCHEME;
+                        }
+                        else
+                        {
+                            return IdentityServerJwtConstants.IdentityServerJwtBearerScheme;
+                        }
+                    };
+                })
                 .AddIdentityCookies();
 
             services.AddTransient<IRedirectUriValidator, RedirectUriValidator>();
@@ -179,13 +206,13 @@ namespace BytexDigital.RGSM.Panel.Server
 
             services.PostConfigureAll<AuthenticationOptions>(options =>
             {
-                options.DefaultAuthenticateScheme = NodeAuthenticationOptions.NODE_AUTHENTICATION_SCHEME;
+                options.DefaultScheme = "API_KEY_OR_JWT";
             });
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("App", policy => policy.RequireClaim("scope", "rgsm.app", "rgsm.node"));
-                options.AddPolicy("Node", policy => policy.RequireClaim("scope", "rgsm.app"));
+                options.AddPolicy("AppOrAdmin", o => o.AddRequirements(new SystemAdministratorOrAppRequirement()));
+                options.AddPolicy("Admin", o => o.AddRequirements(new SystemAdministratorRequirement()));
             });
 
             services

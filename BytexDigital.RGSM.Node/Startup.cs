@@ -162,7 +162,7 @@ namespace BytexDigital.RGSM.Node
                 scope.ServiceProvider.GetRequiredService<NodeDbContext>().Database.Migrate();
 
                 scope.ServiceProvider.GetRequiredService<ServerStateRegister>().InitializeAsync().GetAwaiter().GetResult();
-                scope.ServiceProvider.GetRequiredService<SteamDownloadService>().InitializeAsync().GetAwaiter().GetResult();
+                //scope.ServiceProvider.GetRequiredService<SteamDownloadService>().InitializeAsync().GetAwaiter().GetResult();
             }
 
             if (env.IsDevelopment())
