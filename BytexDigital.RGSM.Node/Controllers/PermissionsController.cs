@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using AutoMapper;
 
+using BytexDigital.RGSM.Node.Application.Core.Authorization.Requirements;
 using BytexDigital.RGSM.Node.Application.Core.Commands;
 using BytexDigital.RGSM.Node.TransferObjects.Entities;
 
@@ -21,11 +22,13 @@ namespace BytexDigital.RGSM.Node.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
+        private readonly IAuthorizationService _authorizationService;
 
-        public PermissionsController(IMediator mediator, IMapper mapper)
+        public PermissionsController(IMediator mediator, IMapper mapper, IAuthorizationService authorizationService)
         {
             _mediator = mediator;
             _mapper = mapper;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet]
@@ -41,6 +44,11 @@ namespace BytexDigital.RGSM.Node.Controllers
             [FromQuery, Required] string groupId,
             [FromQuery, Required] bool addOrRemove)
         {
+            if (!(await _authorizationService.AuthorizeAsync(HttpContext.User, null, new SystemAdministratorRequirement())).Succeeded)
+            {
+                return Unauthorized();
+            }
+
             await _mediator.Send(new ChangeGroupPermissionCmd { Id = serverId, AddOrRemove = addOrRemove, GroupId = groupId, Name = permissionName });
 
             return Ok();

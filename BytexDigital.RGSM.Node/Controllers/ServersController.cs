@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using AutoMapper;
 
+using BytexDigital.RGSM.Node.Application.Core.Authorization.Requirements;
 using BytexDigital.RGSM.Node.Application.Core.Commands;
 using BytexDigital.RGSM.Node.Domain.Entities;
 using BytexDigital.RGSM.Node.TransferObjects.Entities;
@@ -22,16 +23,23 @@ namespace BytexDigital.RGSM.Node.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
+        private readonly IAuthorizationService _authorizationService;
 
-        public ServersController(IMediator mediator, IMapper mapper)
+        public ServersController(IMediator mediator, IMapper mapper, IAuthorizationService authorizationService)
         {
             _mediator = mediator;
             _mapper = mapper;
+            _authorizationService = authorizationService;
         }
 
         [HttpPost]
         public async Task<ActionResult<ServerDto>> CreateServerAsync([FromBody, Required] ServerDto serverDto)
         {
+            if (!(await _authorizationService.AuthorizeAsync(HttpContext.User, null, new SystemAdministratorRequirement())).Succeeded)
+            {
+                return Unauthorized();
+            }
+
             var inputServer = _mapper.Map<Server>(serverDto);
 
             var result = await _mediator.Send(new CreateServerCmd
