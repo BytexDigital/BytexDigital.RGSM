@@ -5,6 +5,7 @@ using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
+using BytexDigital.Common.Errors.Exceptions;
 using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
 
 using Microsoft.AspNetCore.Authorization;
@@ -22,13 +23,13 @@ namespace BytexDigital.RGSM.Node.Application.Core.Authorization.Requirements
         {
             private readonly PermissionsService _permissionsService;
             private readonly ServersService _serversService;
-            private readonly HttpClient _httpClient;
+            private readonly MasterApiService _masterApiService;
 
-            public Handler(PermissionsService permissionsService, ServersService serversService, HttpClient httpClient)
+            public Handler(PermissionsService permissionsService, ServersService serversService, MasterApiService masterApiService)
             {
                 _permissionsService = permissionsService;
                 _serversService = serversService;
-                _httpClient = httpClient;
+                _masterApiService = masterApiService;
             }
 
             protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
@@ -50,16 +51,17 @@ namespace BytexDigital.RGSM.Node.Application.Core.Authorization.Requirements
                 try
                 {
                     var userId = context.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                    var usersGroups = await _httpClient.GetFromJsonAsync<List<ApplicationUserGroupDto>>($"/API/Groups/GetUsersGroups?userId={userId}");
+                    var usersGroupsResult = await _masterApiService.GetGroupsOfUserAsync(userId);
+
 
                     // Users with this group id are considered sysadmins
-                    if (usersGroups.Any(x => x.GroupId == "72056b80-0f35-4b5c-bdac-a143258c0e7c"))
+                    if (usersGroupsResult.Result.Any(x => x.GroupId == MasterApiService.SYSTEM_ADMINISTRATOR_GROUP_ID))
                     {
                         context.Succeed(requirement);
                         return;
                     }
 
-                    if (permission.GroupReferences.Select(x => x.GroupId).Intersect(usersGroups.Select(x => x.GroupId)).Any())
+                    if (permission.GroupReferences.Select(x => x.GroupId).Intersect(usersGroupsResult.Result.Select(x => x.GroupId)).Any())
                     {
                         context.Succeed(requirement);
                         return;

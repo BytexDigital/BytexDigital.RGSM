@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 using AutoMapper;
@@ -35,6 +36,17 @@ namespace BytexDigital.RGSM.Node.Controllers
         public async Task<List<PermissionDto>> GetPermissionsAsync([FromRoute] string serverId)
         {
             return _mapper.Map<List<PermissionDto>>((await _mediator.Send(new GetServerPermissionsQuery { Id = serverId })).Permissions);
+        }
+
+        [HttpGet]
+        [Authorize(Policy = "User")]
+        public async Task<List<PermissionDto>> GetCurrentUsersPermissionsAsync([FromRoute] string serverId)
+        {
+            return _mapper.Map<List<PermissionDto>>((await _mediator.Send(new GetPermissionsOfUserQuery
+            {
+                ServerId = serverId,
+                UserId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value
+            })).Permissions);
         }
 
         [HttpPost]

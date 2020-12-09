@@ -11,12 +11,15 @@ using BytexDigital.Common.Errors.MediatR;
 using BytexDigital.RGSM.Node.Application.Core;
 using BytexDigital.RGSM.Node.Application.Core.Arma3;
 using BytexDigital.RGSM.Node.Application.Core.Authorization.Requirements;
+using BytexDigital.RGSM.Node.Application.Core.Commands;
 using BytexDigital.RGSM.Node.Application.Core.SteamCmd;
 using BytexDigital.RGSM.Node.Application.Core.SteamCmd.Commands;
 using BytexDigital.RGSM.Node.Application.Mappings;
 using BytexDigital.RGSM.Node.Application.Mediator;
 using BytexDigital.RGSM.Node.Application.Options;
 using BytexDigital.RGSM.Node.Persistence;
+
+using FluentValidation.AspNetCore;
 
 using MediatR;
 
@@ -63,7 +66,8 @@ namespace BytexDigital.RGSM.Node
                 .AddSingleton<FileSystemService>()
                 .AddSingleton<SteamDownloadService>()
                 .AddSingleton<ServerStateRegister>()
-                .AddSingleton<ScopeService>();
+                .AddSingleton<ScopeService>()
+                .AddSingleton<MasterApiService>();
 
             services.AddUniformCommonErrorResponses();
 
@@ -106,9 +110,14 @@ namespace BytexDigital.RGSM.Node
                 });
 
             services.AddControllers()
-                /*.AddFluentValidation(options => options
-                    .RegisterValidatorsFromAssemblyContaining<GetDirectoryQuery.Validator>())*/
+                .AddFluentValidation(options => options
+                    .RegisterValidatorsFromAssemblyContaining<GetServersQuery>())
                 .AddJsonOptions(options => options.JsonSerializerOptions.IgnoreNullValues = true);
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("User", policy => policy.RequireClaim("scope", "rgsm.user"));
+            });
 
             services.AddCors(options =>
             {
