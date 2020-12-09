@@ -20,6 +20,8 @@ namespace BytexDigital.RGSM.Node.Persistence
         public DbSet<Arma3Server> Arma3Server { get; set; }
         public DbSet<TrackedDepot> TrackedDepots { get; set; }
         public DbSet<TrackedWorkshopMod> TrackedWorkshopMods { get; set; }
+        public DbSet<GroupReference> GroupReferences { get; set; }
+        public DbSet<Permission> Permissions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

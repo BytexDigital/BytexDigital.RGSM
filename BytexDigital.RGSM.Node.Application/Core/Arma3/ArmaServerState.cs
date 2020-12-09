@@ -53,6 +53,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
 
         public override async Task InitializeAsync()
         {
+            await Mediator.Send(new EnsureArmaServerPermissionsExistCmd { Id = Id });
             await RefreshSettingsAsync();
 
             ArgumentStringBuilder = new ArmaArgumentStringBuilder(this);

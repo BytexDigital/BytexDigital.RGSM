@@ -23,6 +23,8 @@ namespace BytexDigital.RGSM.Node.Application.Core
         public IQueryable<Server> GetServers() => _nodeDbContext.Servers;
         public IQueryable<Server> GetServer(string id) => _nodeDbContext.Servers.Where(x => x.Id == id);
         public IQueryable<Arma3Server> GetArmaServer(string id) => _nodeDbContext.Arma3Server.Where(x => x.Server.Id == id);
+        public IQueryable<Permission> GetServerPermissions(Server server)
+            => _nodeDbContext.Permissions.Where(x => x.ServerId == server.Id);
 
         public async Task<IQueryable<Server>> CreateServerAsync(string displayName, string directory, ServerType serverType)
         {

@@ -34,6 +34,9 @@ namespace BytexDigital.RGSM.Node.Application.Mappings
             CreateMap<BeRconStatus, BeRconStatusDto>().ReverseMap();
 
             CreateMap<WorkshopItem, WorkshopItemDto>().ReverseMap();
+
+            CreateMap<Permission, PermissionDto>().ReverseMap();
+            CreateMap<GroupReference, GroupReferenceDto>().ReverseMap();
         }
     }
 }

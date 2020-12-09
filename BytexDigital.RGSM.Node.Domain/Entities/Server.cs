@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 using BytexDigital.RGSM.Node.Domain.Entities.Arma3;
@@ -21,5 +20,6 @@ namespace BytexDigital.RGSM.Node.Domain.Entities
         public virtual Arma3Server Arma3Server { get; set; }
         public virtual ICollection<TrackedDepot> TrackedDepots { get; set; }
         public virtual ICollection<TrackedWorkshopMod> TrackedWorkshopMods { get; set; }
+        public virtual ICollection<Permission> Permissions { get; set; }
     }
 }

@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 
 using AutoMapper;
 
+using BytexDigital.RGSM.Node.Application.Core;
+using BytexDigital.RGSM.Node.Application.Core.Authorization.Requirements;
 using BytexDigital.RGSM.Node.Application.Core.Commands.Workshop;
 using BytexDigital.RGSM.Node.TransferObjects.Models.Workshop;
 
@@ -21,16 +23,27 @@ namespace BytexDigital.RGSM.Node.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
+        private readonly IAuthorizationService _authorizationService;
 
-        public WorkshopController(IMediator mediator, IMapper mapper)
+        public WorkshopController(IMediator mediator, IMapper mapper, IAuthorizationService authorizationService)
         {
             _mediator = mediator;
             _mapper = mapper;
+            _authorizationService = authorizationService;
         }
 
         [HttpPost]
         public async Task<ActionResult> AddModAsync([FromRoute] string serverId, [FromQuery, Required] ulong publishedFileId)
         {
+            if (!(await _authorizationService.AuthorizeAsync(HttpContext.User, null, new PermissionRequirement
+            {
+                ServerId = serverId,
+                Name = PermissionConstants.WORKSHOP
+            })).Succeeded)
+            {
+                return Unauthorized();
+            }
+
             await _mediator.Send(new AddWorkshopModCmd { Id = serverId, PublishedFileId = publishedFileId });
 
             return Ok();
@@ -39,6 +52,15 @@ namespace BytexDigital.RGSM.Node.Controllers
         [HttpPost]
         public async Task<ActionResult> RemoveModAsync([FromRoute] string serverId, [FromQuery, Required] ulong publishedFileId)
         {
+            if (!(await _authorizationService.AuthorizeAsync(HttpContext.User, null, new PermissionRequirement
+            {
+                ServerId = serverId,
+                Name = PermissionConstants.WORKSHOP
+            })).Succeeded)
+            {
+                return Unauthorized();
+            }
+
             await _mediator.Send(new RemoveWorkshopModCmd { Id = serverId, PublishedFileId = publishedFileId });
 
             return Ok();
@@ -55,6 +77,15 @@ namespace BytexDigital.RGSM.Node.Controllers
         [HttpGet]
         public async Task<ActionResult> InstallOrUpdateAllAsync([FromRoute] string serverId)
         {
+            if (!(await _authorizationService.AuthorizeAsync(HttpContext.User, null, new PermissionRequirement
+            {
+                ServerId = serverId,
+                Name = PermissionConstants.WORKSHOP
+            })).Succeeded)
+            {
+                return Unauthorized();
+            }
+
             await _mediator.Send(new BeginUpdateWorkshopModsCmd { Id = serverId });
 
             return Ok();

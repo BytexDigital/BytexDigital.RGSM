@@ -29,12 +29,13 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core
 
         public async Task<DatabaseDefaultsService> EnsureSystemAdministratorGroupExistsAsync()
         {
-            if (await _storage.Groups.CountAsync(x => x.Name == Group.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_NAME) > 0) return this;
+            if (await _storage.Groups.CountAsync(x => x.Id == Group.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_ID) > 0) return this;
 
             var group = _storage.CreateEntity(x => x.Groups);
 
             group.Name = Group.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_NAME;
             group.DisplayName = Group.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_DISPLAYNAME;
+            group.Id = Group.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_ID;
 
             _storage.Groups.Add(group);
             await _storage.SaveChangesAsync();

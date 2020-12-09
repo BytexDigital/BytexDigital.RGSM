@@ -10,6 +10,7 @@ using BytexDigital.Common.Errors.AspNetCore.Extensions;
 using BytexDigital.Common.Errors.MediatR;
 using BytexDigital.RGSM.Node.Application.Core;
 using BytexDigital.RGSM.Node.Application.Core.Arma3;
+using BytexDigital.RGSM.Node.Application.Core.Authorization.Requirements;
 using BytexDigital.RGSM.Node.Application.Core.SteamCmd;
 using BytexDigital.RGSM.Node.Application.Core.SteamCmd.Commands;
 using BytexDigital.RGSM.Node.Application.Mappings;
@@ -20,6 +21,7 @@ using BytexDigital.RGSM.Node.Persistence;
 using MediatR;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -57,12 +59,16 @@ namespace BytexDigital.RGSM.Node
                 .AddScoped<ServersService>()
                 .AddScoped<SettingsService>()
                 .AddScoped<ArmaServerService>()
+                .AddScoped<PermissionsService>()
                 .AddSingleton<FileSystemService>()
                 .AddSingleton<SteamDownloadService>()
                 .AddSingleton<ServerStateRegister>()
                 .AddSingleton<ScopeService>();
 
             services.AddUniformCommonErrorResponses();
+
+            // Authorization
+            services.AddSingleton<IAuthorizationHandler, PermissionRequirement.Handler>();
 
             // Automapper
             services.AddAutoMapper(typeof(NodeProfile).Assembly);
@@ -162,7 +168,7 @@ namespace BytexDigital.RGSM.Node
                 scope.ServiceProvider.GetRequiredService<NodeDbContext>().Database.Migrate();
 
                 scope.ServiceProvider.GetRequiredService<ServerStateRegister>().InitializeAsync().GetAwaiter().GetResult();
-                //scope.ServiceProvider.GetRequiredService<SteamDownloadService>().InitializeAsync().GetAwaiter().GetResult();
+                scope.ServiceProvider.GetRequiredService<SteamDownloadService>().InitializeAsync().GetAwaiter().GetResult();
             }
 
             if (env.IsDevelopment())
