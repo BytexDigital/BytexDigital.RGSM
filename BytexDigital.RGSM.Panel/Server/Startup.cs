@@ -182,6 +182,12 @@ namespace BytexDigital.RGSM.Panel.Server
                 options.DefaultAuthenticateScheme = NodeAuthenticationOptions.NODE_AUTHENTICATION_SCHEME;
             });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("App", policy => policy.RequireClaim("scope", "rgsm.app", "rgsm.node"));
+                options.AddPolicy("Node", policy => policy.RequireClaim("scope", "rgsm.app"));
+            });
+
             services
                 .AddControllers()
                 .AddFluentValidation(options => options

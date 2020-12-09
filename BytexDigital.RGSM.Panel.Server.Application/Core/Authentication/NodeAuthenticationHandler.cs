@@ -55,7 +55,7 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Authentication
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, node.Id),
-                new Claim(ClaimTypes.Role, "rgsm.node"),
+                new Claim("scope", "rgsm.app"),
                 new Claim("scope", "rgsm.node")
             };
 
