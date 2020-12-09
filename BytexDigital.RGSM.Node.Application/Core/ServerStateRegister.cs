@@ -36,18 +36,20 @@ namespace BytexDigital.RGSM.Node.Application.Core
 
                 foreach (var server in await serversService.GetServers().ToListAsync())
                 {
-                    Register(server);
+                    await RegisterAsync(server);
                 }
             }
         }
 
-        public void Register(Server server)
+        public async Task RegisterAsync(Server server)
         {
             var state = server.Type switch
             {
                 ServerType.Arma3 => new ArmaServerState(_mediator, server.Id, server.Directory),
                 _ => throw new NotImplementedException()
             };
+
+            await state.InitializeAsync();
 
             _ = _serverStates.TryAdd(server.Id, state);
         }

@@ -49,6 +49,8 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core
 
         public IQueryable<Domain.Entities.Node> GetNode(string id) => _applicationDbContext.Nodes.Where(x => x.Id == id);
 
+        public IQueryable<Domain.Entities.NodeKey> GetNodeKey(string id) => _applicationDbContext.NodeKeys.Where(x => x.Node.Id == id);
+
         public IQueryable<Domain.Entities.Node> GetNodes() => _applicationDbContext.Nodes;
 
         public IQueryable<Domain.Entities.Node> GetNodeByName(string name) => _applicationDbContext.Nodes.Where(x => x.Name == name);

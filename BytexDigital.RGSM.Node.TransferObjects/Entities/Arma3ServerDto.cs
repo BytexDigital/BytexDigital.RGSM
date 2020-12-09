@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BytexDigital.RGSM.Node.TransferObjects.Entities
+﻿namespace BytexDigital.RGSM.Node.TransferObjects.Entities
 {
-    class Arma3ServerDto
+    public class Arma3ServerDto : EntityDto
     {
     }
 }

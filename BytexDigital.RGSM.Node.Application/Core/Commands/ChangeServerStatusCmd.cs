@@ -42,16 +42,20 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands
                 // Start
                 if (request.StartOrStop)
                 {
-                    if (!await runnableState.CanStartAsync())
-                        throw new ServiceException().WithField(nameof(request.Id)).WithMessage("Server cannot be started at the time.");
+                    var canStart = await runnableState.CanStartAsync();
+
+                    if (!canStart)
+                        throw new ServiceException().WithField(nameof(request.Id)).WithMessage($"Server cannot be started at the time. Reason: {canStart.FailureReason}");
 
                     await runnableState.StartAsync();
                 }
                 // Stop
                 else
                 {
-                    if (!await runnableState.CanStopAsync())
-                        throw new ServiceException().WithField(nameof(request.Id)).WithMessage("Server cannot be stopped at the time.");
+                    var canStop = await runnableState.CanStopAsync();
+
+                    if (!canStop)
+                        throw new ServiceException().WithField(nameof(request.Id)).WithMessage($"Server cannot be stopped at the time. Reason: {canStop.FailureReason}");
 
                     await runnableState.StopAsync();
                 }

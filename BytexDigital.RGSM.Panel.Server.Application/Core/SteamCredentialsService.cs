@@ -15,6 +15,8 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core
             _applicationDbContext = applicationDbContext;
         }
 
+        public IQueryable<SteamCredential> GetCredentials() => _applicationDbContext.SteamCredentials;
+
         public IQueryable<SteamCredential> GetCredentials(string id)
         {
             return _applicationDbContext.SteamCredentials.Where(x => x.Id == id);

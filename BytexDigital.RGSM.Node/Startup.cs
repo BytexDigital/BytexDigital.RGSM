@@ -1,11 +1,23 @@
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 
 using Autofac;
 
+using AutoMapper;
+
 using BytexDigital.Common.Errors.AspNetCore.Extensions;
-using BytexDigital.RGSM.Node.Application.Core.Generic;
+using BytexDigital.Common.Errors.MediatR;
+using BytexDigital.RGSM.Node.Application.Core;
+using BytexDigital.RGSM.Node.Application.Core.Arma3;
+using BytexDigital.RGSM.Node.Application.Core.SteamCmd;
+using BytexDigital.RGSM.Node.Application.Core.SteamCmd.Commands;
+using BytexDigital.RGSM.Node.Application.Mappings;
+using BytexDigital.RGSM.Node.Application.Mediator;
+using BytexDigital.RGSM.Node.Application.Options;
 using BytexDigital.RGSM.Node.Persistence;
+
+using MediatR;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -41,22 +53,41 @@ namespace BytexDigital.RGSM.Node
             //    .AddScoped<Application.Games.Arma3.Services.CreationService>()
             //    .AddScoped<Application.Games.Arma3.Services.StatusService>();
 
+            services
+                .AddScoped<ServersService>()
+                .AddScoped<SettingsService>()
+                .AddScoped<ArmaServerService>()
+                .AddSingleton<FileSystemService>()
+                .AddSingleton<SteamDownloadService>()
+                .AddSingleton<ServerStateRegister>()
+                .AddSingleton<ScopeService>();
+
             services.AddUniformCommonErrorResponses();
 
             // Automapper
-            //services.AddAutoMapper(typeof(DefaultProfile).Assembly, typeof(NodeProfile).Assembly);
+            services.AddAutoMapper(typeof(NodeProfile).Assembly);
 
             // Settings
-            //services.Configure<NodeOptions>(Configuration.GetSection("Node"));
+            services.Configure<NodeOptions>(Configuration.GetSection("NodeSettings"));
 
             // Mediator
-            //services.AddMediatR(typeof(GetDirectoryQuery).Assembly)
-            //    .AddScoped(typeof(IPipelineBehavior<,>), typeof(DbTransactionBehavior<,>))
-            //    .AddScoped(typeof(IPipelineBehavior<,>), typeof(FluentValidationPipelineBehavior<,>));
+            services.AddMediatR(typeof(UpdateAppCmd).Assembly)
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(ScopeBehavior<,>))
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(FluentValidationPipelineBehavior<,>));
+
+            services.AddHttpClient("MasterApi", options =>
+            {
+                options.DefaultRequestHeaders.TryAddWithoutValidation("Node-Api-Key", Configuration["NodeSettings:Master:ApiKey"]);
+                options.BaseAddress = new Uri(Configuration["NodeSettings:Master:BaseUri"]);
+            });
+
+            services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("MasterApi"));
 
             // Connection to local db
             services.AddDbContext<NodeDbContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")).UseLazyLoadingProxies());
+                options
+                    .UseSqlite(Configuration.GetConnectionString("DefaultConnection"), o => o.MigrationsAssembly(typeof(NodeDbContext).Assembly.GetName().Name))
+                    .UseLazyLoadingProxies());
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -89,8 +120,8 @@ namespace BytexDigital.RGSM.Node
                     {
                         AuthorizationCode = new OpenApiOAuthFlow
                         {
-                            AuthorizationUrl = new Uri($"{Configuration["Panel:BaseUri"]}/connect/authorize"),
-                            TokenUrl = new Uri($"{Configuration["Panel:BaseUri"]}/connect/token"),
+                            AuthorizationUrl = new Uri($"{Configuration["NodeSettings:Master:BaseUri"]}/connect/authorize"),
+                            TokenUrl = new Uri($"{Configuration["NodeSettings:Master:BaseUri"]}/connect/token"),
                             Scopes = new Dictionary<string, string>
                             {
                                 { "openid", "ID" },
@@ -126,19 +157,13 @@ namespace BytexDigital.RGSM.Node
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //using (var scope = app.ApplicationServices.GetRequiredService<IServiceProvider>().CreateScope())
-            //{
-            //    var nodeService = scope.ServiceProvider.GetRequiredService<NodeService>();
-            //    var db = scope.ServiceProvider.GetRequiredService<NodeDbContext>();
+            using (var scope = app.ApplicationServices.GetRequiredService<IServiceProvider>().CreateScope())
+            {
+                scope.ServiceProvider.GetRequiredService<NodeDbContext>().Database.Migrate();
 
-            //    if (!env.IsDevelopment())
-            //    {
-            //        db.Database.Migrate();
-            //    }
-
-            //    nodeService.EnsureLocalSettingsCreatedAsync().GetAwaiter().GetResult();
-            //    nodeService.EnsureNodeRegisteredAsync().GetAwaiter().GetResult();
-            //}
+                scope.ServiceProvider.GetRequiredService<ServerStateRegister>().InitializeAsync().GetAwaiter().GetResult();
+                scope.ServiceProvider.GetRequiredService<SteamDownloadService>().InitializeAsync().GetAwaiter().GetResult();
+            }
 
             if (env.IsDevelopment())
             {

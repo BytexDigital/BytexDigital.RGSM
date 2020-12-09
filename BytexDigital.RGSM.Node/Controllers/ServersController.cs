@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BytexDigital.RGSM.Node.Controllers
 {
-    [Route("API/[controller]")]
+    [Route("API/[controller]/[action]")]
     [ApiController]
     [Authorize]
     public class ServersController : ControllerBase
@@ -37,7 +37,8 @@ namespace BytexDigital.RGSM.Node.Controllers
             var result = await _mediator.Send(new CreateServerCmd
             {
                 DisplayName = inputServer.DisplayName,
-                ServerType = inputServer.Type
+                ServerType = inputServer.Type,
+                Directory = inputServer.Directory
             });
 
             return _mapper.Map<ServerDto>(result.Server);

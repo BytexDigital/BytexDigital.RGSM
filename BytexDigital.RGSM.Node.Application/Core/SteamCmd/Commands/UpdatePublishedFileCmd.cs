@@ -7,19 +7,14 @@ using MediatR;
 
 namespace BytexDigital.RGSM.Node.Application.Core.SteamCmd.Commands
 {
-
-    public class UpdateAppIdCmd : IRequest<UpdateAppIdCmd.Response>
+    public class UpdatePublishedFileCmd : IRequest<UpdatePublishedFileCmd.Response>
     {
-        public string SteamUsernameUsedOverride { get; set; }
-
         public AppId AppId { get; set; }
-        public string Id { get; set; }
+        public PublishedFileId PublishedFileId { get; set; }
         public string Directory { get; set; }
-        public UpdateState UpdateState { get; set; }
-        public string Branch { get; set; }
-        public string BranchPassword { get; set; }
+        public bool UseAnonymousUser { get; set; }
 
-        public class Handler : IRequestHandler<UpdateAppIdCmd, Response>
+        public class Handler : IRequestHandler<UpdatePublishedFileCmd, Response>
         {
             private readonly SteamDownloadService _steamDownloadService;
 
@@ -28,11 +23,11 @@ namespace BytexDigital.RGSM.Node.Application.Core.SteamCmd.Commands
                 _steamDownloadService = steamDownloadService;
             }
 
-            public async Task<Response> Handle(UpdateAppIdCmd request, CancellationToken cancellationToken)
+            public async Task<Response> Handle(UpdatePublishedFileCmd request, CancellationToken cancellationToken)
             {
                 return new Response
                 {
-                    UpdateState = await _steamDownloadService.DownloadAppIdAsync(request.AppId, request.Directory, request.Branch, request.BranchPassword)
+                    UpdateState = await _steamDownloadService.DownloadPublishedFileAsync(request.AppId, request.PublishedFileId, request.Directory, request.UseAnonymousUser)
                 };
             }
         }

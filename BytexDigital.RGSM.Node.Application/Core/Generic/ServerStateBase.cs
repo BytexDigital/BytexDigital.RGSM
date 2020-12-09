@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using System.Threading.Tasks;
+
+using MediatR;
 
 namespace BytexDigital.RGSM.Node.Application.Core.Generic
 {
@@ -13,6 +15,11 @@ namespace BytexDigital.RGSM.Node.Application.Core.Generic
             Mediator = mediator;
             Id = id;
             Directory = directory;
+        }
+
+        public virtual Task InitializeAsync()
+        {
+            return Task.CompletedTask;
         }
     }
 }

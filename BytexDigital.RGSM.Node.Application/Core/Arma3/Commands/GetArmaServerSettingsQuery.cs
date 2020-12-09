@@ -25,7 +25,12 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3.Commands
 
             public async Task<Response> Handle(GetArmaServerSettingsQuery request, CancellationToken cancellationToken)
             {
-                return new Response { Server = await _serversService.GetArmaServer(request.Id).FirstAsync() };
+                return new Response
+                {
+                    Server = await _serversService.GetArmaServer(request.Id)
+                        .Include(x => x.Server).ThenInclude(x => x.TrackedDepots)
+                        .FirstAsync()
+                };
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -11,36 +12,56 @@ using BytexDigital.RGSM.Node.Application.Exceptions;
 using BytexDigital.RGSM.Node.Application.Options;
 using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
 using BytexDigital.Steam.ContentDelivery;
+using BytexDigital.Steam.ContentDelivery.Exceptions;
+using BytexDigital.Steam.ContentDelivery.Models;
 using BytexDigital.Steam.Core;
 using BytexDigital.Steam.Core.Enumerations;
+using BytexDigital.Steam.Core.Exceptions;
 using BytexDigital.Steam.Core.Structs;
 
 using Microsoft.Extensions.Options;
+
+using Nito.AsyncEx;
+
+using SteamKit2.Unified.Internal;
 
 namespace BytexDigital.RGSM.Node.Application.Core.SteamCmd
 {
     public class SteamDownloadService : IDisposable
     {
-        private readonly BlockingCollection<UpdateItem> _downloadQueueCollection;
         private readonly ConcurrentQueue<UpdateItem> _downloadQueue;
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly HttpClient _httpClient;
         private List<SteamCredentialDto> _steamCredentials;
         private ConcurrentDictionary<string, (SteamCredentialDto Credentials, SteamClient Client, SteamContentClient ContentClient)> _steamClients;
+        private ConcurrentDictionary<string, DateTimeOffset> _rateLimitedAccounts;
+        private ConcurrentBag<string> _invalidLoginKeys;
         private Task _workTask;
+        private AsyncLock _clientsLock;
 
         public SteamDownloadService(IOptions<NodeOptions> nodeOptions, HttpClient httpClient)
         {
             _cancellationTokenSource = new CancellationTokenSource();
+            _clientsLock = new AsyncLock();
             _downloadQueue = new ConcurrentQueue<UpdateItem>();
-            _downloadQueueCollection = new BlockingCollection<UpdateItem>(_downloadQueue);
+            _invalidLoginKeys = new ConcurrentBag<string>();
             _steamClients = new ConcurrentDictionary<string, (SteamCredentialDto Credentials, SteamClient Client, SteamContentClient ContentClient)>();
+            _rateLimitedAccounts = new ConcurrentDictionary<string, DateTimeOffset>();
             _httpClient = httpClient;
         }
 
         public async Task InitializeAsync()
         {
-            _steamCredentials = await _httpClient.GetFromJsonAsync<List<SteamCredentialDto>>("API/Steam/Credentials");
+            await RefreshCredentialsAsync();
+        }
+
+        public async Task RefreshCredentialsAsync()
+        {
+            var response = await _httpClient.GetAsync("API/Steam/GetCredentials");
+
+            var str = await response.Content.ReadAsStringAsync();
+
+            _steamCredentials = await _httpClient.GetFromJsonAsync<List<SteamCredentialDto>>("API/Steam/GetCredentials");
         }
 
         public void Dispose()
@@ -48,13 +69,14 @@ namespace BytexDigital.RGSM.Node.Application.Core.SteamCmd
             _cancellationTokenSource.Cancel();
         }
 
-        public Task<UpdateState> DownloadAppIdAsync(AppId appId, string directory, string branch, string branchPassword, string useUsername = default)
+        public Task<UpdateState> DownloadPublishedFileAsync(AppId appId, PublishedFileId publishedFileId, string directory, bool useAnonymous)
         {
             var updateState = new UpdateState
             {
-                CancellationToken = new System.Threading.CancellationTokenSource(),
+                CancellationToken = new CancellationTokenSource(),
                 Progress = 0,
-                State = UpdateState.Status.Queued
+                State = UpdateState.Status.Queued,
+                ProcessedEvent = new Nito.AsyncEx.AsyncManualResetEvent(false)
             };
 
             _downloadQueue.Enqueue(new UpdateItem
@@ -63,10 +85,9 @@ namespace BytexDigital.RGSM.Node.Application.Core.SteamCmd
                 CancellationToken = updateState.CancellationToken.Token,
 
                 AppId = appId,
-                Directory = directory,
-                Branch = branch,
-                BranchPassword = branchPassword,
-                UseSteamUsername = useUsername
+                PublishedFileId = publishedFileId,
+                UseAnonymousUser = useAnonymous,
+                Directory = directory
             });
 
             if (_workTask == default || _workTask.IsCompleted)
@@ -77,46 +98,84 @@ namespace BytexDigital.RGSM.Node.Application.Core.SteamCmd
             return Task.FromResult(updateState);
         }
 
+        public Task<UpdateState> DownloadAppIdAsync(AppId appId, Func<Depot, bool> depotCondition, string directory, string branch, string branchPassword, bool useAnonymousUser)
+        {
+            var updateState = new UpdateState
+            {
+                CancellationToken = new CancellationTokenSource(),
+                Progress = 0,
+                State = UpdateState.Status.Queued,
+                ProcessedEvent = new Nito.AsyncEx.AsyncManualResetEvent(false)
+            };
+
+            _downloadQueue.Enqueue(new UpdateItem
+            {
+                UpdateState = updateState,
+                CancellationToken = updateState.CancellationToken.Token,
+                DepotCondition = depotCondition,
+
+                AppId = appId,
+                Directory = directory,
+                Branch = branch,
+                BranchPassword = branchPassword,
+                UseAnonymousUser = useAnonymousUser
+            });
+
+            if (_workTask == default || _workTask.IsCompleted)
+            {
+                _workTask = Task.Run(async () => await WorkAsync());
+            }
+
+            return Task.FromResult(updateState);
+        }
+
+        public async Task<PublishedFileDetails> GetPublishedFileDetailsAsync(AppId appId, PublishedFileId publishedFileId)
+        {
+            (var credentials, var client, var contentClient) = await GetSteamClientAsync(appId, true);
+
+            return await contentClient.GetPublishedFileDetailsAsync(publishedFileId);
+        }
+
         private async Task WorkAsync()
         {
-            foreach (var item in _downloadQueueCollection.GetConsumingEnumerable())
+            while (!_downloadQueue.IsEmpty)
             {
+                _downloadQueue.TryDequeue(out var item);
+
+                if (item == null) continue;
+
+                if (item.CancellationToken.IsCancellationRequested) continue;
+
                 try
                 {
-                    // Determine the Steam user we need to use to download this item
-                    var usernameQuery = _steamClients.Where(x => x.Value.Credentials.SteamCredentialSupportedApps.Any(app => app.AppId == item.AppId));
-
-                    if (item.PublishedFileId.HasValue)
-                    {
-                        usernameQuery = usernameQuery.Where(x => x.Value.Credentials.SteamCredentialSupportedApps.Any(app => app.SupportsWorkshop));
-                    }
-
-                    var usernameToUse = item.UseSteamUsername ?? usernameQuery.FirstOrDefault().Value.Credentials.Username;
-
-                    // No compatible user found
-                    if (usernameToUse == default) throw item.PublishedFileId.HasValue ?
-                            new NoCompatibleSteamUserFoundException(item.AppId, item.PublishedFileId.Value) :
-                            new NoCompatibleSteamUserFoundException(item.AppId);
-
-                    // Check if the user already has a ready-to-use client
-                    var hadEntry = _steamClients.TryGetValue(usernameToUse, out var steamInfo);
-
-                    if (!hadEntry || steamInfo.Client.IsFaulted)
-                    {
-                        // We don't have a usable client, make a new one
-                        (var client, var contentClient) = await CreateSteamClientAsync(steamInfo.Credentials, _cancellationTokenSource.Token);
-
-                        _steamClients.AddOrUpdate(
-                            steamInfo.Credentials.Username,
-                            username => (steamInfo.Credentials, client, contentClient),
-                            (username, existingEntry) => (steamInfo.Credentials, client, contentClient));
-                    }
-
-                    _ = _steamClients.TryGetValue(usernameToUse, out steamInfo);
+                    (SteamCredentialDto credentials, SteamClient client, SteamContentClient contentClient)
+                        = await GetSteamClientAsync(item.AppId, item.UseAnonymousUser);
 
                     item.UpdateState.State = UpdateState.Status.Processing;
 
-                    await DownloadAsync(item, steamInfo.Client.GetSteamOs(), steamInfo.ContentClient, item.CancellationToken);
+                    // For workshop items, we will perform a folder synchronization, meaning remotely non existant files will be deleted locally
+                    // to ensure a 1to1 copy of the mod.
+                    if (item.PublishedFileId.HasValue)
+                    {
+                        var details = await contentClient.GetPublishedFileDetailsAsync(item.PublishedFileId.Value);
+                        Manifest manifest = await contentClient.GetManifestAsync(item.AppId, item.AppId, details.hcontent_file);
+
+                        foreach (var localFilePath in Directory.GetFiles(item.Directory, "*", SearchOption.AllDirectories))
+                        {
+                            var relativeLocalPath = Path.GetRelativePath(item.Directory, localFilePath);
+
+                            if (manifest.Files.Count(x => x.FileName.ToLowerInvariant() == relativeLocalPath.ToLowerInvariant()) == 0)
+                            {
+                                File.Delete(localFilePath);
+                            }
+                        }
+                    }
+
+                    await DownloadAsync(item, client.GetSteamOs(), contentClient, item.CancellationToken);
+                }
+                catch (SteamClientFaultedException ex)
+                {
+                    item.UpdateState.FailureException = ex.InnerException ?? ex;
                 }
                 catch (Exception ex)
                 {
@@ -124,6 +183,97 @@ namespace BytexDigital.RGSM.Node.Application.Core.SteamCmd
                 }
 
                 item.UpdateState.State = UpdateState.Status.Completed;
+                item.UpdateState.ProcessedEvent.Set();
+            }
+        }
+
+        private async Task<(SteamCredentialDto Credentials, SteamClient Client, SteamContentClient ContentClient)>
+            GetSteamClientAsync(AppId appId, bool useAnonymous)
+        {
+            using (var lockRef = await _clientsLock.LockAsync())
+            {
+                await RefreshCredentialsAsync();
+
+                // Remove accounts from the rateLimited dictionary after their time has been passed
+                foreach (var rateLimitedUser in _rateLimitedAccounts.Where(x => x.Value <= DateTimeOffset.UtcNow).ToList())
+                {
+                    _ = _rateLimitedAccounts.TryRemove(rateLimitedUser.Key, out _);
+                }
+
+                string usernameToUse = default;
+
+                if (!useAnonymous)
+                {
+                    // Determine the Steam user we need to use to download this item
+                    var usernameQuery = _steamCredentials
+                        // Find credentials that support this appid
+                        .Where(x => x.SteamCredentialSupportedApps.Any(app => app.AppId == appId))
+                        // Find credentials that have not been rate limited recently
+                        .Where(x => !_rateLimitedAccounts.ContainsKey(x.Username))
+                        // Find crednetials that have not been marked as broken
+                        .Where(x => !_invalidLoginKeys.Contains(x.LoginKey));
+
+                    usernameToUse = usernameQuery.FirstOrDefault()?.Username;
+                }
+                else
+                {
+                    usernameToUse = "anonymous";
+                }
+
+                // No compatible user found
+                if (usernameToUse == default) throw new NoCompatibleSteamUserFoundException(appId);
+
+                // Check if the user already has a ready-to-use client
+                var hadEntry = _steamClients.TryGetValue(usernameToUse, out var steamInfo);
+
+                if (!hadEntry || steamInfo.Client.IsFaulted)
+                {
+                    SteamCredentialDto credentials = null;
+
+                    if (usernameToUse == "anonymous")
+                    {
+                        credentials = new SteamCredentialDto { Username = "anonymous" };
+                    }
+                    else
+                    {
+                        credentials = _steamCredentials.First(x => x.Username == usernameToUse);
+                    }
+
+                    // We don't have a usable client, make a new one
+                    try
+                    {
+                        (var client, var contentClient) = await CreateSteamClientAsync(credentials, _cancellationTokenSource.Token);
+
+                        _steamClients.AddOrUpdate(
+                            credentials.Username,
+                            username => (credentials, client, contentClient),
+                            (username, existingEntry) => (credentials, client, contentClient));
+                    }
+                    catch (SteamClientFaultedException ex)
+                    {
+                        if (ex.InnerException is SteamLogonException logonException)
+                        {
+                            // If we have been rate limited, exclude this account from further login attempts for some time
+                            if (logonException.Result == SteamKit2.EResult.RateLimitExceeded)
+                            {
+                                _rateLimitedAccounts.TryAdd(credentials.Username, DateTimeOffset.UtcNow.Add(TimeSpan.FromMinutes(30)));
+                            }
+                            // If we got a invalid password result, mark this login key as invalid,
+                            // this will result in this account only be chosen again once the login key
+                            // changes, meaning the system administrator generated a new login key with sentry data.
+                            else if (logonException.Result == SteamKit2.EResult.InvalidPassword)
+                            {
+                                _invalidLoginKeys.Add(credentials.LoginKey);
+                            }
+                        }
+
+                        throw;
+                    }
+                }
+
+                _ = _steamClients.TryGetValue(usernameToUse, out steamInfo);
+
+                return steamInfo;
             }
         }
 
@@ -134,9 +284,13 @@ namespace BytexDigital.RGSM.Node.Application.Core.SteamCmd
             {
                 var downloadHandler = await contentClient.GetPublishedFileDataAsync(updateItem.PublishedFileId.Value, default, default, default, os);
 
-                while (downloadHandler.IsRunning)
+                var downloadTask = downloadHandler.DownloadToFolderAsync(updateItem.Directory, cancellationToken);
+
+                while (downloadHandler.IsRunning || !downloadTask.IsCompleted)
                 {
                     await Task.Delay(100, cancellationToken);
+
+                    if (downloadTask.IsFaulted) throw downloadTask.Exception;
 
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -149,9 +303,18 @@ namespace BytexDigital.RGSM.Node.Application.Core.SteamCmd
             }
 
             // Download Apps
-            var depots = (await contentClient.GetDepotsOfBranchAsync(updateItem.AppId, updateItem.Branch))
-                .Where(depot => depot.OperatingSystems.Any(x => x.Identifier == os.Identifier))
-                .ToList();
+            List<Depot> depots = (await contentClient.GetDepotsOfBranchAsync(updateItem.AppId, updateItem.Branch)).ToList();
+
+            if (updateItem.DepotCondition != default)
+            {
+                depots = depots.Where(depot => updateItem.DepotCondition.Invoke(depot)).ToList();
+            }
+            else
+            {
+                depots = depots
+                    .Where(depot => depot.OperatingSystems.Any(x => x.Identifier == os.Identifier))
+                    .ToList();
+            }
 
             int completedItems = 0;
 
@@ -159,13 +322,15 @@ namespace BytexDigital.RGSM.Node.Application.Core.SteamCmd
             {
                 var downloadHandler = await contentClient.GetAppDataAsync(updateItem.AppId, depot.Id, default, updateItem.Branch, updateItem.BranchPassword, os);
 
-                while (downloadHandler.IsRunning)
+                var downloadTask = downloadHandler.DownloadToFolderAsync(updateItem.Directory, cancellationToken);
+
+                while (!downloadTask.IsCompleted)
                 {
                     await Task.Delay(100, cancellationToken);
 
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    updateItem.UpdateState.Progress = ((double)completedItems + downloadHandler.TotalProgress) / depots.Count;
+                    updateItem.UpdateState.Progress = (double)(completedItems + downloadHandler.TotalProgress) / depots.Count;
                 }
 
                 completedItems += 1;
@@ -175,10 +340,22 @@ namespace BytexDigital.RGSM.Node.Application.Core.SteamCmd
         private async Task<(SteamClient client, SteamContentClient contentClient)> CreateSteamClientAsync(
             SteamCredentialDto steamCredentials, CancellationToken cancellationToken = default)
         {
-            var client = new SteamClient(
-                new SteamCredentials(steamCredentials.Username, steamCredentials.Password),
-                new DefaultSteamAuthenticationCodesProvider(),
-                new PersistedSteamAuthenticationFilesProvider(steamCredentials.LoginKey, Convert.FromBase64String(steamCredentials.Sentry)));
+            SteamClient client = default;
+
+            if (steamCredentials.Username == "anonymous")
+            {
+                client = new SteamClient(
+                    SteamCredentials.Anonymous,
+                    new DefaultSteamAuthenticationCodesProvider(),
+                    new DefaultSteamAuthenticationFilesProvider());
+            }
+            else
+            {
+                client = new SteamClient(
+                    new SteamCredentials(steamCredentials.Username, steamCredentials.Password),
+                    new DefaultSteamAuthenticationCodesProvider(),
+                    new PersistedSteamAuthenticationFilesProvider(steamCredentials.LoginKey, Convert.FromBase64String(steamCredentials.Sentry)));
+            }
 
             var contentClient = new SteamContentClient(client);
 
@@ -223,12 +400,14 @@ namespace BytexDigital.RGSM.Node.Application.Core.SteamCmd
         {
             public CancellationToken CancellationToken { get; set; }
 
+            public Func<Depot, bool> DepotCondition { get; set; }
+
             public AppId AppId { get; set; }
             public PublishedFileId? PublishedFileId { get; set; }
             public string Directory { get; set; }
             public string Branch { get; set; }
             public string BranchPassword { get; set; }
-            public string UseSteamUsername { get; set; }
+            public bool UseAnonymousUser { get; set; }
             public UpdateState UpdateState { get; set; }
         }
     }

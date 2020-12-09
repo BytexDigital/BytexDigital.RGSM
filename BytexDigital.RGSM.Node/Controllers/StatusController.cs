@@ -29,7 +29,7 @@ namespace BytexDigital.RGSM.Node.Controllers
         [HttpGet]
         public async Task<ActionResult<ServerStatusDto>> StatusAsync([FromRoute] string serverId)
         {
-            return _mapper.Map<ServerStatusDto>((await _mediator.Send(new GetServerStatusQuery())).Status);
+            return _mapper.Map<ServerStatusDto>((await _mediator.Send(new GetServerStatusQuery { Id = serverId })).Status);
         }
 
         [HttpPost]
@@ -59,7 +59,7 @@ namespace BytexDigital.RGSM.Node.Controllers
         [HttpPost]
         public async Task<ActionResult> InstallOrUpdateAsync([FromRoute] string serverId)
         {
-            await _mediator.Send(new InstallIOrUpdateServerCmd { Id = serverId });
+            await _mediator.Send(new InstallOrUpdateServerCmd { Id = serverId });
 
             return Ok();
         }

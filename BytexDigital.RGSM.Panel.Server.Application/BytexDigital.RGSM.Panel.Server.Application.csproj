@@ -6,15 +6,19 @@
 
 	<ItemGroup>
 		<PackageReference Include="BytexDigital.Common.Errors" Version="1.0.3" />
+		<PackageReference Include="FluentValidation" Version="9.3.0" />
 		<PackageReference Include="MediatR" Version="9.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\BytexDigital.RGSM.Panel.Server.Domain\BytexDigital.RGSM.Panel.Server.Domain.csproj" />
-		<ProjectReference Include="..\BytexDigital.RGSM.Node.Application\BytexDigital.RGSM.Node.Application.csproj" />
 		<ProjectReference Include="..\BytexDigital.RGSM.Panel.Server.Persistence\BytexDigital.RGSM.Panel.Server.Persistence.csproj" />
 		<ProjectReference Include="..\BytexDigital.RGSM.Panel.Server.TransferObjects\BytexDigital.RGSM.Panel.Server.TransferObjects.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Core\Commands\NewFolder\" />
 	</ItemGroup>
 
 </Project>

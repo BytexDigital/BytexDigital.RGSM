@@ -63,6 +63,17 @@ namespace BytexDigital.RGSM.Panel.Server.Controllers
             return _mapper.Map<List<NodeDto>>(await _nodesService.GetNodes().ToListAsync());
         }
 
+        [HttpGet("{nodeId}")]
+        public async Task<ActionResult<NodeKeyDto>> GetNodeKeyAsync([FromRoute, Required] string nodeId)
+        {
+            if (!(await _authorizationService.AuthorizeAsync(HttpContext.User, null, new SystemAdministratorRequirement())).Succeeded)
+            {
+                return Unauthorized();
+            }
+
+            return _mapper.Map<NodeKeyDto>((await _mediator.Send(new GetNodeKeyQuery { NodeId = nodeId })).NodeKey);
+        }
+
         [HttpDelete("{nodeId}")]
         public async Task<ActionResult> DeleteAsync([FromRoute, Required] string nodeId)
         {

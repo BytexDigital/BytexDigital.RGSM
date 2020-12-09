@@ -63,7 +63,7 @@ namespace BytexDigital.RGSM.Panel.Server
 
             services.AddScoped<IAuthorizationHandler, SystemAdministratorRequirement.Handler>();
 
-            services.AddAutoMapper(typeof(DefaultProfile).Assembly);
+            services.AddAutoMapper(typeof(MasterProfile).Assembly);
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")).UseLazyLoadingProxies());
@@ -161,7 +161,7 @@ namespace BytexDigital.RGSM.Panel.Server
             services
                 .AddAuthentication(options =>
                 {
-                    options.DefaultScheme = IdentityConstants.ApplicationScheme;
+                    options.DefaultScheme = NodeAuthenticationOptions.NODE_AUTHENTICATION_SCHEME;
                     options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
                 })
                 .AddScheme<NodeAuthenticationOptions, NodeAuthenticationHandler>(NodeAuthenticationOptions.NODE_AUTHENTICATION_SCHEME, null)
@@ -177,6 +177,11 @@ namespace BytexDigital.RGSM.Panel.Server
                 options.TokenValidationParameters.ValidAudience = "rgsm";
             });
 
+            services.PostConfigureAll<AuthenticationOptions>(options =>
+            {
+                options.DefaultAuthenticateScheme = NodeAuthenticationOptions.NODE_AUTHENTICATION_SCHEME;
+            });
+
             services
                 .AddControllers()
                 .AddFluentValidation(options => options
@@ -188,6 +193,7 @@ namespace BytexDigital.RGSM.Panel.Server
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             using (var scope = app.ApplicationServices.GetRequiredService<IServiceProvider>().CreateScope())
             {
                 var dbDefaultsService = scope.ServiceProvider.GetRequiredService<DatabaseDefaultsService>();
