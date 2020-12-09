@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BytexDigital.RGSM.Panel.Server.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("API/[controller]")]
     [ApiController]
     [Authorize]
     public class GroupsController : ControllerBase
