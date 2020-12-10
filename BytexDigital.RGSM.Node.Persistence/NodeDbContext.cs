@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq.Expressions;
 
 using BytexDigital.RGSM.Node.Domain.Entities;
@@ -10,10 +11,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BytexDigital.RGSM.Node.Persistence
 {
-    public class NodeDbContext : DbContext
+    public class NodeDbContext : DbContext, IDisposable
     {
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+
         public NodeDbContext(DbContextOptions<NodeDbContext> options) : base(options)
         {
+            Debug.WriteLine($"NodeDbContext created: {ContextId}");
+        }
+
+        public override void Dispose()
+        {
+            Debug.WriteLine($"DISPOSE {Id}");
+
+            base.Dispose();
         }
 
         public DbSet<KeyValue> KeyValues { get; set; }

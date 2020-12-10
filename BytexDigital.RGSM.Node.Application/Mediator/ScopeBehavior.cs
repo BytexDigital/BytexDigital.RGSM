@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 using Autofac;
+using Autofac.Core.Lifetime;
 
 using BytexDigital.RGSM.Node.Application.Core;
 
@@ -23,7 +24,7 @@ namespace BytexDigital.RGSM.Node.Application.Mediator
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
             //return await _scopeService.RunScoped(() => next.Invoke());
-            if (_lifetimeScope.Tag == (object)"Internal") return await next.Invoke();
+            if (_lifetimeScope.Tag != "root") return await next.Invoke();
 
             using (var scope = _lifetimeScope.BeginLifetimeScope((object)"Internal"))
             {

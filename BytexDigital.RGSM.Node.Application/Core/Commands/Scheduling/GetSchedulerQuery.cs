@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BytexDigital.RGSM.Node.Application.Core.Scheduling;
 using BytexDigital.RGSM.Node.Application.Exceptions;
 using BytexDigital.RGSM.Node.Domain.Entities.Scheduling;
+using BytexDigital.RGSM.Node.Persistence;
 
 using MediatR;
 
@@ -22,11 +23,13 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands.Scheduling
         {
             private readonly ServersService _serversService;
             private readonly SchedulersService _schedulersService;
+            private readonly NodeDbContext _nodeDbContext;
 
-            public Handler(ServersService serversService, SchedulersService schedulersService)
+            public Handler(ServersService serversService, SchedulersService schedulersService, NodeDbContext nodeDbContext)
             {
                 _serversService = serversService;
                 _schedulersService = schedulersService;
+                _nodeDbContext = nodeDbContext;
             }
 
             public async Task<Response> Handle(GetSchedulerQuery request, CancellationToken cancellationToken)

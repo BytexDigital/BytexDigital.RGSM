@@ -8,7 +8,7 @@ namespace BytexDigital.RGSM.Node.Domain.Entities.Scheduling
     public class ScheduleAction : Entity
     {
         [Required]
-        public string ScheduleEventId { get; set; }
+        public string ScheduleGroupId { get; set; }
 
         [Required]
         public ScheduleActionType ActionType { get; set; }
@@ -20,6 +20,6 @@ namespace BytexDigital.RGSM.Node.Domain.Entities.Scheduling
         public bool ContinueOnError { get; set; }
 
         public virtual ICollection<KeyValue> KeyValues { get; set; }
-        public virtual ScheduleGroup ScheduleGroups { get; set; }
+        public virtual ScheduleGroup ScheduleGroup { get; set; }
     }
 }

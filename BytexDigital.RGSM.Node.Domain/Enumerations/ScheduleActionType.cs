@@ -2,10 +2,13 @@
 {
     public enum ScheduleActionType
     {
-        StartServer,
-        StopServer,
-        UpdateWorkshopModifications,
-        UpdateGameserver,
-        BeRcon_SendMessage
+        ExecutionDelay = 1,
+        StartServer = 10,
+        StopServer = 11,
+
+        UpdateWorkshopModifications = 12,
+        UpdateGameserver = 13,
+
+        BeRcon_SendMessage = 100
     }
 }

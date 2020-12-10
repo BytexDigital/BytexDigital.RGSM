@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,7 +21,11 @@ namespace BytexDigital.RGSM.Node.Application.Core.Scheduling
         }
 
         public IQueryable<SchedulerPlan> GetSchedulerPlan(Server server)
-            => _nodeDbContext.SchedulerPlans.Where(x => x.ServerId == server.Id).Include(x => x.ScheduleGroups).ThenInclude(x => x.ScheduleActions);
+        {
+            Debug.WriteLine($"GetSchedulerPlan: {_nodeDbContext.ContextId}");
+
+            return _nodeDbContext.SchedulerPlans.Where(x => x.ServerId == server.Id).Include(x => x.ScheduleGroups).ThenInclude(x => x.ScheduleActions);
+        }
 
         public IQueryable<SchedulerPlan> GetSchedulerPlans()
             => _nodeDbContext.SchedulerPlans.Include(x => x.ScheduleGroups).ThenInclude(x => x.ScheduleActions);
@@ -37,6 +42,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Scheduling
                 if (changedGroup == null)
                 {
                     schedulerPlan.ScheduleGroups.Remove(group);
+                    _nodeDbContext.ScheduleGroups.Remove(group);
                 }
                 else
                 {
@@ -47,13 +53,14 @@ namespace BytexDigital.RGSM.Node.Application.Core.Scheduling
                         if (changedAction == null)
                         {
                             group.ScheduleActions.Remove(action);
+                            _nodeDbContext.ScheduleActions.Remove(action);
                         }
                     }
                 }
             }
 
             // Merge existing and new
-            foreach (var changedGroup in schedulerPlan.ScheduleGroups)
+            foreach (var changedGroup in changedSchedulerPlan.ScheduleGroups)
             {
                 var group = schedulerPlan.ScheduleGroups.FirstOrDefault(x => x.Id == changedGroup.Id);
 
@@ -67,10 +74,11 @@ namespace BytexDigital.RGSM.Node.Application.Core.Scheduling
 
                 group.CronExpression = changedGroup.CronExpression;
                 group.DisplayName = changedGroup.DisplayName;
+                group.Priority = changedGroup.Priority;
 
                 foreach (var changedAction in changedGroup.ScheduleActions)
                 {
-                    var action = changedGroup.ScheduleActions.FirstOrDefault(x => x.Id == changedAction.Id);
+                    var action = group.ScheduleActions.FirstOrDefault(x => x.Id == changedAction.Id);
 
                     if (action == null)
                     {
@@ -81,11 +89,14 @@ namespace BytexDigital.RGSM.Node.Application.Core.Scheduling
                     }
 
                     action.ContinueOnError = changedAction.ContinueOnError;
+                    action.ActionType = changedAction.ActionType;
                     action.KeyValues = changedAction.KeyValues;
+                    action.Order = changedAction.Order;
                 }
             }
 
             await _nodeDbContext.SaveChangesAsync();
+            await _nodeDbContext.Entry(schedulerPlan).ReloadAsync();
         }
     }
 }

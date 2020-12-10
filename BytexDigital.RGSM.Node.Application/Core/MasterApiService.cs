@@ -23,7 +23,7 @@ namespace BytexDigital.RGSM.Node.Application.Core
 
         public async Task<ServiceResult<List<ApplicationUserGroupDto>>> GetGroupsOfUserAsync(string userId)
         {
-            var response = await _httpClient.GetAsync($"/API/Groups/GetUsersGroups?userId={userId}1");
+            var response = await _httpClient.GetAsync($"/API/Groups/GetUsersGroups?userId={userId}");
 
             if (!response.IsSuccessStatusCode)
             {

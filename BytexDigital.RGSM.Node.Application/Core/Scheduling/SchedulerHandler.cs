@@ -23,12 +23,12 @@ namespace BytexDigital.RGSM.Node.Application.Core.Scheduling
 {
     public class SchedulerHandler : IHostedService, IAsyncDisposable
     {
-        private ConcurrentDictionary<string, (CancellationTokenSource CancellationTokenSource, Task Task, AsyncAutoResetEvent NewSchedulerEvent)> _schedulerTasks;
+        private ConcurrentDictionary<string, (CancellationTokenSource CancellationTokenSource, Task Task, AsyncManualResetEvent NewSchedulerEvent)> _schedulerTasks;
         private readonly IMediator _mediator;
 
         public SchedulerHandler(IMediator mediator)
         {
-            _schedulerTasks = new ConcurrentDictionary<string, (CancellationTokenSource, Task, AsyncAutoResetEvent)>();
+            _schedulerTasks = new ConcurrentDictionary<string, (CancellationTokenSource, Task, AsyncManualResetEvent)>();
             _mediator = mediator;
         }
 
@@ -57,7 +57,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Scheduling
 
         public Task StartSchedulerAsync(SchedulerPlan schedulerPlan)
         {
-            AsyncAutoResetEvent newSchedulerEvent = new AsyncAutoResetEvent();
+            AsyncManualResetEvent newSchedulerEvent = new AsyncManualResetEvent();
             CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
             Task task = Task.Run(async () =>
@@ -82,17 +82,26 @@ namespace BytexDigital.RGSM.Node.Application.Core.Scheduling
             return Task.CompletedTask;
         }
 
-        public Task NotifySchedulerOfNewPlanAsync(SchedulerPlan schedulerPlan)
+        public async Task NotifySchedulerOfNewPlanAsync(SchedulerPlan schedulerPlan)
         {
             if (_schedulerTasks.TryGetValue(schedulerPlan.Id, out var data))
             {
-                data.NewSchedulerEvent.Set();
+                if (!data.Task.IsCompleted)
+                {
+                    data.NewSchedulerEvent.Set();
+                }
+                else
+                {
+                    await StartSchedulerAsync(schedulerPlan);
+                }
             }
-
-            return Task.CompletedTask;
+            else
+            {
+                await StartSchedulerAsync(schedulerPlan);
+            }
         }
 
-        private async Task WorkAsync(SchedulerPlan schedulerPlan, AsyncAutoResetEvent newSchedulerEvent, CancellationToken cancellationToken)
+        private async Task WorkAsync(SchedulerPlan schedulerPlan, AsyncManualResetEvent newSchedulerEvent, CancellationToken cancellationToken)
         {
             bool firstRun = true;
 
@@ -100,16 +109,25 @@ namespace BytexDigital.RGSM.Node.Application.Core.Scheduling
             {
                 if (firstRun || newSchedulerEvent.IsSet)
                 {
-                    if (newSchedulerEvent.IsSet)
-                    {
-                        await newSchedulerEvent.WaitAsync(cancellationToken);
-                    }
+                    firstRun = false;
 
                     schedulerPlan = (await _mediator.Send(new GetSchedulerQuery
                     {
                         ServerId = schedulerPlan.ServerId,
-                        Query = query => query.Include(x => x.ScheduleGroups).ThenInclude(x => x.ScheduleActions)
+                        Query = query => query.Include(x => x.ScheduleGroups).ThenInclude(x => x.ScheduleActions).ThenInclude(x => x.KeyValues)
+                        // We NEED to mark this as NoTracking because for some reason, even though prior modifications to the database have already been completed
+                        // and this call will make a new instance of NodeDbContext (because of a new scope), it STILL finds already deleted entities and fetches them.
+                        // This questionable behaviour can be avoided by using NoTracking, which is fine since past outside of commands, no scope exists and lazy-loading
+                        // is disabled anyway, yet usually I shouldnt have to do this.
+                        //.AsNoTracking()
                     })).SchedulerPlan;
+
+                    newSchedulerEvent.Reset();
+
+                    if (!schedulerPlan.IsEnabled)
+                    {
+                        return;
+                    }
                 }
 
                 List<(ScheduleGroup Group, DateTime NextTime)> nextGroupTimes = new List<(ScheduleGroup, DateTime)>();
@@ -130,19 +148,36 @@ namespace BytexDigital.RGSM.Node.Application.Core.Scheduling
 
                 if (nextCombinedGroups == default)
                 {
+                    // No next group to execute found. Wait until a new scheduler event arrives or we are asked to cancel the worker.
                     await newSchedulerEvent.WaitAsync(cancellationToken);
                     continue;
                 }
 
                 var nextGroup = nextCombinedGroups.OrderBy(x => x.Group.Priority).FirstOrDefault();
 
+                // Wait until the group should execute or wait for a signal that the scheduler got updated
+                var cancellationTokenSource = new CancellationTokenSource();
+                var combinedCancelToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cancellationTokenSource.Token);
+
+                var delayTask = Task.Delay((nextGroup.NextTime - DateTime.UtcNow), combinedCancelToken.Token);
+                var newSchedulerTask = newSchedulerEvent.WaitAsync(combinedCancelToken.Token);
+
+                var endingTask = await Task.WhenAny(delayTask, newSchedulerTask);
+
+                cancellationTokenSource.Cancel();
+
+                if (endingTask == newSchedulerTask)
+                {
+                    continue;
+                }
+
                 try
                 {
-
+                    await RunGroupAsync(schedulerPlan, nextGroup.Group, cancellationToken);
                 }
                 catch (Exception ex)
                 {
-                    await RunGroupAsync(schedulerPlan, nextGroup.Group, cancellationToken);
+                    // TODO: Add logging
                 }
             }
         }
@@ -155,6 +190,15 @@ namespace BytexDigital.RGSM.Node.Application.Core.Scheduling
                 {
                     switch (action.ActionType)
                     {
+                        case Domain.Enumerations.ScheduleActionType.ExecutionDelay:
+                        {
+                            var secondsStr = action.KeyValues.FirstOrDefault(x => x.Key == "message")?.Value ?? "0";
+                            var seconds = int.Parse(secondsStr);
+
+                            await Task.Delay(seconds, cancellationToken);
+                        }
+                        break;
+
                         case Domain.Enumerations.ScheduleActionType.StartServer:
                         {
                             await _mediator.Send(new ChangeServerStatusCmd { Id = schedulerPlan.ServerId, StartOrStop = true });
@@ -169,13 +213,13 @@ namespace BytexDigital.RGSM.Node.Application.Core.Scheduling
 
                         case Domain.Enumerations.ScheduleActionType.UpdateWorkshopModifications:
                         {
-                            await _mediator.Send(new BeginUpdateWorkshopModsCmd { Id = schedulerPlan.ServerId });
+                            await InstallOrUpdateWorkshopModificationsAsync(schedulerPlan, scheduleGroup, cancellationToken);
                         }
                         break;
 
                         case Domain.Enumerations.ScheduleActionType.UpdateGameserver:
                         {
-                            await _mediator.Send(new InstallOrUpdateServerCmd { Id = schedulerPlan.ServerId });
+                            await InstallOrUpdateServerAsync(schedulerPlan, scheduleGroup, cancellationToken);
                         }
                         break;
 
@@ -201,9 +245,59 @@ namespace BytexDigital.RGSM.Node.Application.Core.Scheduling
             }
         }
 
+        private async Task InstallOrUpdateServerAsync(SchedulerPlan schedulerPlan, ScheduleGroup scheduleGroup, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(new InstallOrUpdateServerCmd { Id = schedulerPlan.ServerId });
+
+            // Continuously query for the status
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+
+                var installationResponse = await _mediator.Send(new GetServerInstallationStatusQuery { Id = schedulerPlan.ServerId }, cancellationToken);
+
+                if (!installationResponse.InstallationStatus.IsUpdating)
+                {
+                    if (installationResponse.InstallationStatus.FailureReason != default)
+                    {
+                        throw new Exception($"Server update failed: {installationResponse.InstallationStatus.FailureReason}");
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        private async Task InstallOrUpdateWorkshopModificationsAsync(SchedulerPlan schedulerPlan, ScheduleGroup scheduleGroup, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(new BeginUpdateWorkshopModsCmd { Id = schedulerPlan.ServerId });
+
+            // Continuously query for the status
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+
+                var workshopItemsResponse = await _mediator.Send(new GetWorkshopItemStatusQuery { Id = schedulerPlan.ServerId }, cancellationToken);
+
+                if (workshopItemsResponse.WorkshopItems.All(x => !x.IsUpdating))
+                {
+                    var faultedItems = workshopItemsResponse.WorkshopItems.Where(x => x.UpdateFailureReason != default);
+
+                    var exceptions = new List<Exception>();
+
+                    foreach (var faultedItem in faultedItems)
+                    {
+                        exceptions.Add(new Exception($"Workshop item update failed: {faultedItem.UpdateFailureReason}"));
+                    }
+
+                    throw new AggregateException(exceptions);
+                }
+            }
+        }
+
         public ValueTask DisposeAsync()
         {
-            throw new NotImplementedException();
+            return ValueTask.CompletedTask;
         }
     }
 }

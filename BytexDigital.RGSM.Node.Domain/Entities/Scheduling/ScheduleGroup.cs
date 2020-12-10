@@ -6,7 +6,7 @@ namespace BytexDigital.RGSM.Node.Domain.Entities.Scheduling
     public class ScheduleGroup : Entity
     {
         [Required]
-        public string SchedulerId { get; set; }
+        public string SchedulerPlanId { get; set; }
 
         [Required]
         public string DisplayName { get; set; }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 using Autofac;
 
@@ -52,6 +53,8 @@ namespace BytexDigital.RGSM.Node
                 .AddScoped<ServersService>()
                 .AddScoped<ArmaServerService>()
                 .AddScoped<PermissionsService>()
+                .AddScoped<ServerSetupService>()
+                .AddScoped<SchedulersService>()
                 .AddSingleton<FileSystemService>()
                 .AddSingleton<SteamDownloadService>()
                 .AddSingleton<ServerStateRegister>()
@@ -59,7 +62,8 @@ namespace BytexDigital.RGSM.Node
                 .AddSingleton<MasterApiService>();
 
             services
-                .AddHostedService<SchedulerHandler>();
+                .AddSingleton<SchedulerHandler>()
+                .AddSingleton<IHostedService>(x => x.GetRequiredService<SchedulerHandler>());
 
             services.AddUniformCommonErrorResponses();
 
@@ -166,11 +170,15 @@ namespace BytexDigital.RGSM.Node
         {
             using (var scope = app.ApplicationServices.GetRequiredService<IServiceProvider>().CreateScope())
             {
-                scope.ServiceProvider.GetRequiredService<NodeDbContext>().Database.Migrate();
+                Task.Run(async () =>
+                {
+                    scope.ServiceProvider.GetRequiredService<NodeDbContext>().Database.Migrate();
 
-                scope.ServiceProvider.GetRequiredService<ServerStateRegister>().InitializeAsync().GetAwaiter().GetResult();
-                scope.ServiceProvider.GetRequiredService<SteamDownloadService>().InitializeAsync().GetAwaiter().GetResult();
-                scope.ServiceProvider.GetRequiredService<SchedulerHandler>().InitializeAsync().GetAwaiter().GetResult();
+                    await scope.ServiceProvider.GetRequiredService<ServerSetupService>().EnsureCorrectSetupAllAsync();
+                    await scope.ServiceProvider.GetRequiredService<ServerStateRegister>().InitializeAsync();
+                    await scope.ServiceProvider.GetRequiredService<SteamDownloadService>().InitializeAsync();
+                    await scope.ServiceProvider.GetRequiredService<SchedulerHandler>().InitializeAsync();
+                }).GetAwaiter().GetResult();
             }
 
             if (env.IsDevelopment())

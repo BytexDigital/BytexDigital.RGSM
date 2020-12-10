@@ -5,6 +5,10 @@ using BytexDigital.RGSM.Node.Application.Core.Scheduling;
 using BytexDigital.RGSM.Node.Application.Exceptions;
 using BytexDigital.RGSM.Node.Domain.Entities.Scheduling;
 
+using Cronos;
+
+using FluentValidation;
+
 using MediatR;
 
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +45,36 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands.Scheduling
                 await _schedulerHandler.NotifySchedulerOfNewPlanAsync(schedulerPlan);
 
                 return Unit.Value;
+            }
+        }
+
+        public class Validator : AbstractValidator<UpdateSchedulerCmd>
+        {
+            public Validator()
+            {
+                RuleFor(x => x.ChangedSchedulerPlan)
+                    .NotNull()
+                    .DependentRules(() =>
+                    {
+                        RuleForEach(x => x.ChangedSchedulerPlan.ScheduleGroups)
+                            .ChildRules(g =>
+                            {
+                                g.RuleFor(x => x.CronExpression)
+                                    .Must(x =>
+                                    {
+                                        try
+                                        {
+                                            _ = CronExpression.Parse(x);
+                                            return true;
+                                        }
+                                        catch
+                                        {
+                                            return false;
+                                        }
+                                    })
+                                    .WithMessage("Invalid cron expression.");
+                            });
+                    });
             }
         }
     }

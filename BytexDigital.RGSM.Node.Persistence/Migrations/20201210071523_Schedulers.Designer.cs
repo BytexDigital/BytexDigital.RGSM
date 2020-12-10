@@ -3,14 +3,16 @@ using System;
 using BytexDigital.RGSM.Node.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BytexDigital.RGSM.Node.Persistence.Migrations
 {
     [DbContext(typeof(NodeDbContext))]
-    partial class NodeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201210071523_Schedulers")]
+    partial class Schedulers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -210,8 +212,11 @@ namespace BytexDigital.RGSM.Node.Persistence.Migrations
                     b.Property<int>("Order")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ScheduleGroupId")
+                    b.Property<string>("ScheduleEventId")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ScheduleGroupsId")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTimeOffset>("TimeCreated")
@@ -224,7 +229,7 @@ namespace BytexDigital.RGSM.Node.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ScheduleGroupId");
+                    b.HasIndex("ScheduleGroupsId");
 
                     b.ToTable("ScheduleActions");
                 });
@@ -246,8 +251,11 @@ namespace BytexDigital.RGSM.Node.Persistence.Migrations
                     b.Property<int>("Priority")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("SchedulerPlanId")
+                    b.Property<string>("SchedulerId")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SchedulerPlanId")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTimeOffset>("TimeCreated")
@@ -439,22 +447,18 @@ namespace BytexDigital.RGSM.Node.Persistence.Migrations
 
             modelBuilder.Entity("BytexDigital.RGSM.Node.Domain.Entities.Scheduling.ScheduleAction", b =>
                 {
-                    b.HasOne("BytexDigital.RGSM.Node.Domain.Entities.Scheduling.ScheduleGroup", "ScheduleGroup")
+                    b.HasOne("BytexDigital.RGSM.Node.Domain.Entities.Scheduling.ScheduleGroup", "ScheduleGroups")
                         .WithMany("ScheduleActions")
-                        .HasForeignKey("ScheduleGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ScheduleGroupsId");
 
-                    b.Navigation("ScheduleGroup");
+                    b.Navigation("ScheduleGroups");
                 });
 
             modelBuilder.Entity("BytexDigital.RGSM.Node.Domain.Entities.Scheduling.ScheduleGroup", b =>
                 {
                     b.HasOne("BytexDigital.RGSM.Node.Domain.Entities.Scheduling.SchedulerPlan", "SchedulerPlan")
                         .WithMany("ScheduleGroups")
-                        .HasForeignKey("SchedulerPlanId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SchedulerPlanId");
 
                     b.Navigation("SchedulerPlan");
                 });
