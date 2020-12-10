@@ -74,7 +74,7 @@ namespace BytexDigital.RGSM.Node.Controllers
             return _mapper.Map<List<WorkshopItemDto>>(response.WorkshopItems);
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<ActionResult> InstallOrUpdateAllAsync([FromRoute] string serverId)
         {
             if (!(await _authorizationService.AuthorizeAsync(HttpContext.User, null, new PermissionRequirement

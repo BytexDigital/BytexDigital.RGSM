@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 
 using BytexDigital.RGSM.Node.Domain.Entities;
 using BytexDigital.RGSM.Node.Domain.Entities.Arma3;
+using BytexDigital.RGSM.Node.Domain.Entities.Scheduling;
 using BytexDigital.RGSM.Node.Domain.Interfaces;
 
 using Microsoft.EntityFrameworkCore;
@@ -15,13 +16,17 @@ namespace BytexDigital.RGSM.Node.Persistence
         {
         }
 
-        public DbSet<Setting> NodeSettings { get; set; }
+        public DbSet<KeyValue> KeyValues { get; set; }
         public DbSet<Server> Servers { get; set; }
+        public DbSet<SchedulerPlan> SchedulerPlans { get; set; }
+        public DbSet<ScheduleGroup> ScheduleGroups { get; set; }
+        public DbSet<ScheduleAction> ScheduleActions { get; set; }
         public DbSet<Arma3Server> Arma3Server { get; set; }
         public DbSet<TrackedDepot> TrackedDepots { get; set; }
         public DbSet<TrackedWorkshopMod> TrackedWorkshopMods { get; set; }
         public DbSet<GroupReference> GroupReferences { get; set; }
         public DbSet<Permission> Permissions { get; set; }
+        public DbSet<ApiKey> ApiKeys { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

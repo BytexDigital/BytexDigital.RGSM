@@ -12,6 +12,7 @@ using BytexDigital.RGSM.Node.Application.Core;
 using BytexDigital.RGSM.Node.Application.Core.Arma3;
 using BytexDigital.RGSM.Node.Application.Core.Authorization.Requirements;
 using BytexDigital.RGSM.Node.Application.Core.Commands;
+using BytexDigital.RGSM.Node.Application.Core.Scheduling;
 using BytexDigital.RGSM.Node.Application.Core.SteamCmd;
 using BytexDigital.RGSM.Node.Application.Core.SteamCmd.Commands;
 using BytexDigital.RGSM.Node.Application.Mappings;
@@ -47,20 +48,8 @@ namespace BytexDigital.RGSM.Node
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services
-            //    .AddSingleton<ServerStateService>()
-            //    .AddSingleton<FileSystemService>()
-            //    .AddScoped<WorkTasksService>()
-            //    .AddScoped<NodeSettingsService>()
-            //    .AddScoped<NodeService>()
-
-            //    // Arma 3
-            //    .AddScoped<Application.Games.Arma3.Services.CreationService>()
-            //    .AddScoped<Application.Games.Arma3.Services.StatusService>();
-
             services
                 .AddScoped<ServersService>()
-                .AddScoped<SettingsService>()
                 .AddScoped<ArmaServerService>()
                 .AddScoped<PermissionsService>()
                 .AddSingleton<FileSystemService>()
@@ -68,6 +57,9 @@ namespace BytexDigital.RGSM.Node
                 .AddSingleton<ServerStateRegister>()
                 .AddSingleton<ScopeService>()
                 .AddSingleton<MasterApiService>();
+
+            services
+                .AddHostedService<SchedulerHandler>();
 
             services.AddUniformCommonErrorResponses();
 
@@ -178,6 +170,7 @@ namespace BytexDigital.RGSM.Node
 
                 scope.ServiceProvider.GetRequiredService<ServerStateRegister>().InitializeAsync().GetAwaiter().GetResult();
                 scope.ServiceProvider.GetRequiredService<SteamDownloadService>().InitializeAsync().GetAwaiter().GetResult();
+                scope.ServiceProvider.GetRequiredService<SchedulerHandler>().InitializeAsync().GetAwaiter().GetResult();
             }
 
             if (env.IsDevelopment())

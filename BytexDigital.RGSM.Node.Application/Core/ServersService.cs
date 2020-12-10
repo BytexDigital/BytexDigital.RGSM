@@ -35,6 +35,8 @@ namespace BytexDigital.RGSM.Node.Application.Core
             server.DisplayName = displayName;
             server.Type = serverType;
             server.Directory = directory;
+            server.SchedulerPlan = _nodeDbContext.CreateEntity(x => x.SchedulerPlans);
+            server.SchedulerPlan.IsEnabled = false;
 
             switch (serverType)
             {
