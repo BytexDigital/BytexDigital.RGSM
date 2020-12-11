@@ -417,7 +417,14 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
 
         public Task CancelUpdatingWorkshopModsAsync(CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            if (WorkshopUpdateStates == null) return Task.CompletedTask;
+
+            foreach (var updateState in WorkshopUpdateStates.ToList())
+            {
+                updateState.Value.CancellationToken.Cancel();
+            }
+
+            return Task.CompletedTask;
         }
 
         public Task<string> GetWorkshopModPathAsync(Domain.Entities.TrackedWorkshopMod trackedWorkshopMod, CancellationToken cancellationToken)
