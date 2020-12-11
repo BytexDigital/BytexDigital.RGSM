@@ -17,6 +17,7 @@ using BytexDigital.RGSM.Node.Application.Core.Commands;
 using BytexDigital.RGSM.Node.Application.Core.Scheduling;
 using BytexDigital.RGSM.Node.Application.Core.SteamCmd;
 using BytexDigital.RGSM.Node.Application.Core.SteamCmd.Commands;
+using BytexDigital.RGSM.Node.Application.Exceptions;
 using BytexDigital.RGSM.Node.Application.Mappings;
 using BytexDigital.RGSM.Node.Application.Mediator;
 using BytexDigital.RGSM.Node.Application.Options;
@@ -52,6 +53,7 @@ namespace BytexDigital.RGSM.Node
         {
             services
                 .AddScoped<ServersService>()
+                .AddScoped<ConnectivityService>()
                 .AddScoped<ArmaServerService>()
                 .AddScoped<PermissionsService>()
                 .AddScoped<ServerSetupService>()
@@ -84,8 +86,8 @@ namespace BytexDigital.RGSM.Node
 
             services.AddHttpClient("MasterApi", options =>
             {
-                options.DefaultRequestHeaders.TryAddWithoutValidation(ApiKeyAuthenticationHandler.HEADER_NAME, Configuration["NodeSettings:Master:ApiKey"]);
-                options.BaseAddress = new Uri(Configuration["NodeSettings:Master:BaseUri"]);
+                options.DefaultRequestHeaders.TryAddWithoutValidation(ApiKeyAuthenticationHandler.HEADER_NAME, Configuration["NodeSettings:MasterOptions:ApiKey"]);
+                options.BaseAddress = new Uri(Configuration["NodeSettings:MasterOptions:BaseUri"]);
             });
 
             services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("MasterApi"));
@@ -100,10 +102,10 @@ namespace BytexDigital.RGSM.Node
                 .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthenticationOptions.NODE_AUTHENTICATION_SCHEME, null)
                 .AddJwtBearer(options =>
                 {
-                    options.MetadataAddress = $"{Configuration["NodeSettings:Master:BaseUri"]}/.well-known/openid-configuration";
+                    options.MetadataAddress = $"{Configuration["NodeSettings:MasterOptions:BaseUri"]}/.well-known/openid-configuration";
                     options.Audience = "rgsm";
 
-                    options.TokenValidationParameters.ValidIssuer = Configuration["NodeSettings:Master:BaseUri"];
+                    options.TokenValidationParameters.ValidIssuer = Configuration["NodeSettings:MasterOptions:BaseUri"];
                     options.TokenValidationParameters.ValidAudience = "rgsm";
                 })
                 .AddPolicyScheme("API_KEY_OR_JWT", "API_KEY_OR_JWT", options =>
@@ -133,7 +135,7 @@ namespace BytexDigital.RGSM.Node
 
             services.AddCors(options =>
             {
-                options.AddDefaultPolicy(policy => policy.WithOrigins(Configuration["NodeSettings:Master:BaseUri"]));
+                options.AddDefaultPolicy(policy => policy.WithOrigins(Configuration["NodeSettings:MasterOptions:BaseUri"]));
             });
 
             services.AddSwaggerGen(options =>
@@ -147,8 +149,8 @@ namespace BytexDigital.RGSM.Node
                     {
                         AuthorizationCode = new OpenApiOAuthFlow
                         {
-                            AuthorizationUrl = new Uri($"{Configuration["NodeSettings:Master:BaseUri"]}/connect/authorize"),
-                            TokenUrl = new Uri($"{Configuration["NodeSettings:Master:BaseUri"]}/connect/token"),
+                            AuthorizationUrl = new Uri($"{Configuration["NodeSettings:MasterOptions:BaseUri"]}/connect/authorize"),
+                            TokenUrl = new Uri($"{Configuration["NodeSettings:MasterOptions:BaseUri"]}/connect/token"),
                             Scopes = new Dictionary<string, string>
                             {
                                 { "openid", "ID" },
@@ -188,8 +190,16 @@ namespace BytexDigital.RGSM.Node
             {
                 Task.Run(async () =>
                 {
+                    // Migrate the database if necessary
                     scope.ServiceProvider.GetRequiredService<NodeDbContext>().Database.Migrate();
 
+                    // Make sure we are connected to the masterserver with a valid api key
+                    if (!await scope.ServiceProvider.GetRequiredService<ConnectivityService>().IsConnectedToMasterAsync())
+                    {
+                        throw new NoMasterConnectionException();
+                    }
+
+                    // Initialize services and other startup related jobs
                     await scope.ServiceProvider.GetRequiredService<ServerSetupService>().EnsureCorrectSetupAllAsync();
                     await scope.ServiceProvider.GetRequiredService<ServerStateRegister>().InitializeAsync();
                     await scope.ServiceProvider.GetRequiredService<SteamDownloadService>().InitializeAsync();
