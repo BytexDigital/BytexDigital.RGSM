@@ -84,7 +84,7 @@ namespace BytexDigital.RGSM.Node
 
             services.AddHttpClient("MasterApi", options =>
             {
-                options.DefaultRequestHeaders.TryAddWithoutValidation("Node-Api-Key", Configuration["NodeSettings:Master:ApiKey"]);
+                options.DefaultRequestHeaders.TryAddWithoutValidation(ApiKeyAuthenticationHandler.HEADER_NAME, Configuration["NodeSettings:Master:ApiKey"]);
                 options.BaseAddress = new Uri(Configuration["NodeSettings:Master:BaseUri"]);
             });
 

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 using BytexDigital.Common.Errors.Exceptions;
 using BytexDigital.RGSM.Panel.Server.Domain.Entities;
+using BytexDigital.RGSM.Panel.Server.Domain.Models;
 
 using MediatR;
 
@@ -29,16 +30,18 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Authenticatio
 
                 return new Response
                 {
-                    Valid = key != null,
-                    IssuedToNode = key?.Node
+                    ApiKeyDetails = new ApiKeyDetails
+                    {
+                        IsValid = key != null,
+                        IssuedToNode = key?.Node
+                    }
                 };
             }
         }
 
         public class Response
         {
-            public bool Valid { get; set; }
-            public Node IssuedToNode { get; set; }
+            public ApiKeyDetails ApiKeyDetails { get; set; }
         }
     }
 }

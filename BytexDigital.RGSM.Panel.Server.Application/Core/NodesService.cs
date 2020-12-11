@@ -23,8 +23,8 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core
             node.BaseUri = baseUri;
             node.Name = name;
             node.DisplayName = displayName;
-            node.NodeKey = _applicationDbContext.CreateEntity(x => x.ApiKeys);
-            node.NodeKey.Value = Guid.NewGuid().ToString();
+            node.ApiKey = _applicationDbContext.CreateEntity(x => x.ApiKeys);
+            node.ApiKey.Value = Guid.NewGuid().ToString();
 
             _applicationDbContext.Nodes.Add(node);
             await _applicationDbContext.SaveChangesAsync();

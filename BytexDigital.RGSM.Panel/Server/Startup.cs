@@ -231,10 +231,7 @@ namespace BytexDigital.RGSM.Panel.Server
                 var dbDefaultsService = scope.ServiceProvider.GetRequiredService<DatabaseDefaultsService>();
                 var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-                if (!env.IsDevelopment())
-                {
-                    db.Database.Migrate();
-                }
+                db.Database.Migrate();
 
                 dbDefaultsService.EnsureSystemAdministratorGroupExistsAsync().GetAwaiter().GetResult();
                 dbDefaultsService.EnsureRootAccountExistsAsync().GetAwaiter().GetResult();

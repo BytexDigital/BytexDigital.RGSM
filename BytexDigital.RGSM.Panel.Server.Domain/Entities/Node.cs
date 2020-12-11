@@ -13,6 +13,6 @@ namespace BytexDigital.RGSM.Panel.Server.Domain.Entities
         [Required]
         public string BaseUri { get; set; }
 
-        public virtual ApiKey NodeKey { get; set; }
+        public virtual ApiKey ApiKey { get; set; }
     }
 }
