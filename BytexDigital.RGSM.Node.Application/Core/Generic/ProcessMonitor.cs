@@ -11,13 +11,15 @@ namespace BytexDigital.RGSM.Node.Application.Core.Generic
         private string _serverDirectory;
         private string _executablePath;
         private readonly ArgumentStringBuilder _argumentStringBuilder;
+        private readonly TimeSpan _shutdownTimeout;
         private Process _process;
 
         private string PidFilePath => Path.Combine(_serverDirectory, ".rgsm", "pid");
 
-        public ProcessMonitor(ArgumentStringBuilder argumentStringBuilder)
+        public ProcessMonitor(ArgumentStringBuilder argumentStringBuilder, TimeSpan? shutdownTimeout = default)
         {
             _argumentStringBuilder = argumentStringBuilder;
+            _shutdownTimeout = shutdownTimeout ?? TimeSpan.FromSeconds(10);
         }
 
         public Task ConfigureAsync(string serverDirectory, string executablePath)
@@ -73,32 +75,29 @@ namespace BytexDigital.RGSM.Node.Application.Core.Generic
             {
             }
 
-            try
-            {
-                _process.Close();
-            }
-            catch
-            {
-            }
+            var timeoutAt = DateTimeOffset.UtcNow.Add(_shutdownTimeout);
 
-            try
+            while (DateTimeOffset.UtcNow < timeoutAt)
             {
-                await _process.WaitForExitAsync(
-                    CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, new CancellationTokenSource(TimeSpan.FromSeconds(10)).Token).Token);
-            }
-            catch
-            {
-            }
+                await Task.Delay(TimeSpan.FromSeconds(1));
 
-            try
-            {
-                if (!_process.HasExited)
+                try
                 {
-                    _process.Kill();
+                    if (_process.HasExited) break;
+                }
+                catch
+                {
+
                 }
             }
+
+            try
+            {
+                _process.Kill();
+            }
             catch
             {
+
             }
 
             try
