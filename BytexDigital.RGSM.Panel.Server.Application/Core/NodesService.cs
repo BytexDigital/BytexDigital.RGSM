@@ -23,8 +23,8 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core
             node.BaseUri = baseUri;
             node.Name = name;
             node.DisplayName = displayName;
-            node.NodeKey = _applicationDbContext.CreateEntity(x => x.NodeKeys);
-            node.NodeKey.ApiKey = Guid.NewGuid().ToString();
+            node.NodeKey = _applicationDbContext.CreateEntity(x => x.ApiKeys);
+            node.NodeKey.Value = Guid.NewGuid().ToString();
 
             _applicationDbContext.Nodes.Add(node);
             await _applicationDbContext.SaveChangesAsync();
@@ -49,7 +49,7 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core
 
         public IQueryable<Domain.Entities.Node> GetNode(string id) => _applicationDbContext.Nodes.Where(x => x.Id == id);
 
-        public IQueryable<Domain.Entities.NodeKey> GetNodeKey(string id) => _applicationDbContext.NodeKeys.Where(x => x.Node.Id == id);
+        public IQueryable<Domain.Entities.ApiKey> GetNodeKey(string id) => _applicationDbContext.ApiKeys.Where(x => x.Node.Id == id);
 
         public IQueryable<Domain.Entities.Node> GetNodes() => _applicationDbContext.Nodes;
 

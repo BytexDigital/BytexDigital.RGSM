@@ -18,7 +18,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Core\Authentication\Policies\" />
 	  <Folder Include="Core\Commands\NewFolder\" />
 	</ItemGroup>
 

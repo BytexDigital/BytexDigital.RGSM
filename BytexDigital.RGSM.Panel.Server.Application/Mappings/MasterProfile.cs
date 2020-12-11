@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 
 using BytexDigital.RGSM.Panel.Server.Domain.Entities;
+using BytexDigital.RGSM.Panel.Server.Domain.Models;
 using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
+using BytexDigital.RGSM.Panel.Server.TransferObjects.Models;
 
 namespace BytexDigital.RGSM.Panel.Server.Application.Mappings
 {
@@ -12,8 +14,9 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Mappings
             CreateMap<ApplicationUser, ApplicationUserDto>().ReverseMap();
             CreateMap<ApplicationUserGroup, ApplicationUserGroupDto>().ReverseMap();
             CreateMap<Group, GroupDto>().ReverseMap();
-            CreateMap<Domain.Entities.Node, NodeDto>().ReverseMap();
-            CreateMap<Domain.Entities.NodeKey, NodeKeyDto>().ReverseMap();
+            CreateMap<Node, NodeDto>().ReverseMap();
+            CreateMap<ApiKey, NodeKeyDto>().ReverseMap();
+            CreateMap<ApiKeyDetails, ApiKeyDetailsDto>().ReverseMap();
         }
     }
 }

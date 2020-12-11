@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using BytexDigital.Common.Errors;
 using BytexDigital.RGSM.Node.Application.Helpers;
 using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
+using BytexDigital.RGSM.Panel.Server.TransferObjects.Models;
 
 namespace BytexDigital.RGSM.Node.Application.Core
 {
@@ -36,6 +37,23 @@ namespace BytexDigital.RGSM.Node.Application.Core
             }
 
             return await response.Content.ReadFromJsonAsync<List<ApplicationUserGroupDto>>();
+        }
+
+        public async Task<ServiceResult<ApiKeyDetailsDto>> GetApiKeyValidityAsync(string key)
+        {
+            var response = await _httpClient.GetAsync($"/API/Authentication/GetApiKeyValidity?key={key}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.Conflict)
+                {
+                    return await response.Content.ReadFromJsonAsync<FailureDetails>();
+                }
+
+                response.EnsureSuccessStatusCode();
+            }
+
+            return await response.Content.ReadFromJsonAsync<ApiKeyDetailsDto>();
         }
     }
 }

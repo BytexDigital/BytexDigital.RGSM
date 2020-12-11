@@ -9,6 +9,7 @@ using AutoMapper;
 
 using BytexDigital.Common.Errors.AspNetCore.Extensions;
 using BytexDigital.Common.Errors.MediatR;
+using BytexDigital.RGSM.Node.Application.Authentication;
 using BytexDigital.RGSM.Node.Application.Core;
 using BytexDigital.RGSM.Node.Application.Core.Arma3;
 using BytexDigital.RGSM.Node.Application.Core.Authorization.Requirements;
@@ -95,7 +96,8 @@ namespace BytexDigital.RGSM.Node
                     .UseSqlite(Configuration.GetConnectionString("DefaultConnection"), o => o.MigrationsAssembly(typeof(NodeDbContext).Assembly.GetName().Name))
                     .UseLazyLoadingProxies());
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication("API_KEY_OR_JWT")
+                .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthenticationOptions.NODE_AUTHENTICATION_SCHEME, null)
                 .AddJwtBearer(options =>
                 {
                     options.MetadataAddress = $"{Configuration["NodeSettings:Master:BaseUri"]}/.well-known/openid-configuration";
@@ -103,6 +105,20 @@ namespace BytexDigital.RGSM.Node
 
                     options.TokenValidationParameters.ValidIssuer = Configuration["NodeSettings:Master:BaseUri"];
                     options.TokenValidationParameters.ValidAudience = "rgsm";
+                })
+                .AddPolicyScheme("API_KEY_OR_JWT", "API_KEY_OR_JWT", options =>
+                {
+                    options.ForwardDefaultSelector = context =>
+                    {
+                        if (context.Request.Headers.ContainsKey(ApiKeyAuthenticationHandler.HEADER_NAME))
+                        {
+                            return ApiKeyAuthenticationOptions.NODE_AUTHENTICATION_SCHEME;
+                        }
+                        else
+                        {
+                            return JwtBearerDefaults.AuthenticationScheme;
+                        }
+                    };
                 });
 
             services.AddControllers()

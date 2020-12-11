@@ -1,6 +1,7 @@
 ﻿
 using System.Linq;
 
+using BytexDigital.RGSM.Panel.Server.Domain.Entities;
 using BytexDigital.RGSM.Panel.Server.Persistence;
 
 namespace BytexDigital.RGSM.Panel.Server.Application.Core
@@ -14,9 +15,9 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core
             _applicationDbContext = applicationDbContext;
         }
 
-        public IQueryable<Domain.Entities.Node> GetNodeByApiKey(string key)
+        public IQueryable<ApiKey> GetApiKey(string value)
         {
-            return _applicationDbContext.Nodes.Where(x => x.NodeKey.ApiKey == key);
+            return _applicationDbContext.ApiKeys.Where(x => x.Value == value);
         }
     }
 }

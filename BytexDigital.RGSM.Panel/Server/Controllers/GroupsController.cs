@@ -30,7 +30,7 @@ namespace BytexDigital.RGSM.Panel.Server.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "AppOrAdmin")]
+        [Authorize(Policy = "Admin")]
         public async Task<ActionResult<List<ApplicationUserGroupDto>>> GetUsersGroupsAsync([FromQuery, Required] string userId)
         {
             return _mapper.Map<List<ApplicationUserGroupDto>>((await _mediator.Send(new GetUserGroupsQuery { UserId = userId })).GroupLinks);

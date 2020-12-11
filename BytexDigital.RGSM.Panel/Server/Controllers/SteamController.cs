@@ -15,7 +15,7 @@ namespace BytexDigital.RGSM.Panel.Server.Controllers
 {
     [Route("API/[controller]/[action]")]
     [ApiController]
-    [Authorize(Policy = "AppOrAdmin")]
+    [Authorize(Policy = "Admin")]
     public class SteamController : ControllerBase
     {
         private readonly IMediator _mediator;

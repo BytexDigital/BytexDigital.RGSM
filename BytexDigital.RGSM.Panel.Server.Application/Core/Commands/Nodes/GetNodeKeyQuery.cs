@@ -31,7 +31,7 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Nodes
 
         public class Response
         {
-            public NodeKey NodeKey { get; set; }
+            public ApiKey NodeKey { get; set; }
         }
     }
 }

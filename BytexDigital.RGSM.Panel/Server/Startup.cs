@@ -177,15 +177,15 @@ namespace BytexDigital.RGSM.Panel.Server
                     options.DefaultScheme = "API_KEY_OR_JWT";
                     options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
                 })
-                .AddScheme<NodeAuthenticationOptions, NodeAuthenticationHandler>(NodeAuthenticationOptions.NODE_AUTHENTICATION_SCHEME, null)
+                .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthenticationOptions.NODE_AUTHENTICATION_SCHEME, null)
                 .AddIdentityServerJwt()
                 .AddPolicyScheme("API_KEY_OR_JWT", "API_KEY_OR_JWT", options =>
                 {
                     options.ForwardDefaultSelector = context =>
                     {
-                        if (context.Request.Headers.ContainsKey(NodeAuthenticationHandler.HEADER_NAME))
+                        if (context.Request.Headers.ContainsKey(ApiKeyAuthenticationHandler.HEADER_NAME))
                         {
-                            return NodeAuthenticationOptions.NODE_AUTHENTICATION_SCHEME;
+                            return ApiKeyAuthenticationOptions.NODE_AUTHENTICATION_SCHEME;
                         }
                         else
                         {
@@ -211,8 +211,7 @@ namespace BytexDigital.RGSM.Panel.Server
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("AppOrAdmin", o => o.AddRequirements(new SystemAdministratorOrAppRequirement()));
-                options.AddPolicy("Admin", o => o.AddRequirements(new SystemAdministratorRequirement()));
+                options.AddPolicy("Admin", o => o.AddRequirements(new SystemAdministratorOrAppRequirement()));
             });
 
             services

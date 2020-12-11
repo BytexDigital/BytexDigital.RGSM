@@ -13,14 +13,14 @@ using Microsoft.Extensions.Options;
 
 namespace BytexDigital.RGSM.Panel.Server.Application.Core.Authentication
 {
-    public class NodeAuthenticationHandler : AuthenticationHandler<NodeAuthenticationOptions>
+    public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthenticationOptions>
     {
-        public const string HEADER_NAME = "Node-Api-Key";
+        public const string HEADER_NAME = "X-API-Key";
         private readonly IMediator _mediator;
         private readonly AuthenticationService _authenticationService;
 
-        public NodeAuthenticationHandler(
-            IOptionsMonitor<NodeAuthenticationOptions> options,
+        public ApiKeyAuthenticationHandler(
+            IOptionsMonitor<ApiKeyAuthenticationOptions> options,
             ILoggerFactory logger,
             UrlEncoder encoder,
             ISystemClock clock,
@@ -38,30 +38,29 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Authentication
                 return AuthenticateResult.NoResult();
             }
 
-            var providedApiKey = apiKeyHeaderValues.FirstOrDefault();
+            var keyValue = apiKeyHeaderValues.FirstOrDefault();
 
-            if (apiKeyHeaderValues.Count == 0 || string.IsNullOrWhiteSpace(providedApiKey))
+            if (apiKeyHeaderValues.Count == 0 || string.IsNullOrWhiteSpace(keyValue))
             {
                 return AuthenticateResult.NoResult();
             }
 
-            var node = await _authenticationService.GetNodeByApiKey(providedApiKey).FirstOrDefaultAsync();
+            var apiKey = await _authenticationService.GetApiKey(keyValue).FirstOrDefaultAsync();
 
-            if (node == null)
+            if (apiKey == null)
             {
                 return AuthenticateResult.NoResult();
             }
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, node.Id),
-                new Claim("scope", "rgsm.app"),
-                new Claim("scope", "rgsm.node")
+                new Claim(ClaimTypes.NameIdentifier, apiKey.Id),
+                new Claim("scope", "rgsm.app")
             };
 
-            var identity = new ClaimsIdentity(claims, NodeAuthenticationOptions.NODE_AUTHENTICATION_SCHEME);
+            var identity = new ClaimsIdentity(claims, ApiKeyAuthenticationOptions.NODE_AUTHENTICATION_SCHEME);
             var principal = new ClaimsPrincipal(new[] { identity });
-            var ticket = new AuthenticationTicket(principal, NodeAuthenticationOptions.NODE_AUTHENTICATION_SCHEME);
+            var ticket = new AuthenticationTicket(principal, ApiKeyAuthenticationOptions.NODE_AUTHENTICATION_SCHEME);
 
             return AuthenticateResult.Success(ticket);
         }

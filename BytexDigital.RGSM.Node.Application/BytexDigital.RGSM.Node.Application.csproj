@@ -12,6 +12,7 @@
 		<PackageReference Include="Cronos" Version="0.7.0" />
 		<PackageReference Include="FluentValidation" Version="9.3.0" />
 		<PackageReference Include="MediatR" Version="9.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="5.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="5.0.0" />
 		<PackageReference Include="Nito.AsyncEx" Version="5.1.0" />
