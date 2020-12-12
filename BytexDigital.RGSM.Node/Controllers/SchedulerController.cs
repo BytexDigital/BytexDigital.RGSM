@@ -61,7 +61,23 @@ namespace BytexDigital.RGSM.Node.Controllers
 
             var schedulerPlan = _mapper.Map<SchedulerPlan>(schedulerPlanDto);
 
-            await _mediator.Send(new UpdateSchedulerCmd { ServerId = serverId, ChangedSchedulerPlan = schedulerPlan });
+            await _mediator.Send(new UpdateSchedulerPlanCmd { ServerId = serverId, ChangedSchedulerPlan = schedulerPlan });
+
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EnableSchedulerAsync([FromRoute] string serverId)
+        {
+            await _mediator.Send(new UpdateSchedulerEnabledCmd { ServerId = serverId, Enable = true });
+
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> StopSchedulerAsync([FromRoute] string serverId)
+        {
+            await _mediator.Send(new UpdateSchedulerEnabledCmd { ServerId = serverId, Enable = false });
 
             return Ok();
         }

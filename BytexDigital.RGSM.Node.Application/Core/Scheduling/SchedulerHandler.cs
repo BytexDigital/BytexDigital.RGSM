@@ -115,11 +115,6 @@ namespace BytexDigital.RGSM.Node.Application.Core.Scheduling
                     {
                         ServerId = schedulerPlan.ServerId,
                         Query = query => query.Include(x => x.ScheduleGroups).ThenInclude(x => x.ScheduleActions).ThenInclude(x => x.KeyValues)
-                        // We NEED to mark this as NoTracking because for some reason, even though prior modifications to the database have already been completed
-                        // and this call will make a new instance of NodeDbContext (because of a new scope), it STILL finds already deleted entities and fetches them.
-                        // This questionable behaviour can be avoided by using NoTracking, which is fine since past outside of commands, no scope exists and lazy-loading
-                        // is disabled anyway, yet usually I shouldnt have to do this.
-                        //.AsNoTracking()
                     })).SchedulerPlan;
 
                     newSchedulerEvent.Reset();

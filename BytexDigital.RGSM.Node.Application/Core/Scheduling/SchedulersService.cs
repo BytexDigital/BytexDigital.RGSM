@@ -30,6 +30,13 @@ namespace BytexDigital.RGSM.Node.Application.Core.Scheduling
         public IQueryable<SchedulerPlan> GetSchedulerPlans()
             => _nodeDbContext.SchedulerPlans.Include(x => x.ScheduleGroups).ThenInclude(x => x.ScheduleActions);
 
+        public async Task EnableSchedulerAsync(SchedulerPlan schedulerPlan, bool isEnabled)
+        {
+            schedulerPlan.IsEnabled = isEnabled;
+
+            await _nodeDbContext.SaveChangesAsync();
+        }
+
         public async Task ChangeSchedulerAsync(SchedulerPlan schedulerPlan, SchedulerPlan changedSchedulerPlan)
         {
             schedulerPlan.IsEnabled = changedSchedulerPlan.IsEnabled;

@@ -15,12 +15,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BytexDigital.RGSM.Node.Application.Core.Commands.Scheduling
 {
-    public class UpdateSchedulerCmd : IRequest
+    public class UpdateSchedulerPlanCmd : IRequest
     {
         public string ServerId { get; set; }
         public SchedulerPlan ChangedSchedulerPlan { get; set; }
 
-        public class Handler : IRequestHandler<UpdateSchedulerCmd>
+        public class Handler : IRequestHandler<UpdateSchedulerPlanCmd>
         {
             private readonly ServersService _serversService;
             private readonly SchedulersService _schedulersService;
@@ -33,7 +33,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands.Scheduling
                 _schedulerHandler = schedulerHandler;
             }
 
-            public async Task<Unit> Handle(UpdateSchedulerCmd request, CancellationToken cancellationToken)
+            public async Task<Unit> Handle(UpdateSchedulerPlanCmd request, CancellationToken cancellationToken)
             {
                 var server = await _serversService.GetServer(request.ServerId).FirstOrDefaultAsync();
 
@@ -48,7 +48,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands.Scheduling
             }
         }
 
-        public class Validator : AbstractValidator<UpdateSchedulerCmd>
+        public class Validator : AbstractValidator<UpdateSchedulerPlanCmd>
         {
             public Validator()
             {
