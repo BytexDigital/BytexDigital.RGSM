@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using BytexDigital.RGSM.Panel.Server.Domain.Entities;
 using BytexDigital.RGSM.Panel.Server.Persistence;
+using BytexDigital.RGSM.Shared;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -29,13 +30,13 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core
 
         public async Task<DatabaseDefaultsService> EnsureSystemAdministratorGroupExistsAsync()
         {
-            if (await _storage.Groups.CountAsync(x => x.Id == Group.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_ID) > 0) return this;
+            if (await _storage.Groups.CountAsync(x => x.Id == GroupsConstants.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_ID) > 0) return this;
 
             var group = _storage.CreateEntity(x => x.Groups);
 
-            group.Name = Group.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_NAME;
-            group.DisplayName = Group.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_DISPLAYNAME;
-            group.Id = Group.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_ID;
+            group.Name = GroupsConstants.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_NAME;
+            group.DisplayName = GroupsConstants.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_DISPLAYNAME;
+            group.Id = GroupsConstants.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_ID;
 
             _storage.Groups.Add(group);
             await _storage.SaveChangesAsync();
@@ -50,7 +51,7 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core
             if (account != null)
             {
                 // Make sure he's in the correct group
-                if (!account.Groups.Any(x => x.Group.Name == Group.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_NAME))
+                if (!account.Groups.Any(x => x.Group.Name == GroupsConstants.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_NAME))
                 {
                     await LinkToGroupAsync(account);
                 }
@@ -79,7 +80,7 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core
             {
                 var groupLink = _storage.CreateEntity(x => x.ApplicationUserGroups);
 
-                groupLink.GroupId = (await _storage.Groups.FirstOrDefaultAsync(x => x.Name == Group.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_NAME)).Id;
+                groupLink.GroupId = (await _storage.Groups.FirstOrDefaultAsync(x => x.Name == GroupsConstants.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_NAME)).Id;
                 groupLink.ApplicationUserId = user.Id;
 
                 _storage.ApplicationUserGroups.Add(groupLink);

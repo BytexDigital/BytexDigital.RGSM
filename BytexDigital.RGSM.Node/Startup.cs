@@ -7,7 +7,8 @@ using Autofac;
 
 using AutoMapper;
 
-using BytexDigital.Common.Errors.AspNetCore.Extensions;
+using BBytexDigital.Common.Errors.AspNetCore.Server.Extensions;
+
 using BytexDigital.Common.Errors.MediatR;
 using BytexDigital.RGSM.Node.Application.Authentication;
 using BytexDigital.RGSM.Node.Application.Core;

@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 
 using BytexDigital.RGSM.Panel.Client.Common.Authorization;
-using BytexDigital.RGSM.Panel.Client.Common.Services;
+using BytexDigital.RGSM.Panel.Client.Common.Core.Master;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;

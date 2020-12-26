@@ -7,7 +7,7 @@
 	<ItemGroup>
 		<PackageReference Include="Autofac" Version="6.0.0" />
 		<PackageReference Include="BytexDigital.BattlEye.Rcon" Version="1.0.3-beta.2" />
-		<PackageReference Include="BytexDigital.Common.Errors" Version="1.0.4" />
+		<PackageReference Include="BytexDigital.ErrorHandling.All" Version="1.0.0" />
 		<PackageReference Include="BytexDigital.Steam" Version="0.7.43-beta" />
 		<PackageReference Include="Cronos" Version="0.7.0" />
 		<PackageReference Include="FluentValidation" Version="9.3.0" />
@@ -23,10 +23,11 @@
 		<ProjectReference Include="..\BytexDigital.RGSM.Node.Persistence\BytexDigital.RGSM.Node.Persistence.csproj" />
 		<ProjectReference Include="..\BytexDigital.RGSM.Node.TransferObjects\BytexDigital.RGSM.Node.TransferObjects.csproj" />
 		<ProjectReference Include="..\BytexDigital.RGSM.Panel.Server.TransferObjects\BytexDigital.RGSM.Panel.Server.TransferObjects.csproj" />
+		<ProjectReference Include="..\BytexDigital.RGSM.Shared\BytexDigital.RGSM.Shared.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Core\Commands\SteamCmd\" />
+		<Folder Include="Core\Commands\SteamCmd\" />
 	</ItemGroup>
 
 </Project>

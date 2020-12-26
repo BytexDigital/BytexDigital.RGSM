@@ -8,9 +8,7 @@
 		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
 		<PackageReference Include="AutoMapper" Version="10.1.1" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
-		<PackageReference Include="BytexDigital.Common.Errors" Version="1.0.4" />
-		<PackageReference Include="BytexDigital.Common.Errors.AspNetCore" Version="1.0.1" />
-		<PackageReference Include="BytexDigital.Common.Errors.MediatR" Version="1.0.0" />
+		<PackageReference Include="BytexDigital.ErrorHandling.All" Version="1.0.0" />
 		<PackageReference Include="FluentValidation" Version="9.3.0" />
 		<PackageReference Include="FluentValidation.AspNetCore" Version="9.3.0" />
 		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="9.3.0" />
@@ -20,17 +18,17 @@
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.0" NoWarn="NU1605" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.0" NoWarn="NU1605" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.0">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\BytexDigital.RGSM.Node.Application\BytexDigital.RGSM.Node.Application.csproj" />
-	  <ProjectReference Include="..\BytexDigital.RGSM.Node.Persistence\BytexDigital.RGSM.Node.Persistence.csproj" />
-	  <ProjectReference Include="..\BytexDigital.RGSM.Node.TransferObjects\BytexDigital.RGSM.Node.TransferObjects.csproj" />
+		<ProjectReference Include="..\BytexDigital.RGSM.Node.Application\BytexDigital.RGSM.Node.Application.csproj" />
+		<ProjectReference Include="..\BytexDigital.RGSM.Node.Persistence\BytexDigital.RGSM.Node.Persistence.csproj" />
+		<ProjectReference Include="..\BytexDigital.RGSM.Node.TransferObjects\BytexDigital.RGSM.Node.TransferObjects.csproj" />
 	</ItemGroup>
 
 </Project>

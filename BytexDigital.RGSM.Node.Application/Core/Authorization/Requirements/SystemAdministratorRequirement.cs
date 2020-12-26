@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 
 using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
+using BytexDigital.RGSM.Shared;
 
 using Microsoft.AspNetCore.Authorization;
 
@@ -36,7 +37,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Authorization.Requirements
                     var usersGroups = await _httpClient.GetFromJsonAsync<List<ApplicationUserGroupDto>>($"/API/Groups/GetUsersGroups?userId={userId}");
 
                     // Users with this group id are considered sysadmins
-                    if (usersGroups.Any(x => x.GroupId == "72056b80-0f35-4b5c-bdac-a143258c0e7c"))
+                    if (usersGroups.Any(x => x.GroupId == GroupsConstants.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_ID))
                     {
                         context.Succeed(requirement);
                         return;

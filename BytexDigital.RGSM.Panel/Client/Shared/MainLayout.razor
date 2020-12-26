@@ -38,12 +38,14 @@
                         <li class="navbar-nav-item nav-item mr-lg-3">
                             <NavLink class="nav-link" href="/servers" Match="NavLinkMatch.All" ActiveClass="active font-weight-bold"><i class="fas fa-server mr-2"></i> Servers</NavLink>
                         </li>
-                        <li class="navbar-nav-item nav-item mr-lg-3">
-                            <NavLink class="nav-link" href="/nodes" Match="NavLinkMatch.All" ActiveClass="active font-weight-bold"><i class="fas fa-network-wired mr-2"></i> Nodes</NavLink>
-                        </li>
-                        <li class="navbar-nav-item nav-item mr-lg-3">
-                            <NavLink class="nav-link" href="/settings" Match="NavLinkMatch.All" ActiveClass="active font-weight-bold"><i class="fas fa-cog mr-2"></i> Global Settings</NavLink>
-                        </li>
+
+                        @if (IsAdmin)
+                        {
+                            <li class="navbar-nav-item nav-item mr-lg-3">
+                                <NavLink class="nav-link" href="/settings" Match="NavLinkMatch.Prefix" ActiveClass="active font-weight-bold"><i class="fas fa-cog mr-2"></i> Settings</NavLink>
+                            </li>
+                        }
+
                         @*<li class="navbar-nav-item  nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Dropdown

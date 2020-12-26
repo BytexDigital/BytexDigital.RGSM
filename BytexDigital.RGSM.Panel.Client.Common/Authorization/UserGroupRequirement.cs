@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 
-using BytexDigital.RGSM.Panel.Client.Common.Services;
+using BytexDigital.RGSM.Panel.Client.Common.Core.Master;
 
 using Microsoft.AspNetCore.Authorization;
 

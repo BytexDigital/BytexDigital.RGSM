@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\BytexDigital.RGSM.Panel.Client.Common\BytexDigital.RGSM.Panel.Client.Common.csproj" />
+    <ProjectReference Include="..\..\BytexDigital.RGSM.Shared\BytexDigital.RGSM.Shared.csproj" />
   </ItemGroup>
 
 </Project>

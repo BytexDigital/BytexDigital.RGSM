@@ -1,6 +1,6 @@
-﻿using BytexDigital.Common.Errors;
+﻿using BytexDigital.ErrorHandling.Shared;
 
-namespace BytexDigital.RGSM.Node.Application.Helpers
+namespace BytexDigital.RGSM.Shared
 {
     public class ServiceResult
     {

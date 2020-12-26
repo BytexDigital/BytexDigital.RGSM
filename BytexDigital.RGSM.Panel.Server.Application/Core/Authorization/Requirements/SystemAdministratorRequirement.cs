@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 using BytexDigital.RGSM.Panel.Server.Domain.Entities;
+using BytexDigital.RGSM.Shared;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,7 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Authorization.Requirem
             {
                 var user = await _accountsService.GetUser(context.User).FirstAsync();
 
-                if (user.Groups.Any(x => x.Group.Name == Group.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_NAME))
+                if (user.Groups.Any(x => x.Group.Name == GroupsConstants.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_NAME))
                 {
                     context.Succeed(requirement);
                 }

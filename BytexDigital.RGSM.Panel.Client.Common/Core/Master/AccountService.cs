@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
 
-namespace BytexDigital.RGSM.Panel.Client.Common.Services
+namespace BytexDigital.RGSM.Panel.Client.Common.Core.Master
 {
     public class AccountService
     {
@@ -21,7 +21,7 @@ namespace BytexDigital.RGSM.Panel.Client.Common.Services
 
         public async Task<List<GroupDto>> GetAssignedGroupsAsync()
         {
-            return await _httpClient.GetFromJsonAsync<List<GroupDto>>("/api/Accounts/GetAssignedGroups");
+            return await _httpClient.GetFromJsonAsync<List<GroupDto>>("/API/Accounts/GetAssignedGroups");
         }
     }
 }

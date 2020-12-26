@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 using BytexDigital.RGSM.Panel.Client.Common.Authorization;
+using BytexDigital.RGSM.Shared;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
@@ -17,14 +18,17 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings._Components
         [Inject]
         public NavigationManager Navigation { get; set; }
 
-        [CascadingParameter]
-        public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+        [Inject]
+        public AuthenticationStateProvider AuthenticationStateProvider { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            var user = (await AuthenticationStateTask).User;
+            var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
 
-            if (!(await AuthorizationService.AuthorizeAsync(user, null, new UserGroupRequirement { GroupName = "system_administrator" })).Succeeded)
+            if (!(await AuthorizationService.AuthorizeAsync(
+                authenticationState.User,
+                null,
+                new UserGroupRequirement { GroupName = GroupsConstants.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_NAME })).Succeeded)
             {
                 Navigation.NavigateTo("/unauthorized");
             }

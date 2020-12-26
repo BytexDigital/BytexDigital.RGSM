@@ -1,7 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="BytexDigital.ErrorHandling.Shared" Version="1.0.4" />
+		<PackageReference Include="BytexDigital.ErrorHandling.AspNetCore" Version="1.0.2" />
+	</ItemGroup>
 
 </Project>

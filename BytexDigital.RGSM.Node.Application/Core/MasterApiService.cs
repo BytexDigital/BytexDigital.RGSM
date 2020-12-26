@@ -4,10 +4,10 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
-using BytexDigital.Common.Errors;
-using BytexDigital.RGSM.Node.Application.Helpers;
+using BytexDigital.ErrorHandling.Shared;
 using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
 using BytexDigital.RGSM.Panel.Server.TransferObjects.Models;
+using BytexDigital.RGSM.Shared;
 
 namespace BytexDigital.RGSM.Node.Application.Core
 {
