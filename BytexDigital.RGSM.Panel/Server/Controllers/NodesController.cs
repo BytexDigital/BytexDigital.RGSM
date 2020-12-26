@@ -66,14 +66,14 @@ namespace BytexDigital.RGSM.Panel.Server.Controllers
 
         [HttpGet("{nodeId}")]
         [Authorize(Policy = "Admin")]
-        public async Task<ActionResult<NodeKeyDto>> GetNodeKeyAsync([FromRoute, Required] string nodeId)
+        public async Task<ActionResult<ApiKeyDto>> GetNodeKeyAsync([FromRoute, Required] string nodeId)
         {
             if (!(await _authorizationService.AuthorizeAsync(HttpContext.User, null, new SystemAdministratorRequirement())).Succeeded)
             {
                 return Unauthorized();
             }
 
-            return _mapper.Map<NodeKeyDto>((await _mediator.Send(new GetNodeKeyQuery { NodeId = nodeId })).NodeKey);
+            return _mapper.Map<ApiKeyDto>((await _mediator.Send(new GetNodeKeyQuery { NodeId = nodeId })).NodeKey);
         }
 
         [HttpDelete("{nodeId}")]

@@ -42,7 +42,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BytexDigital.RGSM.Panel.Ser
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BytexDigital.RGSM.Node.TransferObjects", "BytexDigital.RGSM.Node.TransferObjects\BytexDigital.RGSM.Node.TransferObjects.csproj", "{DADE6B86-BE22-43D9-943B-5034CB38DD8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BytexDigital.RGSM.Shared", "BytexDigital.RGSM.Shared\BytexDigital.RGSM.Shared.csproj", "{3456D0EF-2D88-4D6E-91AB-1DB9FD60BA77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BytexDigital.RGSM.Shared", "BytexDigital.RGSM.Shared\BytexDigital.RGSM.Shared.csproj", "{3456D0EF-2D88-4D6E-91AB-1DB9FD60BA77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

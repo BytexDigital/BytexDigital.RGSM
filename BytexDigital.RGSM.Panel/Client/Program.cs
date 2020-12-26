@@ -34,7 +34,9 @@ namespace BytexDigital.RGSM.Panel.Client
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("BytexDigital.RGSM.Panel.ServerAPI"));
 
             // Add custom services
-            builder.Services.AddScoped<AccountService>();
+            builder.Services
+                .AddScoped<AccountService>()
+                .AddScoped<NodesService>();
 
             // Enable options pattern
             builder.Services.AddOptions();

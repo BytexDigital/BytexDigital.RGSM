@@ -41,8 +41,12 @@
 
                         @if (IsAdmin)
                         {
-                            <li class="navbar-nav-item nav-item mr-lg-3">
-                                <NavLink class="nav-link" href="/settings" Match="NavLinkMatch.Prefix" ActiveClass="active font-weight-bold"><i class="fas fa-cog mr-2"></i> Settings</NavLink>
+                            <li class="navbar-nav-item nav-item dropdown">
+                                <NavLink class="nav-link dropdown-toggle" href="/settings" Match="NavLinkMatch.Prefix" ActiveClass="active font-weight-bold"
+                                         role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-cog mr-2"></i> Settings</NavLink>
+                                <div class="dropdown-menu">
+                                    <NavLink Match="NavLinkMatch.Prefix" class="dropdown-item" href="/settings/nodes">Nodes</NavLink>
+                                </div>
                             </li>
                         }
 

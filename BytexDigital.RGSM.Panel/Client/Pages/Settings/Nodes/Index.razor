@@ -1,0 +1,29 @@
+﻿@page "/settings/nodes"
+@inherits _Components.SettingsComponentBase
+
+<h2 class="mb-5">Nodes</h2>
+
+@if (RegisteredNodes == null)
+{
+    <Spinner></Spinner>
+}
+else
+{
+    <a class="card card-dashed" style="min-height: 5rem;" href="#">
+        <div class="card-body card-body-centered card-dashed-body">
+            <i class="fas fa-plus fa-lg mb-2"></i>
+            Register new node
+        </div>
+    </a>
+
+    @foreach (var node in RegisteredNodes)
+    {
+        <a class="card card-frame mt-2" href="/settings/nodes/@node.Id">
+            <div class="card-body">
+                <h4 class="mb-0">@node.DisplayName</h4>
+                <p class="mb-0 text-muted">@node.BaseUri</p>
+                <small class="text-muted">Click to edit</small>
+            </div>
+        </a>
+    }
+}

@@ -1,0 +1,46 @@
+﻿@page "/settings/nodes/{NodeId}"
+
+@if (NodeDto == null)
+{
+    <Spinner></Spinner>
+}
+else
+{
+    <div class="mb-4">
+        <h3 class="mb-0">Editing node @NodeDto.DisplayName</h3>
+        <p class="text-muted mb-0">@NodeDto.Id</p>
+    </div>
+
+    <EditForm Model="NodeModel" OnValidSubmit="SaveAsync">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <BytexDigital.Blazor.Components.FormValidators.ManualFormValidator TModel="NodeEditViewModel" @ref="NodeModelValidator" />
+
+        <div class="card">
+            <div class="card-body">
+                <div class="form-group">
+                    <label class="input-label">Display Name</label>
+                    <InputText @bind-Value="NodeModel.DisplayName" class="form-control" placeholder="Display name"></InputText>
+                    <ValidationMessage For="() => NodeModel.DisplayName" />
+                </div>
+
+                <div class="form-group">
+                    <label class="input-label">Name</label>
+                    <InputText @bind-Value="NodeModel.Name" class="form-control" placeholder="Unique name"></InputText>
+                    <ValidationMessage For="() => NodeModel.Name" />
+                </div>
+
+                <div class="form-group">
+                    <label class="input-label">Base Uri</label>
+                    <InputText @bind-Value="NodeModel.BaseUri" class="form-control" placeholder="https://127.0.0.1:3298/"></InputText>
+                    <ValidationMessage For="() => NodeModel.BaseUri" />
+                </div>
+
+                <ValidationMessage For="() => NodeModel.ErrorField"></ValidationMessage>
+
+                <div class="d-flex justify-content-md-end">
+                    <button class="btn btn-primary" type="submit"><i class="fas fa-save mr-3"></i>Save</button>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+}

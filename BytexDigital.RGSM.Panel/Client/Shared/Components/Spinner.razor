@@ -1,0 +1,15 @@
+﻿<div class="w-100 d-flex justify-content-center align-items-center" @attributes="AdditionalAttributes">
+    <div class="spinner-border text-muted" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+
+    <p class="m-0 ml-3 text-muted">@Text</p>
+</div>
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object> AdditionalAttributes { get; set; }
+
+    [Parameter]
+    public string Text { get; set; } = "Loading..";
+}
