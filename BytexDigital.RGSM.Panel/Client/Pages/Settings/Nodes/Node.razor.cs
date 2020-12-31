@@ -2,9 +2,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
+using Blazored.Modal.Services;
+
 using BytexDigital.Blazor.Components.FormValidators;
 using BytexDigital.ErrorHandling.Shared;
-using BytexDigital.RGSM.Panel.Client.Common.Core.Master;
+using BytexDigital.RGSM.Panel.Client.Common.Core;
+using BytexDigital.RGSM.Panel.Client.Extensions;
 using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
 
 using Microsoft.AspNetCore.Components;
@@ -17,10 +20,13 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Nodes
         public string NodeId { get; set; }
 
         [Inject]
-        public NodesService NodesService { get; set; }
+        public NodeRegisterService NodeService { get; set; }
 
         [Inject]
         public NavigationManager Navigation { get; set; }
+
+        [Inject]
+        public IModalService ModalService { get; set; }
 
         public NodeEditViewModel NodeModel { get; set; }
         public ManualFormValidator<NodeEditViewModel> NodeModelValidator { get; set; }
@@ -48,8 +54,8 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Nodes
 
         public async Task RefreshDataAsync()
         {
-            NodeDto = await NodesService.GetNodeOrDefaultAsync(NodeId);
-            ApiKeyDto = await NodesService.GetNodeApiKeyOrDefaultAsync(NodeId);
+            NodeDto = await NodeService.GetNodeOrDefaultAsync(NodeId);
+            ApiKeyDto = await NodeService.GetNodeApiKeyOrDefaultAsync(NodeId);
 
             if (NodeDto != null)
             {
@@ -68,12 +74,37 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Nodes
             NodeDto.BaseUri = NodeModel.BaseUri;
             NodeDto.Name = NodeModel.Name;
 
-            var updateResult = await NodesService.UpdateNodeAsync(NodeDto);
+            var updateResult = await ServiceResult.FromAsync(async () => await NodeService.UpdateNodeAsync(NodeDto));
 
             if (!updateResult.Succeeded && updateResult.FailureDetails != null)
             {
-                updateResult.FailureDetails.Errors.ForField(null).Do(x => NodeModelValidator.ModelState.Field(x => x.ErrorField).AddError(x.Message));
-                updateResult.FailureDetails.Errors.ForField("BaseUri").Do(x => NodeModelValidator.ModelState.Field(x => x.BaseUri).AddError(x.Message));
+                updateResult.FailureDetails
+                    .ForServiceErrors()
+                    .ForNoField(x => NodeModelValidator.ModelState.Field(x => x.ErrorField).AddError(x.Description))
+                    .ForField("BaseUri", x => NodeModelValidator.ModelState.Field(x => x.BaseUri).AddError(x.Description))
+                    .ForField("Name", x => NodeModelValidator.ModelState.Field(x => x.Name).AddError(x.Description))
+                    .ForField("DisplayName", x => NodeModelValidator.ModelState.Field(x => x.DisplayName).AddError(x.Description));
+            }
+
+            if (updateResult.Succeeded)
+            {
+                // TODO: Add toast
+                Navigation.NavigateTo("/settings/nodes");
+            }
+        }
+
+        public async Task DeleteAsync()
+        {
+            var modalRef = ModalService.ShowConfirmation("Are you sure that you want to delete this node?");
+            var result = await modalRef.Result;
+
+            if (result.Cancelled) return;
+
+            var deleteResult = await ServiceResult.FromAsync(async () => await NodeService.DeleteNodeAsync(NodeDto));
+
+            if (deleteResult.Succeeded)
+            {
+                Navigation.NavigateTo("/settings/nodes");
             }
         }
 

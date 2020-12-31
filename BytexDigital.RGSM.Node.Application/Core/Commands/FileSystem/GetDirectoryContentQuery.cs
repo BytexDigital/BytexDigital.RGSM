@@ -1,9 +1,7 @@
-﻿using System;
-using System.IO;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
-using BytexDigital.Common.Errors.Exceptions;
+using BytexDigital.ErrorHandling.Shared;
 using BytexDigital.RGSM.Node.Application.Exceptions;
 using BytexDigital.RGSM.Node.Application.Helpers;
 using BytexDigital.RGSM.Node.Domain.Models.FileSystem;
@@ -43,15 +41,17 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands.FileSystem
                 if (!accessedPath.IsSubdirectoryOfOrMatches(server.Directory))
                 {
                     throw new ServiceException()
+                        .AddServiceError()
                         .WithField(nameof(request.Path))
-                        .WithMessage("The path cannot be accessed because it resides outside the server directory.");
+                        .WithDescription("The path cannot be accessed because it resides outside the server directory.");
                 }
 
                 if (!System.IO.Directory.Exists(accessedPath))
                 {
                     throw new ServiceException()
+                        .AddServiceError()
                         .WithField(nameof(request.Path))
-                        .WithMessage("Directory does not exist.");
+                        .WithDescription("Directory does not exist.");
                 }
 
                 return new Response

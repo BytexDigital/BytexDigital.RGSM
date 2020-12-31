@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-using BytexDigital.Common.Errors.Exceptions;
+using BytexDigital.ErrorHandling.Shared;
 using BytexDigital.RGSM.Node.Application.Core.FeatureInterfaces;
 using BytexDigital.RGSM.Node.Application.Exceptions;
 
@@ -29,12 +29,12 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands
 
                 if (state == null) throw new ServerNotFoundException();
 
-                if (state is not IRunnable runnableState) throw new ServerNotRunnableException();
+                if (state is not IRunnable runnableState) throw new ServerDoesNotSupportFeatureException<IRunnable>();
 
                 var canUpdate = await runnableState.CanInstallOrUpdateAsync();
 
                 if (!canUpdate)
-                    throw new ServiceException().WithField(nameof(request.Id)).WithMessage($"The server cannot install or update at the moment. Reason: {canUpdate.FailureReason}");
+                    throw new ServiceException().AddServiceError().WithField(nameof(request.Id)).WithDescription($"The server cannot install or update at the moment. Reason: {canUpdate.FailureReason}");
 
                 await runnableState.BeginInstallationOrUpdateAsync();
 

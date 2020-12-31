@@ -1,0 +1,10 @@
+﻿@typeparam T
+
+<div class="modal fade show d-block" data-backdrop="static" tabindex="-1" role="dialog" @ref="ModalReference">
+    <div class="modal-backdrop fade show" @onclick="HandleBackgroundClick"></div>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" id="@Id">
+            @Child
+        </div>
+    </div>
+</div>

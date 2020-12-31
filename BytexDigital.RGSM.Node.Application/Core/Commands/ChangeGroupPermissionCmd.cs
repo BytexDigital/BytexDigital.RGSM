@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-using BytexDigital.Common.Errors.Exceptions;
+using BytexDigital.ErrorHandling.Shared;
 using BytexDigital.RGSM.Node.Application.Exceptions;
 
 using MediatR;
@@ -36,7 +36,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands
 
                 var permission = await _permissionsService.GetPermission(server, request.Name).FirstOrDefaultAsync();
 
-                if (permission == null) throw new ServiceException().WithField(nameof(request.Name)).WithMessage("Permission not found.");
+                if (permission == null) throw new ServiceException().AddServiceError().WithField(nameof(request.Name)).WithDescription("Permission not found.");
 
                 await _permissionsService.AddOrRemoveGroupFromPermissionAsync(permission, request.AddOrRemove, request.GroupId);
 

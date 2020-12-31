@@ -14,7 +14,8 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Extensions
                 .AddScoped<SettingsService>()
                 .AddScoped<SteamCredentialsService>()
                 .AddScoped<AuthenticationService>()
-                .AddScoped<NodesService>();
+                .AddScoped<NodesService>()
+                .AddScoped<GroupsService>();
 
             return services;
         }

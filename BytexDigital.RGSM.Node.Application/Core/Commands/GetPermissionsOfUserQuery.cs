@@ -3,9 +3,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using BytexDigital.Common.Errors.Exceptions;
+using BytexDigital.ErrorHandling.Shared;
 using BytexDigital.RGSM.Node.Application.Exceptions;
 using BytexDigital.RGSM.Node.Domain.Entities;
+using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
+using BytexDigital.RGSM.Shared;
 
 using MediatR;
 
@@ -33,11 +35,11 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands
 
             public async Task<Response> Handle(GetPermissionsOfUserQuery request, CancellationToken cancellationToken)
             {
-                var groupsResult = await _masterApiService.GetGroupsOfUserAsync(request.UserId);
+                var groupsResult = await ServiceResult.FromAsync(async () => await _masterApiService.GetGroupsOfUserAsync(request.UserId));
                 var server = await _serversService.GetServer(request.ServerId).FirstOrDefaultAsync();
 
                 if (server == null) throw new ServerNotFoundException();
-                if (!groupsResult.Succeeded) throw new ServiceException().WithField(nameof(request.UserId)).WithMessage("User's groups could not be fetched.");
+                if (!groupsResult.Succeeded) throw new ServiceException().AddServiceError().WithField(nameof(request.UserId)).WithDescription("User's groups could not be fetched.");
 
                 List<Permission> permissions = new List<Permission>();
 

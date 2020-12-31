@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
 
-using BytexDigital.Common.Errors.Exceptions;
+using BytexDigital.ErrorHandling.Shared;
 using BytexDigital.RGSM.Panel.Server.Domain.Entities;
 
 using MediatR;
@@ -29,7 +28,8 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Authenticatio
             {
                 var user = await _accountsService.GetUser(request.UserId).FirstOrDefaultAsync();
 
-                if (user == null) throw new ServiceException().WithField(nameof(request.UserId)).WithMessage("User not found.");
+                if (user == null) throw new ServiceException()
+                        .AddServiceError().WithField(nameof(request.UserId)).WithDescription("User not found.");
 
                 return new Response
                 {

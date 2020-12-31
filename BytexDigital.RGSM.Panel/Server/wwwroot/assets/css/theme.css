@@ -4408,7 +4408,7 @@ a.close.disabled {
   z-index: 1004;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(33, 50, 91, 0.125); }
+  background-color: rgba(33, 50, 91, 0.35); }
   .modal-backdrop.fade {
     opacity: 0; }
   .modal-backdrop.show {
@@ -16297,7 +16297,7 @@ a:hover .text-hover-primary {
   width: 100%;
   height: 100%;
   z-index: 1002;
-  background-color: rgba(33, 50, 91, 0.125); }
+  background-color: rgba(33, 50, 91, 0.35); }
 
 .hs-unfold-content.hs-unfold-reverse-y {
   top: auto;

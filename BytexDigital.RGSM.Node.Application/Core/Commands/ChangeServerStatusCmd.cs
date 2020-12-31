@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-using BytexDigital.Common.Errors.Exceptions;
+using BytexDigital.ErrorHandling.Shared;
 using BytexDigital.RGSM.Node.Application.Core.FeatureInterfaces;
 using BytexDigital.RGSM.Node.Application.Exceptions;
 
@@ -32,12 +32,12 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands
             {
                 var server = await _serversService.GetServer(request.Id).FirstOrDefaultAsync();
 
-                if (server == null) throw new ServiceException().WithField(nameof(request.Id)).WithMessage("Server not found.");
+                if (server == null) throw new ServiceException().AddServiceError().WithField(nameof(request.Id)).WithDescription("Server not found.");
 
                 var state = _serverStateRegister.GetServerState(request.Id);
 
                 if (state is not IRunnable runnableState)
-                    throw new ServerNotRunnableException();
+                    throw new ServerDoesNotSupportFeatureException<IRunnable>();
 
                 // Start
                 if (request.StartOrStop)
@@ -45,7 +45,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands
                     var canStart = await runnableState.CanStartAsync();
 
                     if (!canStart)
-                        throw new ServiceException().WithField(nameof(request.Id)).WithMessage($"Server cannot be started at the time. Reason: {canStart.FailureReason}");
+                        throw new ServiceException().AddServiceError().WithField(nameof(request.Id)).WithDescription($"Server cannot be started at the time. Reason: {canStart.FailureReason}");
 
                     await runnableState.StartAsync();
                 }
@@ -55,7 +55,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands
                     var canStop = await runnableState.CanStopAsync();
 
                     if (!canStop)
-                        throw new ServiceException().WithField(nameof(request.Id)).WithMessage($"Server cannot be stopped at the time. Reason: {canStop.FailureReason}");
+                        throw new ServiceException().AddServiceError().WithField(nameof(request.Id)).WithDescription($"Server cannot be stopped at the time. Reason: {canStop.FailureReason}");
 
                     await runnableState.StopAsync();
                 }

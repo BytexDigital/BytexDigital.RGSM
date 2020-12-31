@@ -1,5 +1,5 @@
 ﻿@page "/settings/nodes"
-@inherits _Components.SettingsComponentBase
+@inherits Settings._Components.SettingsComponentBase
 
 <h2 class="mb-5">Nodes</h2>
 
@@ -9,21 +9,25 @@
 }
 else
 {
-    <a class="card card-dashed" style="min-height: 5rem;" href="#">
+    @foreach (var node in RegisteredNodes.OrderBy(x => x.DisplayName))
+    {
+        <a class="card card-frame mt-2" href="/settings/nodes/@node.Id">
+            <div class="card-body">
+                <h4 class="mb-0">@node.DisplayName <span class="text-muted">(@node.Name)</span></h4>
+                <p class="mb-0 text-muted">@node.BaseUri</p>
+                <small class="text-muted">Click to edit</small>
+
+                <div class="mt-2">
+                    <BytexDigital.RGSM.Panel.Client.Pages.Settings.Nodes._Components.NodeStatus NodeDto="node" />
+                </div>
+            </div>
+        </a>
+    }
+
+    <a class="card card-dashed mt-2" style="min-height: 5rem;" href="#" @onclick="ShowRegisterNodeModalAsync" @onclick:preventDefault="true">
         <div class="card-body card-body-centered card-dashed-body">
             <i class="fas fa-plus fa-lg mb-2"></i>
             Register new node
         </div>
     </a>
-
-    @foreach (var node in RegisteredNodes)
-    {
-        <a class="card card-frame mt-2" href="/settings/nodes/@node.Id">
-            <div class="card-body">
-                <h4 class="mb-0">@node.DisplayName</h4>
-                <p class="mb-0 text-muted">@node.BaseUri</p>
-                <small class="text-muted">Click to edit</small>
-            </div>
-        </a>
-    }
 }

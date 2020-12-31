@@ -1,8 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
-using BytexDigital.Common.Errors;
-using BytexDigital.Common.Errors.Exceptions;
+using BytexDigital.ErrorHandling.Shared;
 using BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Authentication;
 using BytexDigital.RGSM.Panel.Server.Common.Helpers;
 
@@ -45,8 +44,10 @@ namespace BytexDigital.RGSM.Panel.Server.Pages
             }
             catch (ServiceException ex)
             {
-                ex.Errors.ForField(nameof(LoginCmd.Username)).Do(x => ModelState.AddModelError(NameOf<LoginModel>.Property(p => p.LoginViewModelData.Username), x.Message));
-                ex.Errors.ForField(nameof(LoginCmd.Password)).Do(x => ModelState.AddModelError(NameOf<LoginModel>.Property(p => p.LoginViewModelData.Password), x.Message));
+                ex.FailureDetails
+                    .ForServiceErrors()
+                    .ForField(nameof(LoginCmd.Username), x => ModelState.AddModelError(NameOf<LoginModel>.Property(p => p.LoginViewModelData.Username), x.Description))
+                    .ForField(nameof(LoginCmd.Password), x => ModelState.AddModelError(NameOf<LoginModel>.Property(p => p.LoginViewModelData.Password), x.Description));
 
                 return Page();
             }

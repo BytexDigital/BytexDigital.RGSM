@@ -7,9 +7,8 @@ using Autofac;
 
 using AutoMapper;
 
-using BBytexDigital.Common.Errors.AspNetCore.Server.Extensions;
-
-using BytexDigital.Common.Errors.MediatR;
+using BytexDigital.ErrorHandling.AspNetCore.Server.Extensions;
+using BytexDigital.ErrorHandling.MediatR;
 using BytexDigital.RGSM.Node.Application.Authentication;
 using BytexDigital.RGSM.Node.Application.Core;
 using BytexDigital.RGSM.Node.Application.Core.Arma3;
@@ -136,7 +135,10 @@ namespace BytexDigital.RGSM.Node
 
             services.AddCors(options =>
             {
-                options.AddDefaultPolicy(policy => policy.WithOrigins(Configuration["NodeSettings:MasterOptions:BaseUri"]));
+                options.AddDefaultPolicy(policy => policy
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod());
             });
 
             services.AddSwaggerGen(options =>
@@ -223,6 +225,8 @@ namespace BytexDigital.RGSM.Node
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors();
 
             app.UseRouting();
 

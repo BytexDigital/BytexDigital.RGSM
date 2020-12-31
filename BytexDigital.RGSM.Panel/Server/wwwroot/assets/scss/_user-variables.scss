@@ -13,7 +13,11 @@
 // $primary: $red;
 // $font-size-base: .875rem;
 
+$navy: null !default;
+
 $gray-900: null !default;
+
+$overlay-soft-bg-color: rgba($navy, .35) !default;
 
 // The color of the SVG loader should be modified manually.
 // See assets/svg/components/circle-preloader.svg

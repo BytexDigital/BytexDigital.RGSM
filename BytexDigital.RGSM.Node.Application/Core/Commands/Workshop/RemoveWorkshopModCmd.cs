@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using BytexDigital.Common.Errors.Exceptions;
+using BytexDigital.ErrorHandling.Shared;
 using BytexDigital.RGSM.Node.Application.Core.FeatureInterfaces;
 using BytexDigital.RGSM.Node.Application.Exceptions;
 using BytexDigital.Steam.Core.Structs;
@@ -38,7 +38,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands.Workshop
                 if (state is not IWorkshopSupport workshopState) throw new ServerDoesNotSupportFeatureException<IWorkshopSupport>();
 
                 if (!server.TrackedWorkshopMods.Any(x => x.PublishedFileId == request.PublishedFileId))
-                    throw new ServiceException().WithField(nameof(request.PublishedFileId)).WithMessage("Workshop item is already removed.");
+                    throw new ServiceException().AddServiceError().WithField(nameof(request.PublishedFileId)).WithDescription("Workshop item is already removed.");
 
                 await _serversService.RemoveTrackedWorkshopItemAsync(server, request.PublishedFileId);
 

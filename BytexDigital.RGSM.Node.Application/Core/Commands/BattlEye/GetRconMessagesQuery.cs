@@ -29,7 +29,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands.BattlEye
                 var state = _serverStateRegister.GetServerState(request.Id);
 
                 if (state == null) throw new ServerNotFoundException();
-                if (state is not IBattlEyeRcon beRconState) throw new SteamProvidesNoBattlEyeRconException();
+                if (state is not IBattlEyeRcon beRconState) throw new ServerDoesNotSupportFeatureException<IBattlEyeRcon>();
 
                 return new Response
                 {

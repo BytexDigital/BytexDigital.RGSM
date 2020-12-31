@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-using BytexDigital.ErrorHandling.Shared.Exceptions;
+using BytexDigital.ErrorHandling.Shared;
 using BytexDigital.RGSM.Panel.Server.Domain.Entities;
 
 using MediatR;
@@ -28,7 +28,7 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Nodes
             {
                 var nodeKey = await _nodesService.GetNodeKey(request.NodeId).FirstAsync();
 
-                if (nodeKey == null) throw new ServiceException().WithField(nameof(request.NodeId)).WithMessage("Node has no API key or does not exist.");
+                if (nodeKey == null) throw new ServiceException().AddServiceError().WithField(nameof(request.NodeId)).WithDescription("Node has no API key or does not exist.");
 
                 return new Response { NodeKey = nodeKey };
             }

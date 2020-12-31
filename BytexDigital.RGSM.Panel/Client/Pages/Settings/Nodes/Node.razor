@@ -35,9 +35,15 @@ else
                     <ValidationMessage For="() => NodeModel.BaseUri" />
                 </div>
 
+                <div class="form-group">
+                    <label class="input-label">API Key</label>
+                    <input class="form-control readonly" readonly="readonly" value="@ApiKeyDto.Value" />
+                </div>
+
                 <ValidationMessage For="() => NodeModel.ErrorField"></ValidationMessage>
 
-                <div class="d-flex justify-content-md-end">
+                <div class="d-flex justify-content-md-between">
+                    <button class="btn btn-ghost-danger" type="button" @onclick="DeleteAsync">Delete</button>
                     <button class="btn btn-primary" type="submit"><i class="fas fa-save mr-3"></i>Save</button>
                 </div>
             </div>

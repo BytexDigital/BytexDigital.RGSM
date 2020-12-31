@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Json;
+﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-using BytexDigital.Common.Errors.Exceptions;
-using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
+using BytexDigital.ErrorHandling.Shared;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -51,7 +47,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Authorization.Requirements
                 try
                 {
                     var userId = context.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                    var usersGroupsResult = await _masterApiService.GetGroupsOfUserAsync(userId);
+                    var usersGroupsResult = await ServiceResult.FromAsync(async () => await _masterApiService.GetGroupsOfUserAsync(userId));
 
 
                     // Users with this group id are considered sysadmins

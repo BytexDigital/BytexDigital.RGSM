@@ -1,0 +1,56 @@
+﻿@if (IsLoading)
+{
+    <div class="d-flex align-items-center">
+        <div class="spinner-grow spinner-grow-sm text-light mr-2" role="status">
+            <span class="sr-only"></span>
+        </div>
+
+        <small class="text-muted">Loading status</small>
+    </div>
+}
+else if (IsOnline)
+{
+    <div class="d-flex align-items-center">
+        <div class="status-dot bg-success mr-2"></div>
+
+        <small class="text-muted">Node online</small>
+    </div>
+}
+else
+{
+    <div class="d-flex align-items-center">
+        <div class="status-dot bg-danger mr-2"></div>
+
+        <small class="text-muted">@ErrorMessage</small>
+    </div>
+}
+
+
+
+@code {
+    [Parameter]
+    public BytexDigital.RGSM.Panel.Server.TransferObjects.Entities.NodeDto NodeDto { get; set; }
+
+    [Inject]
+    public Panel.Client.Common.Core.NodesService NodeService { get; set; }
+
+    public bool IsLoading { get; set; } = true;
+    public bool IsOnline { get; set; }
+    public string ErrorMessage { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var status = await NodeService.IsNodeReachableAsync(NodeDto.BaseUri);
+
+            StateHasChanged();
+
+            IsLoading = false;
+            IsOnline = status.IsReachable;
+            ErrorMessage = status.FailureReason;
+
+            StateHasChanged();
+        }
+    }
+}

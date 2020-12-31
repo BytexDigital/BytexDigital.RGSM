@@ -30,7 +30,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands.Console
                 var state = _serverStateRegister.GetServerState(request.Id);
 
                 if (state == null) throw new ServerNotFoundException();
-                if (state is not IProvidesConsoleOutput consoleState) throw new ServerProvidesNoConsoleOutputException();
+                if (state is not IProvidesConsoleOutput consoleState) throw new ServerDoesNotSupportFeatureException<IProvidesConsoleOutput>();
 
                 return new Response
                 {

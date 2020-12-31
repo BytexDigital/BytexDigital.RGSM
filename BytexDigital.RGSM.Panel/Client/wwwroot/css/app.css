@@ -16,3 +16,18 @@
         right: 0.75rem;
         top: 0.5rem;
     }
+
+.header {
+    z-index: 99;
+}
+
+.modal-backdrop {
+    z-index: unset;
+}
+
+.status-dot {
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    display: inline-block;
+}

@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 using AutoMapper;
 
-using BBytexDigital.Common.Errors.AspNetCore.Server.Extensions;
-
-using BytexDigital.Common.Errors.MediatR;
+using BytexDigital.ErrorHandling.AspNetCore.Server.Extensions;
+using BytexDigital.ErrorHandling.MediatR;
 using BytexDigital.RGSM.Panel.Server.Application.Core;
 using BytexDigital.RGSM.Panel.Server.Application.Core.Authentication;
 using BytexDigital.RGSM.Panel.Server.Application.Core.Authorization.Requirements;

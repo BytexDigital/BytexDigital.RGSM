@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
+using BytexDigital.ErrorHandling.AspNetCore;
 using BytexDigital.ErrorHandling.Shared;
 using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
 using BytexDigital.RGSM.Panel.Server.TransferObjects.Models;
@@ -22,7 +23,7 @@ namespace BytexDigital.RGSM.Node.Application.Core
             _httpClient = httpClient;
         }
 
-        public async Task<ServiceResult<List<ApplicationUserGroupDto>>> GetGroupsOfUserAsync(string userId)
+        public async Task<List<ApplicationUserGroupDto>> GetGroupsOfUserAsync(string userId)
         {
             var response = await _httpClient.GetAsync($"/API/Groups/GetUsersGroups?userId={userId}");
 
@@ -30,7 +31,7 @@ namespace BytexDigital.RGSM.Node.Application.Core
             {
                 if (response.StatusCode == HttpStatusCode.Conflict)
                 {
-                    return await response.Content.ReadFromJsonAsync<FailureDetails>();
+                    throw await response.Content.ReadFromJsonAsync<ApiProblemDetails>();
                 }
 
                 response.EnsureSuccessStatusCode();
@@ -39,7 +40,7 @@ namespace BytexDigital.RGSM.Node.Application.Core
             return await response.Content.ReadFromJsonAsync<List<ApplicationUserGroupDto>>();
         }
 
-        public async Task<ServiceResult<ApiKeyDetailsDto>> GetApiKeyValidityAsync(string key)
+        public async Task<ApiKeyDetailsDto> GetApiKeyValidityAsync(string key)
         {
             var response = await _httpClient.GetAsync($"/API/Authentication/GetApiKeyValidity?key={key}");
 
@@ -47,7 +48,7 @@ namespace BytexDigital.RGSM.Node.Application.Core
             {
                 if (response.StatusCode == HttpStatusCode.Conflict)
                 {
-                    return await response.Content.ReadFromJsonAsync<FailureDetails>();
+                    throw await response.Content.ReadFromJsonAsync<ApiProblemDetails>();
                 }
 
                 response.EnsureSuccessStatusCode();

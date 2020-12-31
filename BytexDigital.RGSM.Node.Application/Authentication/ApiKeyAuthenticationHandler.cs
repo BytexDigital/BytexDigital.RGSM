@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
+using BytexDigital.ErrorHandling.Shared;
 using BytexDigital.RGSM.Node.Application.Core;
 
 using MediatR;
@@ -46,7 +47,7 @@ namespace BytexDigital.RGSM.Node.Application.Authentication
                 return AuthenticateResult.NoResult();
             }
 
-            var keyValidityResult = await _masterApiService.GetApiKeyValidityAsync(keyValue);
+            var keyValidityResult = await ServiceResult.FromAsync(async () => await _masterApiService.GetApiKeyValidityAsync(keyValue));
 
             if (!keyValidityResult.Succeeded) return AuthenticateResult.NoResult();
             if (!keyValidityResult.Result.IsValid) return AuthenticateResult.NoResult();

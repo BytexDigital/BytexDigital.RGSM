@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-using BytexDigital.Common.Errors.Exceptions;
+using BytexDigital.ErrorHandling.Shared;
 using BytexDigital.RGSM.Node.Application.Core.FeatureInterfaces;
 using BytexDigital.RGSM.Node.Application.Exceptions;
 using BytexDigital.RGSM.Node.Domain.Models.Status;
@@ -28,10 +28,10 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands
             {
                 var state = _serverStateRegister.GetServerState(request.Id);
 
-                if (state == null) throw new ServiceException().WithField(nameof(request.Id)).WithMessage("Server not found.");
+                if (state == null) throw new ServiceException().AddServiceError().WithField(nameof(request.Id)).WithDescription("Server not found.");
 
                 if (state is not IRunnable runnableState)
-                    throw new ServerNotRunnableException();
+                    throw new ServerDoesNotSupportFeatureException<IRunnable>();
 
                 return new Response
                 {

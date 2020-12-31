@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using BytexDigital.Common.Errors.Exceptions;
+using BytexDigital.ErrorHandling.Shared;
 
 using FluentValidation;
 
@@ -31,7 +31,7 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Nodes
             public async Task<Response> Handle(RegisterNodeCmd request, CancellationToken cancellationToken)
             {
                 if (await _nodesService.GetNodeByName(request.Name).AnyAsync())
-                    throw new ServiceException().WithField(nameof(request.Name)).WithMessage("Name is not unique.");
+                    throw new ServiceException().AddServiceError().WithField(nameof(request.Name)).WithDescription("Name is not unique.");
 
                 var node = await (await _nodesService.RegisterNodeAsync(request.BaseUri, request.Name, request.DisplayName)).FirstAsync();
 

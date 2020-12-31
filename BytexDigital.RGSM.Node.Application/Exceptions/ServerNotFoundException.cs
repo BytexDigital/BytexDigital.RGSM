@@ -1,5 +1,5 @@
-﻿
-using BytexDigital.Common.Errors.Exceptions;
+﻿using BytexDigital.ErrorHandling.Shared;
+
 
 namespace BytexDigital.RGSM.Node.Application.Exceptions
 {
@@ -7,10 +7,13 @@ namespace BytexDigital.RGSM.Node.Application.Exceptions
     {
         public ServerNotFoundException()
         {
-            Errors = new ServiceException()
+            FailureDetails = new ServiceExceptionBuilder()
+                .AddApplicationError()
                 .WithCode(nameof(ServerNotFoundException))
-                .WithMessage("Server not found.")
-                .Build().Errors;
+                .WithDescription("Server not found.")
+                .ToBuilder()
+                .Build()
+                .FailureDetails;
         }
     }
 }

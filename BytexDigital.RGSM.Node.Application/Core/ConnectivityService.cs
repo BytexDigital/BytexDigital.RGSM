@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 
+using BytexDigital.ErrorHandling.Shared;
 using BytexDigital.RGSM.Node.Application.Options;
 
 using Microsoft.Extensions.Options;
@@ -19,7 +20,7 @@ namespace BytexDigital.RGSM.Node.Application.Core
 
         public async Task<bool> IsConnectedToMasterAsync()
         {
-            var validityResult = await _masterApiService.GetApiKeyValidityAsync(_options.Value.MasterOptions.ApiKey);
+            var validityResult = await ServiceResult.FromAsync(async () => await _masterApiService.GetApiKeyValidityAsync(_options.Value.MasterOptions.ApiKey));
 
             return validityResult.Succeeded && validityResult.Result.IsValid;
         }

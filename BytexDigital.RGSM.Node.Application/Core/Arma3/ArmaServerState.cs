@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using BytexDigital.Common.Errors.Exceptions;
 using BytexDigital.RGSM.Node.Application.Core.Arma3.Commands;
 using BytexDigital.RGSM.Node.Application.Core.BattlEye;
 using BytexDigital.RGSM.Node.Application.Core.Commands.Workshop;

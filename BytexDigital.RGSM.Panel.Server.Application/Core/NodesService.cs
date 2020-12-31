@@ -43,7 +43,9 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core
 
         public async Task UnregisterNodeAsync(Domain.Entities.Node node)
         {
-            _applicationDbContext.Remove(node);
+            _applicationDbContext.ApiKeys.Remove(node.ApiKey);
+            _applicationDbContext.Nodes.Remove(node);
+           
             await _applicationDbContext.SaveChangesAsync();
         }
 

@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-using BytexDigital.Common.Errors.Exceptions;
+using BytexDigital.ErrorHandling.Shared;
 using BytexDigital.RGSM.Node.Application.Core.FeatureInterfaces;
 using BytexDigital.RGSM.Node.Application.Exceptions;
 
@@ -32,7 +32,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands.Workshop
                 var canUpdate = await workshopState.CanUpdateWorkshopModsAsync(cancellationToken);
 
                 if (!canUpdate)
-                    throw new ServiceException().WithField(nameof(request.Id)).WithMessage($"The server cannot begin updating workshop mods. Reason: {canUpdate.FailureReason}");
+                    throw new ServiceException().AddServiceError().WithField(nameof(request.Id)).WithDescription($"The server cannot begin updating workshop mods. Reason: {canUpdate.FailureReason}");
 
                 await workshopState.BeginUpdatingWorkshopModsAsync(cancellationToken);
 

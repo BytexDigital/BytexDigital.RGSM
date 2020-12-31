@@ -1,5 +1,4 @@
-﻿
-using BytexDigital.Common.Errors.Exceptions;
+﻿using BytexDigital.ErrorHandling.Shared;
 
 namespace BytexDigital.RGSM.Node.Application.Exceptions
 {
@@ -7,10 +6,13 @@ namespace BytexDigital.RGSM.Node.Application.Exceptions
     {
         public ServerDoesNotSupportFeatureException()
         {
-            Errors = new ServiceException()
+            FailureDetails = new ServiceException()
+                .AddApplicationError()
                 .WithCode(nameof(ServerDoesNotSupportFeatureException<T>))
-                .WithMessage($"Server does not support {typeof(T).Name}.")
-                .Build().Errors;
+                .WithDescription($"Server does not support {typeof(T).Name}.")
+                .ToBuilder()
+                .Build()
+                .FailureDetails;
         }
     }
 }

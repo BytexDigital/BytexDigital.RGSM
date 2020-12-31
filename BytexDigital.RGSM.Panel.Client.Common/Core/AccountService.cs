@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
 
-namespace BytexDigital.RGSM.Panel.Client.Common.Core.Master
+namespace BytexDigital.RGSM.Panel.Client.Common.Core
 {
     public class AccountService
     {
