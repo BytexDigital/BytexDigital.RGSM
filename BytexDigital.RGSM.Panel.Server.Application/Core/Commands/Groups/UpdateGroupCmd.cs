@@ -61,12 +61,12 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Groups
 
                     .NotEmpty()
 
-                    .NotEqual(GroupsConstants.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_NAME)
+                    .Must(name => name?.ToLower() != GroupsConstants.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_NAME.ToLower())
                     .WithMessage("Group name is reserved.")
 
                     .MustAsync(async (model, name, token) =>
                     {
-                        return await groupsService.GetGroupByName(name).Where(x => x.Id != model.Id).AnyAsync();
+                        return !await groupsService.GetGroupByName(name).Where(x => x.Id != model.Id).AnyAsync();
                     })
                     .WithMessage("Name is not unique.");
             }
