@@ -3,6 +3,7 @@
 */
 $red: null !default;
 $blue: null !default;
+$font-family-base: null !default;
 
 .validation-message, .field-validation-error {
     display: inline-block;
@@ -39,4 +40,8 @@ $blue: null !default;
             padding-left: 0.75rem !important;
         }
     }
+}
+
+.iziToast {
+    font-family: $font-family-base;
 }

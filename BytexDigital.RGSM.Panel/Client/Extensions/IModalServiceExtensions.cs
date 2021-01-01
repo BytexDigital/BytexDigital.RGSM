@@ -30,6 +30,8 @@ namespace BytexDigital.RGSM.Panel.Client.Extensions
                 parameters = new ModalParameters();
             }
 
+            parameters.Add("ModalParameters", parameters);
+
             options.UseCustomLayout = true;
 
             return modalService.Show<FrontModal<TComponent>>(null, parameters, options);

@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Groups
 {
-    public partial class Index : ComponentBase
+    public partial class Index : Settings._Components.SettingsComponentBase
     {
         [Inject]
         public GroupsService GroupsService { get; set; }

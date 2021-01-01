@@ -1,5 +1,4 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 using Blazored.Modal.Services;
@@ -28,17 +27,33 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Nodes
         [Inject]
         public IModalService ModalService { get; set; }
 
+        [Inject]
+        public ToastsService ToastService { get; set; }
+
         public NodeEditViewModel NodeModel { get; set; }
         public ManualFormValidator<NodeEditViewModel> NodeModelValidator { get; set; }
 
         public NodeDto NodeDto { get; set; }
         public ApiKeyDto ApiKeyDto { get; set; }
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
+        public Node()
         {
-            await base.OnAfterRenderAsync(firstRender);
+            NodeModel = new NodeEditViewModel
+            {
+                DisplayName = "",
+                BaseUri = "",
+                Name = ""
+            };
+        }
 
-            if (firstRender)
+        public override async Task SetParametersAsync(ParameterView parameters)
+        {
+            var nodeId = NodeId;
+            var newNodeId = parameters.GetValueOrDefault<string>(nameof(NodeId));
+
+            await base.SetParametersAsync(parameters);
+
+            if (nodeId != newNodeId)
             {
                 await RefreshDataAsync();
 
@@ -48,6 +63,13 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Nodes
                     return;
                 }
 
+                NodeModel = new NodeEditViewModel
+                {
+                    DisplayName = NodeDto.DisplayName,
+                    BaseUri = NodeDto.BaseUri,
+                    Name = NodeDto.Name
+                };
+
                 StateHasChanged();
             }
         }
@@ -56,16 +78,6 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Nodes
         {
             NodeDto = await NodeService.GetNodeOrDefaultAsync(NodeId);
             ApiKeyDto = await NodeService.GetNodeApiKeyOrDefaultAsync(NodeId);
-
-            if (NodeDto != null)
-            {
-                NodeModel = new NodeEditViewModel
-                {
-                    DisplayName = NodeDto.DisplayName,
-                    BaseUri = NodeDto.BaseUri,
-                    Name = NodeDto.Name
-                };
-            }
         }
 
         public async Task SaveAsync()
@@ -84,12 +96,13 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Nodes
                     .ForField("BaseUri", x => NodeModelValidator.ModelState.Field(x => x.BaseUri).AddError(x.Description))
                     .ForField("Name", x => NodeModelValidator.ModelState.Field(x => x.Name).AddError(x.Description))
                     .ForField("DisplayName", x => NodeModelValidator.ModelState.Field(x => x.DisplayName).AddError(x.Description));
+
+
             }
 
             if (updateResult.Succeeded)
             {
-                // TODO: Add toast
-                Navigation.NavigateTo("/settings/nodes");
+                await ToastService.NotifyAsync(WebNotificationType.Success, "Saved changes.");
             }
         }
 

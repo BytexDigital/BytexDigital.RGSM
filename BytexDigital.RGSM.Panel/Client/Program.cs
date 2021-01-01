@@ -47,7 +47,8 @@ namespace BytexDigital.RGSM.Panel.Client
                 .AddScoped<NodeRegisterService>()
                 .AddScoped<NodesService>()
                 .AddScoped<GroupsService>()
-                .AddScoped<ServersService>();
+                .AddScoped<ServersService>()
+                .AddScoped<ToastsService>();
 
             // Enable options pattern
             builder.Services.AddOptions();

@@ -7,8 +7,8 @@
 else
 {
     <div class="mb-4">
-        <h3 class="mb-0">Editing node @NodeDto.DisplayName</h3>
-        <p class="text-muted mb-0">@NodeDto.Id</p>
+        <h2 class="mb-0">Editing node <span class="text-primary">@NodeDto.DisplayName</span></h2>
+        <p class="text-muted mb-0">@NodeDto.Name</p>
     </div>
 
     <EditForm Model="NodeModel" OnValidSubmit="SaveAsync">
@@ -44,7 +44,7 @@ else
 
                 <div class="d-flex justify-content-md-between">
                     <button class="btn btn-ghost-danger" type="button" @onclick="DeleteAsync">Delete</button>
-                    <button class="btn btn-primary" type="submit"><i class="fas fa-save mr-3"></i>Save</button>
+                    <button class="btn btn-primary btn-wide" type="submit"><i class="fas fa-save mr-3"></i>Save</button>
                 </div>
             </div>
         </div>

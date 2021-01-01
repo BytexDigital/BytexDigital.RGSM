@@ -39,9 +39,9 @@ namespace BytexDigital.RGSM.Panel.Client.Common.Core
             return await response.Content.ReadFromJsonAsync<GroupDto>();
         }
 
-        public async Task<GroupDto> GetGroupAsync(GroupDto groupDto)
+        public async Task<GroupDto> GetGroupAsync(string groupId)
         {
-            var response = await _httpClient.GetAsync($"/API/Groups/GetGroup/{groupDto.Id}");
+            var response = await _httpClient.GetAsync($"/API/Groups/GetGroup/{groupId}");
 
             if (!response.IsSuccessStatusCode)
             {
