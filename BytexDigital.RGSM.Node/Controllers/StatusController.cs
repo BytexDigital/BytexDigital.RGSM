@@ -2,10 +2,10 @@
 
 using AutoMapper;
 
-using BytexDigital.RGSM.Node.Application.Core;
 using BytexDigital.RGSM.Node.Application.Core.Authorization.Requirements;
 using BytexDigital.RGSM.Node.Application.Core.Commands;
 using BytexDigital.RGSM.Node.TransferObjects.Models.Status;
+using BytexDigital.RGSM.Shared;
 
 using MediatR;
 
@@ -42,7 +42,7 @@ namespace BytexDigital.RGSM.Node.Controllers
             if (!(await _authorizationService.AuthorizeAsync(HttpContext.User, null, new PermissionRequirement
             {
                 ServerId = serverId,
-                Name = PermissionConstants.STARSTOP
+                Name = PermissionConstants.STARTSTOP
             })).Succeeded)
             {
                 return Unauthorized();
@@ -59,7 +59,7 @@ namespace BytexDigital.RGSM.Node.Controllers
             if (!(await _authorizationService.AuthorizeAsync(HttpContext.User, null, new PermissionRequirement
             {
                 ServerId = serverId,
-                Name = PermissionConstants.STARSTOP
+                Name = PermissionConstants.STARTSTOP
             })).Succeeded)
             {
                 return Unauthorized();
@@ -84,7 +84,7 @@ namespace BytexDigital.RGSM.Node.Controllers
             if (!(await _authorizationService.AuthorizeAsync(HttpContext.User, null, new PermissionRequirement
             {
                 ServerId = serverId,
-                Name = PermissionConstants.STARSTOP
+                Name = PermissionConstants.STARTSTOP
             })).Succeeded)
             {
                 return Unauthorized();

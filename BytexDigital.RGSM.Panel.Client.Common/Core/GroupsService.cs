@@ -55,5 +55,20 @@ namespace BytexDigital.RGSM.Panel.Client.Common.Core
 
             return await response.Content.ReadFromJsonAsync<GroupDto>();
         }
+
+        public async Task UpdateGroupAsync(GroupDto groupDto)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"/API/Groups/UpdateGroup", groupDto);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
+                {
+                    throw await response.Content.ReadFromJsonAsync<ApiProblemDetails>();
+                }
+
+                response.EnsureSuccessStatusCode();
+            }
+        }
     }
 }

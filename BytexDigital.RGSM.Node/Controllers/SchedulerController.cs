@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 
 using AutoMapper;
 
-using BytexDigital.RGSM.Node.Application.Core;
 using BytexDigital.RGSM.Node.Application.Core.Authorization.Requirements;
 using BytexDigital.RGSM.Node.Application.Core.Commands.Scheduling;
 using BytexDigital.RGSM.Node.Domain.Entities.Scheduling;
 using BytexDigital.RGSM.Node.TransferObjects.Entities.Scheduling;
+using BytexDigital.RGSM.Shared;
 
 using MediatR;
 

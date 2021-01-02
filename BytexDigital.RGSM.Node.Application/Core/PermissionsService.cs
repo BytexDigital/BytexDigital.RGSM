@@ -1,10 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 using BytexDigital.RGSM.Node.Domain.Entities;
 using BytexDigital.RGSM.Node.Persistence;
+using BytexDigital.RGSM.Shared;
 
 namespace BytexDigital.RGSM.Node.Application.Core
 {

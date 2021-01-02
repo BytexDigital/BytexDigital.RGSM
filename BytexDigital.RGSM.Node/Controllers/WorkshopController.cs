@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 
 using AutoMapper;
 
-using BytexDigital.RGSM.Node.Application.Core;
 using BytexDigital.RGSM.Node.Application.Core.Authorization.Requirements;
 using BytexDigital.RGSM.Node.Application.Core.Commands.Workshop;
 using BytexDigital.RGSM.Node.TransferObjects.Models.Workshop;
+using BytexDigital.RGSM.Shared;
 
 using MediatR;
 

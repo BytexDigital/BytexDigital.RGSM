@@ -28,7 +28,7 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Nodes
         public IModalService ModalService { get; set; }
 
         [Inject]
-        public ToastsService ToastService { get; set; }
+        public ToastsService ToastsService { get; set; }
 
         public NodeEditViewModel NodeModel { get; set; }
         public ManualFormValidator<NodeEditViewModel> NodeModelValidator { get; set; }
@@ -90,19 +90,22 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Nodes
 
             if (!updateResult.Succeeded && updateResult.FailureDetails != null)
             {
-                updateResult.FailureDetails
+                updateResult
                     .ForServiceErrors()
                     .ForNoField(x => NodeModelValidator.ModelState.Field(x => x.ErrorField).AddError(x.Description))
                     .ForField("BaseUri", x => NodeModelValidator.ModelState.Field(x => x.BaseUri).AddError(x.Description))
                     .ForField("Name", x => NodeModelValidator.ModelState.Field(x => x.Name).AddError(x.Description))
                     .ForField("DisplayName", x => NodeModelValidator.ModelState.Field(x => x.DisplayName).AddError(x.Description));
 
-
+                await updateResult
+                    .AsAsync()
+                    .ForServiceErrors(async x => await ToastsService.NotifyAsync(WebNotificationType.Error, "Application Error", x.Description))
+                    .WaitAsync();
             }
 
             if (updateResult.Succeeded)
             {
-                await ToastService.NotifyAsync(WebNotificationType.Success, "Saved changes.");
+                await ToastsService.NotifyAsync(WebNotificationType.Success, "Saved changes.");
             }
         }
 

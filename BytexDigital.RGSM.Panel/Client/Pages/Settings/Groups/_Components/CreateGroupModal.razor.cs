@@ -15,7 +15,7 @@ using Microsoft.JSInterop;
 
 namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Groups._Components
 {
-    public partial class CreateGroupModal
+    public partial class CreateGroupModal : ComponentBase
     {
         [CascadingParameter]
         public BlazoredModalInstance ModelInstance { get; set; }

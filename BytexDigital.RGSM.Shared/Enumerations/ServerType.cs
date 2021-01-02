@@ -1,4 +1,4 @@
-﻿namespace BytexDigital.RGSM.Node.Domain.Enumerations
+﻿namespace BytexDigital.RGSM.Shared.Enumerations
 {
     public enum ServerType
     {

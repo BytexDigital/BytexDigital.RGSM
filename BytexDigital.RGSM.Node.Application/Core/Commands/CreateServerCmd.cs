@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 
 using BytexDigital.RGSM.Node.Domain.Entities;
-using BytexDigital.RGSM.Node.Domain.Enumerations;
+using BytexDigital.RGSM.Shared.Enumerations;
 
 using FluentValidation;
 
@@ -20,19 +20,22 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands
 
         public class Handler : IRequestHandler<CreateServerCmd, Response>
         {
-            private readonly ServersService _serversService;
+            private readonly ServerCreationService _serverCreationService;
             private readonly ServerStateRegister _serverStateRegister;
+            private readonly ServerIntegrityService _serverIntegrityService;
 
-            public Handler(ServersService serversService, ServerStateRegister serverStateRegister)
+            public Handler(ServerCreationService serverCreationService, ServerStateRegister serverStateRegister, ServerIntegrityService serverIntegrityService)
             {
-                _serversService = serversService;
+                _serverCreationService = serverCreationService;
                 _serverStateRegister = serverStateRegister;
+                _serverIntegrityService = serverIntegrityService;
             }
 
             public async Task<Response> Handle(CreateServerCmd request, CancellationToken cancellationToken)
             {
-                var server = await (await _serversService.CreateServerAsync(request.DisplayName, request.Directory, request.ServerType)).FirstAsync();
+                var server = await (await _serverCreationService.CreateServerAsync(request.DisplayName, request.Directory, request.ServerType)).FirstAsync();
 
+                await _serverIntegrityService.EnsureCorrectSetupAsync(server);
                 await _serverStateRegister.RegisterAsync(server);
 
                 return new Response { Server = server };

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,10 +26,12 @@ namespace BytexDigital.RGSM.Panel.Client.Common.Core.Commands
             public async Task<Response> Handle(GetAllServersQuery request, CancellationToken cancellationToken)
             {
                 var nodes = await _nodesService.GetNodesAsync();
-                var servers = new List<(NodeDto Node, ServerDto Server)>();
+                var servers = new Dictionary<NodeDto, List<ServerDto>>();
 
                 foreach (var node in nodes)
                 {
+                    servers.Add(node, new List<ServerDto>());
+
                     var availability = await _nodesService.IsNodeReachableAsync(node.BaseUri);
 
                     if (!availability.IsReachable) continue;
@@ -37,7 +40,7 @@ namespace BytexDigital.RGSM.Panel.Client.Common.Core.Commands
 
                     foreach (var server in nodeServers)
                     {
-                        servers.Add((node, server));
+                        servers[node].Add(server);
                     }
                 }
 
@@ -50,7 +53,7 @@ namespace BytexDigital.RGSM.Panel.Client.Common.Core.Commands
 
         public class Response
         {
-            public List<(NodeDto Node, ServerDto Server)> Servers { get; set; }
+            public Dictionary<NodeDto, List<ServerDto>> Servers { get; set; }
         }
     }
 }

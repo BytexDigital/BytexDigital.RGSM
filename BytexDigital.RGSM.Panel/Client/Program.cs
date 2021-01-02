@@ -44,6 +44,7 @@ namespace BytexDigital.RGSM.Panel.Client
             // Add custom services
             builder.Services
                 .AddScoped<AccountService>()
+                .AddScoped<PermissionsService>()
                 .AddScoped<NodeRegisterService>()
                 .AddScoped<NodesService>()
                 .AddScoped<GroupsService>()

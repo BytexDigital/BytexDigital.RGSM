@@ -24,14 +24,9 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Groups
         public IModalService ModalService { get; set; }
 
         [Inject]
-
-        public NavigationManager Navigation { get; set; }
-
-        [Inject]
         public IMediator Mediator { get; set; }
 
         public List<GroupDto> Groups { get; set; }
-        public List<(NodeDto Node, ServerDto Server)> Servers { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -44,7 +39,6 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Groups
         public async Task RefreshGroupsAsync()
         {
             Groups = await GroupsService.GetGroupsAsync();
-            Servers = (await Mediator.Send(new GetAllServersQuery())).Servers;
         }
 
         public async Task CreateGroupAsync()

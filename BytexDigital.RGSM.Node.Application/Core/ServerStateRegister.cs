@@ -7,7 +7,7 @@ using Autofac;
 using BytexDigital.RGSM.Node.Application.Core.Arma3;
 using BytexDigital.RGSM.Node.Application.Core.Generic;
 using BytexDigital.RGSM.Node.Domain.Entities;
-using BytexDigital.RGSM.Node.Domain.Enumerations;
+using BytexDigital.RGSM.Shared.Enumerations;
 
 using MediatR;
 
@@ -33,6 +33,8 @@ namespace BytexDigital.RGSM.Node.Application.Core
             using (var scope = _lifetimeScope.BeginLifetimeScope())
             {
                 var serversService = scope.Resolve<ServersService>();
+                var permissionsService = scope.Resolve<PermissionsService>();
+                var setupService = scope.Resolve<ServerIntegrityService>();
 
                 foreach (var server in await serversService.GetServers().ToListAsync())
                 {

@@ -38,4 +38,52 @@ else
             </div>
         </div>
     </EditForm>
+
+    @if (ServerDtos == default)
+    {
+        <Spinner class="mt-5" Text="Loading servers.."></Spinner>
+    }
+    else
+    {
+        <h3 class="mt-4">Server permissions</h3>
+
+        foreach (var nodeData in ServerDtos.OrderBy(x => x.Key.DisplayName))
+        {
+            var node = nodeData.Key;
+            var servers = nodeData.Value;
+
+            foreach (var server in servers.OrderBy(x => x.DisplayName))
+            {
+                <div class="card border mb-1">
+                    <div class="card-header card-collapse" id="coursesHeadingOne">
+                        <a class="btn btn-link btn-sm btn-block card-btn p-3" href="javascript:;" role="button" data-toggle="collapse" data-target="#@server.Id">
+                            <!-- Header -->
+                            <span class="row">
+                                <span class="col-8">
+                                    <span class="media">
+                                        <span class="card-btn-toggle mr-3 ml-0">
+                                            <span class="card-btn-toggle-default">+</span>
+                                            <span class="card-btn-toggle-active">−</span>
+                                        </span>
+                                        <span class="media-body">
+                                            <span class="text-body p mb-0 font-weight-bold mr-5">@server.DisplayName</span>
+                                        </span>
+                                    </span>
+                                </span>
+                                <span class="col-4 text-right">
+                                    <span class="text-muted">Running on @node.DisplayName</span>
+                                </span>
+                            </span>
+                            <!-- End Header -->
+                        </a>
+                    </div>
+                    <div id="@server.Id.ToString()" class="collapse">
+                        <div class="card-body">
+                            <BytexDigital.RGSM.Panel.Client.Pages.Settings.Groups._Components.ServerPermissions Server="server" Node="node" />
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    }
 }

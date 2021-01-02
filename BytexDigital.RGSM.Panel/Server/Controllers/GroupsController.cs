@@ -60,7 +60,7 @@ namespace BytexDigital.RGSM.Panel.Server.Controllers
             })).Group);
         }
 
-        [HttpPatch]
+        [HttpPost]
         [Authorize(Policy = "Admin")]
         public async Task<ActionResult> UpdateGroupAsync([FromBody] GroupDto groupDto)
         {

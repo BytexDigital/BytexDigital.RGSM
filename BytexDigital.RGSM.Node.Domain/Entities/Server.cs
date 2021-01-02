@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 using BytexDigital.RGSM.Node.Domain.Entities.Arma3;
 using BytexDigital.RGSM.Node.Domain.Entities.Scheduling;
-using BytexDigital.RGSM.Node.Domain.Enumerations;
+using BytexDigital.RGSM.Shared.Enumerations;
 
 namespace BytexDigital.RGSM.Node.Domain.Entities
 {

@@ -1,0 +1,13 @@
+﻿@if (Permissions == default)
+{
+    <Spinner Text="Loading permissions.."></Spinner>
+}
+else
+{
+    foreach (var permission in Permissions.OrderBy(x => x.Name))
+    {
+        <div class="mt-2">
+            <PermissionSwitch Permission="permission" />
+        </div>
+    }
+}

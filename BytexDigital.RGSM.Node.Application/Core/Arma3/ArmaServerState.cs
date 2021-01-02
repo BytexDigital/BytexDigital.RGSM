@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 using BytexDigital.RGSM.Node.Application.Core.Arma3.Commands;
 using BytexDigital.RGSM.Node.Application.Core.BattlEye;
+using BytexDigital.RGSM.Node.Application.Core.Commands;
 using BytexDigital.RGSM.Node.Application.Core.Commands.Workshop;
 using BytexDigital.RGSM.Node.Application.Core.FeatureInterfaces;
 using BytexDigital.RGSM.Node.Application.Core.Generic;
@@ -52,7 +53,6 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
 
         public override async Task InitializeAsync()
         {
-            await Mediator.Send(new EnsureArmaServerPermissionsExistCmd { Id = Id });
             await RefreshSettingsAsync();
 
             ArgumentStringBuilder = new ArmaArgumentStringBuilder(this);
