@@ -15,13 +15,11 @@ namespace BytexDigital.RGSM.Node.Application.Core
     {
         private readonly NodeDbContext _nodeDbContext;
         private readonly ServersService _serversService;
-        private readonly ArmaServerService _armaServerService;
 
-        public ServerCreationService(NodeDbContext nodeDbContext, ServersService serversService, ArmaServerService armaServerService)
+        public ServerCreationService(NodeDbContext nodeDbContext, ServersService serversService)
         {
             _nodeDbContext = nodeDbContext;
             _serversService = serversService;
-            _armaServerService = armaServerService;
         }
 
         public async Task<IQueryable<Server>> CreateServerAsync(string displayName, string directory, ServerType serverType)
