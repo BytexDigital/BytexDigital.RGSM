@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 
 using BytexDigital.RGSM.Node.Application.Core.Authorization.Requirements;
-using BytexDigital.RGSM.Node.Application.Core.Commands.FileSystem;
+using BytexDigital.RGSM.Node.Application.Core.Features.FileSystem.Commands;
 using BytexDigital.RGSM.Node.TransferObjects.Models.FileSystem;
 using BytexDigital.RGSM.Shared;
 

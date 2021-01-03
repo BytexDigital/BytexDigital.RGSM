@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using AutoMapper;
 
-using BytexDigital.RGSM.Node.Application.Core.Commands.BattlEye;
+using BytexDigital.RGSM.Node.Application.Core.Features.BattlEye.Commands;
 using BytexDigital.RGSM.Node.TransferObjects.Models.BattlEye;
 
 using MediatR;

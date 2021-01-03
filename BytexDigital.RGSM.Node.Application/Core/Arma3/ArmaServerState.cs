@@ -7,25 +7,28 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using BytexDigital.RGSM.Node.Application.Core.Arma3.Commands;
-using BytexDigital.RGSM.Node.Application.Core.BattlEye;
-using BytexDigital.RGSM.Node.Application.Core.Commands;
-using BytexDigital.RGSM.Node.Application.Core.Commands.Workshop;
-using BytexDigital.RGSM.Node.Application.Core.FeatureInterfaces;
+using BytexDigital.RGSM.Node.Application.Core.Features.BattlEye;
+using BytexDigital.RGSM.Node.Application.Core.Features.Runnable;
+using BytexDigital.RGSM.Node.Application.Core.Features.ServerLogs;
+using BytexDigital.RGSM.Node.Application.Core.Features.Workshop;
+using BytexDigital.RGSM.Node.Application.Core.Features.Workshop.Commands;
 using BytexDigital.RGSM.Node.Application.Core.Generic;
 using BytexDigital.RGSM.Node.Application.Core.Steam;
 using BytexDigital.RGSM.Node.Application.Core.Steam.Commands;
 using BytexDigital.RGSM.Node.Domain.Entities.Arma3;
 using BytexDigital.RGSM.Node.Domain.Models.BattlEye;
-using BytexDigital.RGSM.Node.Domain.Models.Console;
+using BytexDigital.RGSM.Node.Domain.Models.ServerLogs;
 using BytexDigital.RGSM.Node.Domain.Models.Status;
 using BytexDigital.RGSM.Node.Domain.Models.Workshop;
 using BytexDigital.Steam.Core.Structs;
 
 using MediatR;
 
+using Serilog;
+
 namespace BytexDigital.RGSM.Node.Application.Core.Arma3
 {
-    public class ArmaServerState : ServerStateBase, IRunnable, IProvidesConsoleOutput, IBattlEyeRcon, IWorkshopSupport, IWorkshopStorage
+    public class ArmaServerState : ServerStateBase, IRunnable, IServerLogs, IBattlEyeRcon, IWorkshopSupport, IWorkshopStorage
     {
         public const uint DEDICATED_SERVER_APP_ID = 233780;
 
@@ -36,6 +39,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
         public ModsKeyManager ModKeyManager { get; private set; }
         public UpdateState ServerUpdateState { get; private set; }
         public ConcurrentDictionary<PublishedFileId, UpdateState> WorkshopUpdateStates { get; private set; }
+        public ILogger Logger { get; private set; }
 
         public bool IsUpdating => ServerUpdateState != null &&
             (ServerUpdateState.State == UpdateState.Status.Queued || ServerUpdateState.State == UpdateState.Status.Processing);
@@ -49,6 +53,10 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
         public ArmaServerState(IMediator mediator, string id, string directory) : base(mediator, id, directory)
         {
             WorkshopUpdateStates = new ConcurrentDictionary<PublishedFileId, UpdateState>();
+
+            Logger = new LoggerConfiguration()
+                .WriteTo.Logger(logger => logger.WriteTo.File(Path.Combine(Directory, ".rgsm", "logs", "server.log"), rollingInterval: RollingInterval.Day))
+                .CreateLogger();
         }
 
         public override async Task InitializeAsync()
@@ -86,7 +94,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
 
         public async Task CreateRconMonitorAsync(CancellationToken cancellationToken = default)
         {
-            RconMonitor = new BeRconMonitor(this);
+            RconMonitor = new BeRconMonitor();
 
             await RconMonitor.ConfigureAsync(Settings.RconIp, Settings.RconPort, Settings.RconPassword);
         }
@@ -242,76 +250,6 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
             return Task.CompletedTask;
         }
 
-        public async Task<List<ConsoleOutputContent>> GetConsoleOutputAsync(List<string> identifiers = default, int lastNLines = 0, CancellationToken cancellationToken = default)
-        {
-            var profilesFolder = await GetProfilesPathAsync(cancellationToken);
-
-            if (!System.IO.Path.IsPathRooted(profilesFolder)) profilesFolder = System.IO.Path.Combine(Directory, profilesFolder);
-
-            if (!System.IO.Directory.Exists(profilesFolder)) return new List<ConsoleOutputContent>();
-
-            List<ConsoleOutputContent> outputs = new List<ConsoleOutputContent>();
-
-            if (identifiers == default || identifiers.Contains("console"))
-            {
-                var consoleFiles = System.IO.Directory.GetFiles(profilesFolder, "*.log");
-                var currentConsoleFilePath = consoleFiles.OrderByDescending(x => new System.IO.FileInfo(x).LastWriteTimeUtc).FirstOrDefault();
-
-                if (currentConsoleFilePath != default)
-                {
-                    using (var fileStream = new FileStream(currentConsoleFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                    using (var reader = new StreamReader(fileStream))
-                    {
-                        var content = await reader.ReadToEndAsync();
-                        var lines = content.Split(Environment.NewLine).ToList();
-
-                        if (lastNLines > 0)
-                        {
-                            lines = lines.TakeLast(lastNLines).ToList();
-                        }
-
-                        outputs.Add(new ConsoleOutputContent
-                        {
-                            Type = "console",
-                            FromFile = currentConsoleFilePath,
-                            Lines = lines
-                        });
-                    }
-                }
-            }
-
-            if (identifiers == default || identifiers.Contains("rpt"))
-            {
-                var rptFiles = System.IO.Directory.GetFiles(profilesFolder, "*.rpt");
-                var currentRptFilePath = rptFiles.OrderByDescending(x => x).FirstOrDefault();
-
-                if (currentRptFilePath != default)
-                {
-
-                    using (var fileStream = new FileStream(currentRptFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                    using (var reader = new StreamReader(fileStream))
-                    {
-                        var content = await reader.ReadToEndAsync();
-                        var lines = content.Split(Environment.NewLine).ToList();
-
-                        if (lastNLines > 0)
-                        {
-                            lines = lines.TakeLast(lastNLines).ToList();
-                        }
-
-                        outputs.Add(new ConsoleOutputContent
-                        {
-                            Type = "rpt",
-                            FromFile = currentRptFilePath,
-                            Lines = lines
-                        });
-                    }
-                }
-            }
-
-            return outputs;
-        }
-
         public Task<BeRconStatus> IsBeRconConnectedAsync(CancellationToken cancellationToken1 = default)
         {
             return Task.FromResult(new BeRconStatus
@@ -339,7 +277,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
         {
             var mods = new List<WorkshopItem>();
 
-            foreach (var trackedMod in (await Mediator.Send(new GetWorkshopModsQuery { Id = Id })).TrackedWorkshopMods)
+            foreach (var trackedMod in (await Mediator.Send(new GetWorkshopModsQuery { ServerId = Id })).TrackedWorkshopMods)
             {
                 string modDirectory = await GetWorkshopModPathAsync(trackedMod, cancellationToken);
 
@@ -374,7 +312,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
 
             List<Task> modTasks = new List<Task>();
 
-            foreach (var trackedMod in (await Mediator.Send(new GetWorkshopModsQuery { Id = Id })).TrackedWorkshopMods)
+            foreach (var trackedMod in (await Mediator.Send(new GetWorkshopModsQuery { ServerId = Id })).TrackedWorkshopMods)
             {
                 string modDirectory = await GetWorkshopModPathAsync(trackedMod, cancellationToken);
 
@@ -433,6 +371,101 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
             if (!Path.IsPathRooted(modDirectory)) modDirectory = Path.Combine(Directory, modDirectory);
 
             return Task.FromResult(modDirectory);
+        }
+
+        public async Task<List<LogSource>> GetLogSourcesAsync(CancellationToken cancellationToken = default)
+        {
+            var profilesFolder = await GetProfilesPathAsync(cancellationToken);
+            if (!System.IO.Path.IsPathRooted(profilesFolder)) profilesFolder = System.IO.Path.Combine(Directory, profilesFolder);
+            if (!System.IO.Directory.Exists(profilesFolder)) return new List<LogSource>();
+
+            List<LogSource> sources = new List<LogSource>();
+
+            // console_xxxxx.log files
+            var consoleFiles = System.IO.Directory.GetFiles(profilesFolder, "*.log");
+
+            foreach (var consoleFilePath in consoleFiles)
+            {
+                sources.Add(new LogSource
+                {
+                    Type = "console_file",
+                    Name = Path.GetFileNameWithoutExtension(consoleFilePath),
+                    SizeInBytes = new FileInfo(consoleFilePath).Length,
+                    TimeLastUpdated = new DateTimeOffset(File.GetLastWriteTimeUtc(consoleFilePath), TimeSpan.Zero)
+                });
+            }
+
+            // RPT files
+            var rptFiles = System.IO.Directory.GetFiles(profilesFolder, "*.rpt");
+
+            foreach (var rptFilePath in rptFiles)
+            {
+                sources.Add(new LogSource
+                {
+                    Type = "rpt_file",
+                    Name = Path.GetFileNameWithoutExtension(rptFilePath),
+                    SizeInBytes = new FileInfo(rptFilePath).Length,
+                    TimeLastUpdated = new DateTimeOffset(File.GetLastWriteTimeUtc(rptFilePath), TimeSpan.Zero)
+                });
+            }
+
+            return sources;
+        }
+
+        public async Task<LogSource> GetPrimaryLogSourceOrDefaultAsync(CancellationToken cancellationToken = default)
+        {
+            var primarySource = (await GetLogSourcesAsync(cancellationToken))
+                .Where(x => x.Type == "rpt_file")
+                .OrderByDescending(x => x.TimeLastUpdated)
+                .FirstOrDefault();
+
+            return primarySource;
+        }
+
+        public async Task<LogContent> GetLogContentOrDefaultAsync(string logSourceName, int limitLines = 0, CancellationToken cancellationToken = default)
+        {
+            var profilesFolder = await GetProfilesPathAsync(cancellationToken);
+            if (!System.IO.Path.IsPathRooted(profilesFolder)) profilesFolder = System.IO.Path.Combine(Directory, profilesFolder);
+
+            var sources = await GetLogSourcesAsync(cancellationToken);
+            var requestSource = sources.FirstOrDefault(x => x.Name == logSourceName);
+
+            if (requestSource == default) return default;
+
+            string fileToReadPath = default;
+
+            if (requestSource.Type == "console_file")
+            {
+                var consoleFiles = System.IO.Directory.GetFiles(profilesFolder, "*.log");
+                var requestedConsoleFile = consoleFiles.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == requestSource.Name);
+
+                fileToReadPath = requestedConsoleFile;
+            }
+            else if (requestSource.Type == "rpt_file")
+            {
+                var consoleFiles = System.IO.Directory.GetFiles(profilesFolder, "*.rpt");
+                var requestedConsoleFile = consoleFiles.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == requestSource.Name);
+
+                fileToReadPath = requestedConsoleFile;
+            }
+
+            if (!File.Exists(fileToReadPath)) return null;
+
+            using var fileStream = new FileStream(fileToReadPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var reader = new StreamReader(fileStream);
+
+            var content = await reader.ReadToEndAsync();
+            var lines = content.Split(Environment.NewLine).ToList();
+
+            if (limitLines > 0)
+            {
+                lines = lines.TakeLast(limitLines).ToList();
+            }
+
+            return new LogContent
+            {
+                Lines = lines
+            };
         }
     }
 }

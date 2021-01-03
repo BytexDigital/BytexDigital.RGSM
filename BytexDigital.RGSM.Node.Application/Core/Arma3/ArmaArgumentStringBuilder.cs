@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-using BytexDigital.RGSM.Node.Application.Core.Commands.Workshop;
+using BytexDigital.RGSM.Node.Application.Core.Features.Workshop.Commands;
 using BytexDigital.RGSM.Node.Application.Core.Generic;
 
 namespace BytexDigital.RGSM.Node.Application.Core.Arma3
@@ -38,7 +38,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
         {
             List<(bool, string)> mods = new List<(bool, string)>();
 
-            var workshopMods = await _armaServerState.Mediator.Send(new GetWorkshopModsQuery());
+            var workshopMods = await _armaServerState.Mediator.Send(new GetWorkshopModsQuery { ServerId = _armaServerState.Id });
 
             foreach (var workshopMod in workshopMods.TrackedWorkshopMods.Where(x => x.Load))
             {
