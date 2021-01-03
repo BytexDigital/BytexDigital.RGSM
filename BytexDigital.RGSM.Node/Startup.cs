@@ -57,7 +57,7 @@ namespace BytexDigital.RGSM.Node
                 .AddScoped<ConnectivityService>()
                 .AddScoped<ArmaServerService>()
                 .AddScoped<PermissionsService>()
-                .AddScoped<IntegrityService>()
+                .AddScoped<ServerIntegrityService>()
                 .AddScoped<SchedulersService>()
                 .AddScoped<WorkshopManagerService>()
                 .AddSingleton<FileSystemService>()

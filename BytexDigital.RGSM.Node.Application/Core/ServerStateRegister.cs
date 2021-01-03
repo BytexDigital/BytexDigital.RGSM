@@ -34,7 +34,7 @@ namespace BytexDigital.RGSM.Node.Application.Core
             {
                 var serversService = scope.Resolve<ServersService>();
                 var permissionsService = scope.Resolve<PermissionsService>();
-                var setupService = scope.Resolve<IntegrityService>();
+                var setupService = scope.Resolve<ServerIntegrityService>();
 
                 foreach (var server in await serversService.GetServers().ToListAsync())
                 {

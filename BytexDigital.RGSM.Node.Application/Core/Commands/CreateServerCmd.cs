@@ -21,10 +21,10 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands
         public class Handler : IRequestHandler<CreateServerCmd, Response>
         {
             private readonly ServerStateRegister _serverStateRegister;
-            private readonly IntegrityService _serverIntegrityService;
+            private readonly ServerIntegrityService _serverIntegrityService;
             private readonly ServersService _serversService;
 
-            public Handler(ServerStateRegister serverStateRegister, IntegrityService serverIntegrityService, ServersService serversService)
+            public Handler(ServerStateRegister serverStateRegister, ServerIntegrityService serverIntegrityService, ServersService serversService)
             {
                 _serverStateRegister = serverStateRegister;
                 _serverIntegrityService = serverIntegrityService;

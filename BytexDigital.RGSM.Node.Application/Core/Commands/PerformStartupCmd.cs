@@ -12,13 +12,13 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands
     {
         public class Handler : IRequestHandler<PerformStartupCmd>
         {
-            private readonly IntegrityService _serverIntegrityService;
+            private readonly ServerIntegrityService _serverIntegrityService;
             private readonly ServerStateRegister _serverStateRegister;
             private readonly SteamDownloadService _steamDownloadService;
             private readonly SchedulerHandler _schedulerHandler;
 
             public Handler(
-                IntegrityService serverIntegrityService,
+                ServerIntegrityService serverIntegrityService,
                 ServerStateRegister serverStateRegister,
                 SteamDownloadService steamDownloadService,
                 SchedulerHandler schedulerHandler)
