@@ -5,7 +5,7 @@ using BytexDigital.Steam.Core.Structs;
 
 using MediatR;
 
-namespace BytexDigital.RGSM.Node.Application.Core.SteamCmd.Commands
+namespace BytexDigital.RGSM.Node.Application.Core.Steam.Commands
 {
     public class UpdatePublishedFileCmd : IRequest<UpdatePublishedFileCmd.Response>
     {

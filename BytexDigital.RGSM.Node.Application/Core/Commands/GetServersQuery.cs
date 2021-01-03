@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using BytexDigital.RGSM.Node.Application.Core.Servers;
 using BytexDigital.RGSM.Node.Domain.Entities;
 
 using MediatR;

@@ -5,12 +5,10 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 using BytexDigital.ErrorHandling.AspNetCore;
-using BytexDigital.ErrorHandling.Shared;
 using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
 using BytexDigital.RGSM.Panel.Server.TransferObjects.Models;
-using BytexDigital.RGSM.Shared;
 
-namespace BytexDigital.RGSM.Node.Application.Core
+namespace BytexDigital.RGSM.Node.Application.Core.Infrastructure
 {
     public class MasterApiService
     {

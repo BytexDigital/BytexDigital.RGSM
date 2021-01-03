@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 using Nito.AsyncEx;
 
-namespace BytexDigital.RGSM.Node.Application.Core.SteamCmd
+namespace BytexDigital.RGSM.Node.Application.Core.Steam
 {
     public class UpdateState
     {

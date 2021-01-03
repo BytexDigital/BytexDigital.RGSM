@@ -5,7 +5,7 @@ using BytexDigital.RGSM.Node.Domain.Entities;
 using BytexDigital.RGSM.Node.Persistence;
 using BytexDigital.Steam.Core.Structs;
 
-namespace BytexDigital.RGSM.Node.Application.Core
+namespace BytexDigital.RGSM.Node.Application.Core.Steam
 {
     public class WorkshopManagerService
     {

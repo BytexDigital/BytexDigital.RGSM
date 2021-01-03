@@ -6,6 +6,7 @@ using Autofac;
 
 using BytexDigital.RGSM.Node.Application.Core.Arma3;
 using BytexDigital.RGSM.Node.Application.Core.Generic;
+using BytexDigital.RGSM.Node.Application.Core.Infrastructure;
 using BytexDigital.RGSM.Node.Domain.Entities;
 using BytexDigital.RGSM.Shared.Enumerations;
 
@@ -13,7 +14,7 @@ using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace BytexDigital.RGSM.Node.Application.Core
+namespace BytexDigital.RGSM.Node.Application.Core.Servers
 {
     public class ServerStateRegister
     {

@@ -2,7 +2,8 @@
 using System.Threading.Tasks;
 
 using BytexDigital.RGSM.Node.Application.Core.Scheduling;
-using BytexDigital.RGSM.Node.Application.Core.SteamCmd;
+using BytexDigital.RGSM.Node.Application.Core.Servers;
+using BytexDigital.RGSM.Node.Application.Core.Steam;
 
 using MediatR;
 

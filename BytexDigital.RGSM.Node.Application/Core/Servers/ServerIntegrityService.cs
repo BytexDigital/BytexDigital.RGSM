@@ -9,7 +9,7 @@ using BytexDigital.RGSM.Node.Persistence;
 using BytexDigital.RGSM.Shared;
 using BytexDigital.RGSM.Shared.Enumerations;
 
-namespace BytexDigital.RGSM.Node.Application.Core
+namespace BytexDigital.RGSM.Node.Application.Core.Servers
 {
     public class ServerIntegrityService
     {

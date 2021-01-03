@@ -5,7 +5,7 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 using BytexDigital.ErrorHandling.Shared;
-using BytexDigital.RGSM.Node.Application.Core;
+using BytexDigital.RGSM.Node.Application.Core.Infrastructure;
 
 using MediatR;
 

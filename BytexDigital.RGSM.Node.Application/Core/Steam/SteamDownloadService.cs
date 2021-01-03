@@ -25,7 +25,7 @@ using Nito.AsyncEx;
 
 using SteamKit2.Unified.Internal;
 
-namespace BytexDigital.RGSM.Node.Application.Core.SteamCmd
+namespace BytexDigital.RGSM.Node.Application.Core.Steam
 {
     public class SteamDownloadService : IDisposable
     {

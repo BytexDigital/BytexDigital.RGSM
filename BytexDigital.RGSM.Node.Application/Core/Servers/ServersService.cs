@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,9 +6,8 @@ using BytexDigital.RGSM.Node.Domain.Entities;
 using BytexDigital.RGSM.Node.Domain.Entities.Arma3;
 using BytexDigital.RGSM.Node.Persistence;
 using BytexDigital.RGSM.Shared.Enumerations;
-using BytexDigital.Steam.Core.Structs;
 
-namespace BytexDigital.RGSM.Node.Application.Core
+namespace BytexDigital.RGSM.Node.Application.Core.Servers
 {
     public class ServersService
     {

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 using BytexDigital.RGSM.Node.Domain.Models.FileSystem;
 
-namespace BytexDigital.RGSM.Node.Application.Core
+namespace BytexDigital.RGSM.Node.Application.Core.FileSystem
 {
     public class FileSystemService
     {

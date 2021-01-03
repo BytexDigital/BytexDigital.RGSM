@@ -5,7 +5,7 @@ using BytexDigital.RGSM.Node.Application.Options;
 
 using Microsoft.Extensions.Options;
 
-namespace BytexDigital.RGSM.Node.Application.Core
+namespace BytexDigital.RGSM.Node.Application.Core.Infrastructure
 {
     public class ConnectivityService
     {

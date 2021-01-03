@@ -47,5 +47,30 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
 
             await _nodeDbContext.SaveChangesAsync();
         }
+
+        public async Task UpdateSettingsAsync(
+            Arma3Server armaServer,
+            int? appId,
+            string branch,
+            string executableFileName,
+            string profilesPath,
+            string battlEyePath,
+            string rconIp,
+            int rconPort,
+            string rconPassword,
+            string arguments)
+        {
+            armaServer.AppId = appId;
+            armaServer.Branch = branch;
+            armaServer.ExecutableFileName = executableFileName;
+            armaServer.ProfilesPath = profilesPath;
+            armaServer.BattlEyePath = battlEyePath;
+            armaServer.RconIp = rconIp;
+            armaServer.RconPort = rconPort;
+            armaServer.RconPassword = rconPassword;
+            armaServer.AdditionalArguments = arguments;
+
+            await _nodeDbContext.SaveChangesAsync();
+        }
     }
 }
