@@ -90,5 +90,30 @@ namespace BytexDigital.RGSM.Node.Controllers
 
             return Ok();
         }
+
+        [HttpPost]
+        public async Task<ActionResult> EnableOrDisableLoadOfWorkshopModAsync(
+            [FromRoute] string serverId,
+            [FromQuery, Required] ulong publishedFileId,
+            [FromQuery, Required] bool load)
+        {
+            if (!(await _authorizationService.AuthorizeAsync(HttpContext.User, null, new PermissionRequirement
+            {
+                ServerId = serverId,
+                Name = PermissionConstants.WORKSHOP
+            })).Succeeded)
+            {
+                return Unauthorized();
+            }
+
+            await _mediator.Send(new UpdateWorkshopModLoadStatusCmd
+            {
+                ServerId = serverId,
+                PublishedFileId = publishedFileId,
+                Load = load
+            });
+
+            return Ok();
+        }
     }
 }

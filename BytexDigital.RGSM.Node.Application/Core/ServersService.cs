@@ -94,6 +94,13 @@ namespace BytexDigital.RGSM.Node.Application.Core
             }
         }
 
+        public async Task UpdateTrackedWorkshopItemAsync(TrackedWorkshopMod trackedWorkshopMod, bool load)
+        {
+            trackedWorkshopMod.Load = load;
+
+            await _nodeDbContext.SaveChangesAsync();
+        }
+
         public IQueryable<TrackedWorkshopMod> GetTrackedWorkshopMods(Server server)
             => _nodeDbContext.TrackedWorkshopMods.Where(x => x.ServerId == server.Id);
     }
