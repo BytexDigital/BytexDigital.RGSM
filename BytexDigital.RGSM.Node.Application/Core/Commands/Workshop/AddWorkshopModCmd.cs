@@ -21,11 +21,13 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands.Workshop
         public class Handler : IRequestHandler<AddWorkshopModCmd>
         {
             private readonly ServersService _serversService;
+            private readonly WorkshopManagerService _workshopService;
             private readonly ServerStateRegister _serverStateRegister;
 
-            public Handler(ServersService serversService, ServerStateRegister serverStateRegister)
+            public Handler(ServersService serversService, WorkshopManagerService workshopService, ServerStateRegister serverStateRegister)
             {
                 _serversService = serversService;
+                _workshopService = workshopService;
                 _serverStateRegister = serverStateRegister;
             }
 
@@ -40,7 +42,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands.Workshop
                 if (server.TrackedWorkshopMods.Any(x => x.PublishedFileId == request.PublishedFileId))
                     throw new ServiceException().AddServiceError().WithField(nameof(request.PublishedFileId)).WithDescription("Workshop item has already been added.");
 
-                await _serversService.AddTrackedWorkshopItemAsync(server, request.PublishedFileId);
+                await _workshopService.AddTrackedWorkshopItemAsync(server, request.PublishedFileId);
 
                 return Unit.Value;
             }

@@ -22,11 +22,13 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands.Workshop
         {
             private readonly ServersService _serversService;
             private readonly ServerStateRegister _serverStateRegister;
+            private readonly WorkshopManagerService _workshopManagerService;
 
-            public Handler(ServersService serversService, ServerStateRegister serverStateRegister)
+            public Handler(ServersService serversService, ServerStateRegister serverStateRegister, WorkshopManagerService workshopManagerService)
             {
                 _serversService = serversService;
                 _serverStateRegister = serverStateRegister;
+                _workshopManagerService = workshopManagerService;
             }
 
             public async Task<Unit> Handle(RemoveWorkshopModCmd request, CancellationToken cancellationToken)
@@ -40,7 +42,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands.Workshop
                 if (!server.TrackedWorkshopMods.Any(x => x.PublishedFileId == request.PublishedFileId))
                     throw new ServiceException().AddServiceError().WithField(nameof(request.PublishedFileId)).WithDescription("Workshop item is already removed.");
 
-                await _serversService.RemoveTrackedWorkshopItemAsync(server, request.PublishedFileId);
+                await _workshopManagerService.RemoveTrackedWorkshopItemAsync(server, request.PublishedFileId);
 
                 return Unit.Value;
             }

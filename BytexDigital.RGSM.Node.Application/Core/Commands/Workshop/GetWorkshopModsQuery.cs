@@ -20,11 +20,13 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands.Workshop
         {
             private readonly ServersService _serversService;
             private readonly ServerStateRegister _serverStateRegister;
+            private readonly WorkshopManagerService _workshopService;
 
-            public Handler(ServersService serversService, ServerStateRegister serverStateRegister)
+            public Handler(ServersService serversService, ServerStateRegister serverStateRegister, WorkshopManagerService workshopService)
             {
                 _serversService = serversService;
                 _serverStateRegister = serverStateRegister;
+                _workshopService = workshopService;
             }
 
             public async Task<Response> Handle(GetWorkshopModsQuery request, CancellationToken cancellationToken)
@@ -35,7 +37,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands.Workshop
                 if (state == null) throw new ServerNotFoundException();
                 if (state is not IWorkshopSupport workshopState) throw new ServerDoesNotSupportFeatureException<IWorkshopSupport>();
 
-                var mods = await _serversService.GetTrackedWorkshopMods(server).ToListAsync();
+                var mods = await _workshopService.GetTrackedWorkshopMods(server).ToListAsync();
 
                 return new Response
                 {

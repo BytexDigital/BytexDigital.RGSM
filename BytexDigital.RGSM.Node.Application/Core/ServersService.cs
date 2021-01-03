@@ -71,37 +71,5 @@ namespace BytexDigital.RGSM.Node.Application.Core
 
             await _nodeDbContext.SaveChangesAsync();
         }
-
-        public async Task AddTrackedWorkshopItemAsync(Server server, PublishedFileId publishedFileId)
-        {
-            var trackedMod = _nodeDbContext.CreateEntity(x => x.TrackedWorkshopMods);
-            trackedMod.PublishedFileId = publishedFileId.Id;
-            trackedMod.Load = false;
-
-            server.TrackedWorkshopMods.Add(trackedMod);
-
-            await _nodeDbContext.SaveChangesAsync();
-        }
-
-        public async Task RemoveTrackedWorkshopItemAsync(Server server, PublishedFileId publishedFileId)
-        {
-            var trackedMod = server.TrackedWorkshopMods.FirstOrDefault(x => x.PublishedFileId == publishedFileId);
-
-            if (trackedMod != null)
-            {
-                server.TrackedWorkshopMods.Remove(trackedMod);
-                await _nodeDbContext.SaveChangesAsync();
-            }
-        }
-
-        public async Task UpdateTrackedWorkshopItemAsync(TrackedWorkshopMod trackedWorkshopMod, bool load)
-        {
-            trackedWorkshopMod.Load = load;
-
-            await _nodeDbContext.SaveChangesAsync();
-        }
-
-        public IQueryable<TrackedWorkshopMod> GetTrackedWorkshopMods(Server server)
-            => _nodeDbContext.TrackedWorkshopMods.Where(x => x.ServerId == server.Id);
     }
 }

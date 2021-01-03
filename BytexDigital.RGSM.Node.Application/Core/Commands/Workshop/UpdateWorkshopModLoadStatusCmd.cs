@@ -21,11 +21,13 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands.Workshop
         {
             private readonly ServerStateRegister _serverStateRegister;
             private readonly ServersService _serversService;
+            private readonly WorkshopManagerService _workshopService;
 
-            public Handler(ServerStateRegister serverStateRegister, ServersService serversService)
+            public Handler(ServerStateRegister serverStateRegister, ServersService serversService, WorkshopManagerService workshopService)
             {
                 _serverStateRegister = serverStateRegister;
                 _serversService = serversService;
+                _workshopService = workshopService;
             }
 
             public async Task<Unit> Handle(UpdateWorkshopModLoadStatusCmd request, CancellationToken cancellationToken)
@@ -36,11 +38,11 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands.Workshop
                 if (!(state is IWorkshopSupport workshopState)) throw new ServerDoesNotSupportFeatureException<IWorkshopSupport>();
 
                 var server = await _serversService.GetServer(state.Id).FirstAsync();
-                var trackedMod = await _serversService.GetTrackedWorkshopMods(server).FirstOrDefaultAsync(x => x.PublishedFileId == request.PublishedFileId);
+                var trackedMod = await _workshopService.GetTrackedWorkshopMods(server).FirstOrDefaultAsync(x => x.PublishedFileId == request.PublishedFileId);
 
                 if (trackedMod == null) throw ServiceException.ServiceError("Mod is not being tracked.").WithField(nameof(request.PublishedFileId));
 
-                await _serversService.UpdateTrackedWorkshopItemAsync(trackedMod, request.Load);
+                await _workshopService.UpdateTrackedWorkshopItemAsync(trackedMod, request.Load);
 
                 return Unit.Value;
             }
