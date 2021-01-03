@@ -36,5 +36,23 @@ namespace BytexDigital.RGSM.Panel.Client.Common.Core
 
             return await response.Content.ReadFromJsonAsync<List<PermissionDto>>();
         }
+
+        public async Task SavePermissionAsync(NodeDto nodeDto, ServerDto serverDto, GroupDto groupDto, PermissionDto permissionDto, bool value)
+        {
+            var parameters = $"?permissionName={permissionDto.Name}&groupId={groupDto.Id}&addOrRemove={value}";
+            var response = await _httpClient.PostAsync($"{nodeDto.BaseUri}/API/Permissions/{serverDto.Id}/AddOrRemoveGroupFromPermission{parameters}", null);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
+                {
+                    throw await response.Content.ReadFromJsonAsync<ApiProblemDetails>();
+                }
+                else
+                {
+                    response.EnsureSuccessStatusCode();
+                }
+            }
+        }
     }
 }

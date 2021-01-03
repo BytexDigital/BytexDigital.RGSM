@@ -1,11 +1,11 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using BytexDigital.RGSM.Node.TransferObjects.Entities;
 
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
 
 namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Groups._Components
 {
@@ -16,6 +16,11 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Groups._Components
 
         [Parameter]
         public EventCallback<bool> OnValueChanged { get; set; }
+
+        [CascadingParameter]
+        public Dictionary<PermissionDto, bool> Permissions { get; set; }
+
+        public bool Value => Permissions[Permission];
 
         public string UiId { get; set; } = Guid.NewGuid().ToString();
 

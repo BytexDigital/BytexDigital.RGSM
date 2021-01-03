@@ -13,7 +13,7 @@ namespace BytexDigital.RGSM.Node.Domain.Entities
         public uint? OfAppId { get; set; }
 
         [Required]
-        public bool IsLoaded { get; set; }
+        public bool Load { get; set; }
 
         public string Directory { get; set; }
 

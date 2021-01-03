@@ -20,20 +20,20 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands
 
         public class Handler : IRequestHandler<CreateServerCmd, Response>
         {
-            private readonly ServerCreationService _serverCreationService;
             private readonly ServerStateRegister _serverStateRegister;
-            private readonly ServerIntegrityService _serverIntegrityService;
+            private readonly IntegrityService _serverIntegrityService;
+            private readonly ServersService _serversService;
 
-            public Handler(ServerCreationService serverCreationService, ServerStateRegister serverStateRegister, ServerIntegrityService serverIntegrityService)
+            public Handler(ServerStateRegister serverStateRegister, IntegrityService serverIntegrityService, ServersService serversService)
             {
-                _serverCreationService = serverCreationService;
                 _serverStateRegister = serverStateRegister;
                 _serverIntegrityService = serverIntegrityService;
+                _serversService = serversService;
             }
 
             public async Task<Response> Handle(CreateServerCmd request, CancellationToken cancellationToken)
             {
-                var server = await (await _serverCreationService.CreateServerAsync(request.DisplayName, request.Directory, request.ServerType)).FirstAsync();
+                var server = await (await _serversService.CreateServerAsync(request.DisplayName, request.Directory, request.ServerType)).FirstAsync();
 
                 await _serverIntegrityService.EnsureCorrectSetupAsync(server);
                 await _serverStateRegister.RegisterAsync(server);

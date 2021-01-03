@@ -11,12 +11,12 @@ using BytexDigital.RGSM.Shared.Enumerations;
 
 namespace BytexDigital.RGSM.Node.Application.Core
 {
-    public class ServerIntegrityService
+    public class IntegrityService
     {
         private readonly NodeDbContext _nodeDbContext;
         private readonly ArmaServerService _armaServerService;
 
-        public ServerIntegrityService(NodeDbContext nodeDbContext, ArmaServerService armaServerService)
+        public IntegrityService(NodeDbContext nodeDbContext, ArmaServerService armaServerService)
         {
             _nodeDbContext = nodeDbContext;
             _armaServerService = armaServerService;

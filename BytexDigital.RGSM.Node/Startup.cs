@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -56,7 +57,7 @@ namespace BytexDigital.RGSM.Node
                 .AddScoped<ConnectivityService>()
                 .AddScoped<ArmaServerService>()
                 .AddScoped<PermissionsService>()
-                .AddScoped<ServerIntegrityService>()
+                .AddScoped<IntegrityService>()
                 .AddScoped<SchedulersService>()
                 .AddSingleton<FileSystemService>()
                 .AddSingleton<SteamDownloadService>()
@@ -71,7 +72,11 @@ namespace BytexDigital.RGSM.Node
             services.AddUniformCommonErrorResponses();
 
             // Authorization
-            services.AddSingleton<IAuthorizationHandler, PermissionRequirement.Handler>();
+            // Add AuthorizationHandlers
+            foreach (var handlerType in typeof(PermissionRequirement.Handler).Assembly.GetTypes().Where(x => x.IsAssignableTo(typeof(IAuthorizationHandler))))
+            {
+                services.AddScoped(typeof(IAuthorizationHandler), handlerType);
+            }
 
             // Automapper
             services.AddAutoMapper(typeof(NodeProfile).Assembly);

@@ -4,10 +4,17 @@
 }
 else
 {
-    foreach (var permission in Permissions.OrderBy(x => x.Name))
-    {
-        <div class="mt-2">
-            <PermissionSwitch Permission="permission" />
-        </div>
-    }
+    <CascadingValue Value="Permissions">
+        @foreach (var permission in Permissions.OrderBy(x => x.Key.Name))
+        {
+            <div class="mt-2">
+                <PermissionSwitch Permission="permission.Key" OnValueChanged="newValue => OnPermissionValueChanged(permission.Key.Name, newValue)" />
+            </div>
+        }
+    </CascadingValue>
+
+    <div class="mt-3 d-flex justify-content-md-end">
+        <button class="btn btn-ghost-secondary mr-md-2" disabled="@(!IsChanged)" @onclick="RevertChangesAsync"><i class="fas fa-undo"></i></button>
+        <button class="btn btn-wide btn-primary" disabled="@(!IsChanged)" @onclick="SaveChangesAsync">Save Changes</button>
+    </div>
 }
