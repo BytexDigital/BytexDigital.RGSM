@@ -3,6 +3,8 @@
     public enum ScheduleActionType
     {
         ExecutionDelay = 1,
+        RunExecutable = 2,
+
         StartServer = 10,
         StopServer = 11,
 

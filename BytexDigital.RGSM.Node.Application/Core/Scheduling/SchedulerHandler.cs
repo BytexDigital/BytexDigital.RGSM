@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -191,6 +193,28 @@ namespace BytexDigital.RGSM.Node.Application.Core.Scheduling
                             var seconds = int.Parse(secondsStr);
 
                             await Task.Delay(seconds, cancellationToken);
+                        }
+                        break;
+
+                        case Domain.Enumerations.ScheduleActionType.RunExecutable:
+                        {
+                            var executablePath = action.KeyValues.FirstOrDefault(x => x.Key == "path")?.Value;
+                            var arguments = action.KeyValues.FirstOrDefault(x => x.Key == "arguments")?.Value;
+
+                            if (!string.IsNullOrEmpty(executablePath) && File.Exists(executablePath))
+                            {
+                                var psi = new ProcessStartInfo();
+                                psi.Arguments = arguments;
+                                psi.FileName = executablePath;
+
+                                var process = Process.Start(psi);
+
+                                var processCancelToken = CancellationTokenSource.CreateLinkedTokenSource(
+                                    cancellationToken,
+                                    new CancellationTokenSource(TimeSpan.FromMinutes(15)).Token);
+
+                                await process.WaitForExitAsync(processCancelToken.Token);
+                            }
                         }
                         break;
 
