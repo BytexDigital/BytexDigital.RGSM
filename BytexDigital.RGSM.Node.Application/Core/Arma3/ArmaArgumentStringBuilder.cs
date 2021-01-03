@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using BytexDigital.RGSM.Node.Application.Core.Commands.Workshop;
 using BytexDigital.RGSM.Node.Application.Core.Generic;
 
 namespace BytexDigital.RGSM.Node.Application.Core.Arma3
@@ -37,7 +38,14 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
         {
             List<(bool, string)> mods = new List<(bool, string)>();
 
-            // TODO: dynamically get workshop mods
+            var workshopMods = await _armaServerState.Mediator.Send(new GetWorkshopModsQuery());
+
+            foreach (var workshopMod in workshopMods.TrackedWorkshopMods.Where(x => x.Load))
+            {
+                var path = await _armaServerState.GetWorkshopModPathAsync(workshopMod, cancellationToken);
+
+                mods.Add((true, workshopMod.Directory));
+            }
 
             // Merge with unmanaged mods
             var customArguments = await GetAdditionalArgumentsAsync(cancellationToken);
