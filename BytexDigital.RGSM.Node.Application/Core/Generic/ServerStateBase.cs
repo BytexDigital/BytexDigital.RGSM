@@ -1,6 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 
 using MediatR;
+
+using Serilog;
 
 namespace BytexDigital.RGSM.Node.Application.Core.Generic
 {
@@ -8,14 +11,21 @@ namespace BytexDigital.RGSM.Node.Application.Core.Generic
     {
         public IMediator Mediator { get; }
         public string Id { get; }
-        public string Directory { get; }
+        public string BaseDirectory { get; }
+        public ILogger Logger { get; set; }
 
         public ServerStateBase(IMediator mediator, string id, string directory)
         {
             Mediator = mediator;
             Id = id;
-            Directory = directory;
+            BaseDirectory = directory;
+
+            Logger = new LoggerConfiguration()
+                .WriteTo.Logger(logger => logger.WriteTo.File(Path.Combine(BaseDirectory, ".rgsm", "logs", "server.log"), rollingInterval: RollingInterval.Day))
+                .CreateLogger();
         }
+
+
 
         public virtual Task InitializeAsync()
         {

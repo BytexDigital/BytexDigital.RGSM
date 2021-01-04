@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using BytexDigital.RGSM.Node.Domain.Models.ServerLogs;
+using BytexDigital.RGSM.Node.Domain.Models.Logs;
 
 namespace BytexDigital.RGSM.Node.Application.Core.Features.ServerLogs
 {

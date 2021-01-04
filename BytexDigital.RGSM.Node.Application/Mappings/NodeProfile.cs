@@ -5,7 +5,7 @@ using BytexDigital.RGSM.Node.Domain.Entities.Scheduling;
 using BytexDigital.RGSM.Node.Domain.Enumerations;
 using BytexDigital.RGSM.Node.Domain.Models.BattlEye;
 using BytexDigital.RGSM.Node.Domain.Models.FileSystem;
-using BytexDigital.RGSM.Node.Domain.Models.ServerLogs;
+using BytexDigital.RGSM.Node.Domain.Models.Logs;
 using BytexDigital.RGSM.Node.Domain.Models.Status;
 using BytexDigital.RGSM.Node.Domain.Models.Workshop;
 using BytexDigital.RGSM.Node.TransferObjects.Entities;

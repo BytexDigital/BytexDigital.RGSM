@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using BytexDigital.ErrorHandling.Shared;
 using BytexDigital.RGSM.Node.Application.Core.Servers;
 using BytexDigital.RGSM.Node.Application.Exceptions;
-using BytexDigital.RGSM.Node.Domain.Models.ServerLogs;
+using BytexDigital.RGSM.Node.Domain.Models.Logs;
 
 using MediatR;
 

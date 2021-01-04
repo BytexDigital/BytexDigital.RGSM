@@ -18,14 +18,12 @@ using BytexDigital.RGSM.Node.Application.Core.Steam;
 using BytexDigital.RGSM.Node.Application.Core.Steam.Commands;
 using BytexDigital.RGSM.Node.Domain.Entities.Arma3;
 using BytexDigital.RGSM.Node.Domain.Models.BattlEye;
-using BytexDigital.RGSM.Node.Domain.Models.ServerLogs;
+using BytexDigital.RGSM.Node.Domain.Models.Logs;
 using BytexDigital.RGSM.Node.Domain.Models.Status;
 using BytexDigital.RGSM.Node.Domain.Models.Workshop;
 using BytexDigital.Steam.Core.Structs;
 
 using MediatR;
-
-using Serilog;
 
 namespace BytexDigital.RGSM.Node.Application.Core.Arma3
 {
@@ -40,7 +38,6 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
         public ModsKeyManager ModKeyManager { get; private set; }
         public UpdateState ServerUpdateState { get; private set; }
         public ConcurrentDictionary<PublishedFileId, UpdateState> WorkshopUpdateStates { get; private set; }
-        public ILogger Logger { get; private set; }
 
         public bool IsUpdating => ServerUpdateState != null &&
             (ServerUpdateState.State == UpdateState.Status.Queued || ServerUpdateState.State == UpdateState.Status.Processing);
@@ -54,10 +51,6 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
         public ArmaServerState(IMediator mediator, string id, string directory) : base(mediator, id, directory)
         {
             WorkshopUpdateStates = new ConcurrentDictionary<PublishedFileId, UpdateState>();
-
-            Logger = new LoggerConfiguration()
-                .WriteTo.Logger(logger => logger.WriteTo.File(Path.Combine(Directory, ".rgsm", "logs", "server.log"), rollingInterval: RollingInterval.Day))
-                .CreateLogger();
         }
 
         public override async Task InitializeAsync()
@@ -89,9 +82,9 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
         {
             await RefreshSettingsAsync();
 
-            await ProcessMonitor.ConfigureAsync(Directory, Path.Combine(Directory, await GetExecutableFileNameAsync()));
+            await ProcessMonitor.ConfigureAsync(BaseDirectory, Path.Combine(BaseDirectory, await GetExecutableFileNameAsync()));
             await RconMonitor.ConfigureAsync(Settings.RconIp, Settings.RconPort, Settings.RconPassword);
-            await ModKeyManager.ConfigureAsync(Path.Combine(Directory, "keys"), Directory);
+            await ModKeyManager.ConfigureAsync(Path.Combine(BaseDirectory, "keys"), BaseDirectory);
             await WriteBattlEyeConfigAsync();
         }
 
@@ -101,7 +94,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
             {
                 ProcessMonitor = new ProcessMonitor(ArgumentStringBuilder);
 
-                await ProcessMonitor.ConfigureAsync(Directory, Path.Combine(Directory, await GetExecutableFileNameAsync()));
+                await ProcessMonitor.ConfigureAsync(BaseDirectory, Path.Combine(BaseDirectory, await GetExecutableFileNameAsync()));
             }
             catch (Exception ex)
             {
@@ -135,7 +128,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
             {
                 ModKeyManager = new ModsKeyManager();
 
-                await ModKeyManager.ConfigureAsync(Path.Combine(Directory, "keys"), Directory, cancellationToken);
+                await ModKeyManager.ConfigureAsync(Path.Combine(BaseDirectory, "keys"), BaseDirectory, cancellationToken);
 
                 Logger.Information("Created and configured mod keys manager.");
             }
@@ -184,7 +177,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
 
             if (!Path.IsPathRooted(path))
             {
-                path = Path.Combine(Directory, path);
+                path = Path.Combine(BaseDirectory, path);
             }
 
             return Task.FromResult(path);
@@ -196,7 +189,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
 
             if (!Path.IsPathRooted(path))
             {
-                path = Path.Combine(Directory, path);
+                path = Path.Combine(BaseDirectory, path);
             }
 
             return Task.FromResult(path);
@@ -293,7 +286,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
                     Id = Id,
                     AppId = appId,
                     UseAnonymousUser = false,
-                    Directory = Directory,
+                    Directory = BaseDirectory,
                     UpdateState = ServerUpdateState,
                     Branch = Settings.Branch ?? "public",
                     BranchPassword = null,
@@ -461,7 +454,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
         {
             string modDirectory = trackedWorkshopMod.Directory ?? Path.Combine(".workshop", trackedWorkshopMod.PublishedFileId.ToString());
 
-            if (!Path.IsPathRooted(modDirectory)) modDirectory = Path.Combine(Directory, modDirectory);
+            if (!Path.IsPathRooted(modDirectory)) modDirectory = Path.Combine(BaseDirectory, modDirectory);
 
             return Task.FromResult(modDirectory);
         }
@@ -471,10 +464,33 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
             try
             {
                 var profilesFolder = await GetProfilesPathAsync(cancellationToken);
-                if (!System.IO.Path.IsPathRooted(profilesFolder)) profilesFolder = System.IO.Path.Combine(Directory, profilesFolder);
-                if (!System.IO.Directory.Exists(profilesFolder)) return new List<LogSource>();
+                if (!Path.IsPathRooted(profilesFolder)) profilesFolder = System.IO.Path.Combine(BaseDirectory, profilesFolder);
+                if (!Directory.Exists(profilesFolder)) return new List<LogSource>();
 
                 List<LogSource> sources = new List<LogSource>();
+
+                // RGSM logs
+                var rgsmLogsDirectory = Path.Combine(BaseDirectory, ".rgsm", "logs");
+
+                if (Directory.Exists(rgsmLogsDirectory))
+                {
+                    var rgsmLogs = Directory.GetFiles(rgsmLogsDirectory, "*.log");
+
+                    foreach (var rgsmLogFile in rgsmLogs)
+                    {
+                        sources.Add(new LogSource
+                        {
+                            Type = "rgsm",
+                            Name = $"rgsm:{Path.GetFileNameWithoutExtension(rgsmLogFile)}",
+                            SizeInBytes = new FileInfo(rgsmLogFile).Length,
+                            TimeLastUpdated = new DateTimeOffset(File.GetLastWriteTimeUtc(rgsmLogFile), TimeSpan.Zero),
+                            MetaValues = new Dictionary<string, string>
+                            {
+                                { "path", rgsmLogFile }
+                            }
+                        });
+                    }
+                }
 
                 // console_xxxxx.log files
                 var consoleFiles = System.IO.Directory.GetFiles(profilesFolder, "*.log");
@@ -486,7 +502,11 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
                         Type = "console_file",
                         Name = Path.GetFileNameWithoutExtension(consoleFilePath),
                         SizeInBytes = new FileInfo(consoleFilePath).Length,
-                        TimeLastUpdated = new DateTimeOffset(File.GetLastWriteTimeUtc(consoleFilePath), TimeSpan.Zero)
+                        TimeLastUpdated = new DateTimeOffset(File.GetLastWriteTimeUtc(consoleFilePath), TimeSpan.Zero),
+                        MetaValues = new Dictionary<string, string>
+                        {
+                            { "path", consoleFilePath }
+                        }
                     });
                 }
 
@@ -500,7 +520,11 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
                         Type = "rpt_file",
                         Name = Path.GetFileNameWithoutExtension(rptFilePath),
                         SizeInBytes = new FileInfo(rptFilePath).Length,
-                        TimeLastUpdated = new DateTimeOffset(File.GetLastWriteTimeUtc(rptFilePath), TimeSpan.Zero)
+                        TimeLastUpdated = new DateTimeOffset(File.GetLastWriteTimeUtc(rptFilePath), TimeSpan.Zero),
+                        MetaValues = new Dictionary<string, string>
+                        {
+                            { "path", rptFilePath }
+                        }
                     });
                 }
 
@@ -536,7 +560,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
             try
             {
                 var profilesFolder = await GetProfilesPathAsync(cancellationToken);
-                if (!System.IO.Path.IsPathRooted(profilesFolder)) profilesFolder = System.IO.Path.Combine(Directory, profilesFolder);
+                if (!System.IO.Path.IsPathRooted(profilesFolder)) profilesFolder = System.IO.Path.Combine(BaseDirectory, profilesFolder);
 
                 var sources = await GetLogSourcesAsync(cancellationToken);
                 var requestSource = sources.FirstOrDefault(x => x.Name == logSourceName);
@@ -545,7 +569,15 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
 
                 string fileToReadPath = default;
 
-                if (requestSource.Type == "console_file")
+                if (requestSource.Type == "rgsm")
+                {
+                    var rgsmFiles = System.IO.Directory.GetFiles(Path.Combine(BaseDirectory, ".rgsm", "logs"), "*.log");
+                    var requestedRgsmFile = rgsmFiles.FirstOrDefault(x =>
+                        Path.GetFileNameWithoutExtension(x) == Path.GetFileNameWithoutExtension(requestSource.MetaValues["path"]));
+
+                    fileToReadPath = requestedRgsmFile;
+                }
+                else if (requestSource.Type == "console_file")
                 {
                     var consoleFiles = System.IO.Directory.GetFiles(profilesFolder, "*.log");
                     var requestedConsoleFile = consoleFiles.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == requestSource.Name);
