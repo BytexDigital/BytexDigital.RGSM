@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 using BytexDigital.RGSM.Node.Application.Core.Arma3.Commands;
 using BytexDigital.RGSM.Node.Application.Core.Features.BattlEye;
+using BytexDigital.RGSM.Node.Application.Core.Features.Installable;
 using BytexDigital.RGSM.Node.Application.Core.Features.Runnable;
 using BytexDigital.RGSM.Node.Application.Core.Features.ServerLogs;
 using BytexDigital.RGSM.Node.Application.Core.Features.Workshop;
@@ -28,7 +29,7 @@ using Serilog;
 
 namespace BytexDigital.RGSM.Node.Application.Core.Arma3
 {
-    public class ArmaServerState : ServerStateBase, IRunnable, IServerLogs, IBattlEyeRcon, IWorkshopSupport, IWorkshopStorage
+    public class ArmaServerState : ServerStateBase, IRunnable, IServerLogs, IBattlEyeRcon, IWorkshopSupport, IWorkshopStorage, IInstallAndUpdatable
     {
         public const uint DEDICATED_SERVER_APP_ID = 233780;
 
@@ -72,7 +73,16 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
 
         public async Task RefreshSettingsAsync()
         {
-            Settings = (await Mediator.Send(new GetArmaServerSettingsQuery { Id = Id })).Server;
+            try
+            {
+                Settings = (await Mediator.Send(new GetArmaServerSettingsQuery { Id = Id })).Server;
+                Logger.Information("Refreshed server settings from database.");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Error refreshing server settings from database.");
+                throw;
+            }
         }
 
         public async Task RefreshSettingsAndReconfigureAsync()
@@ -87,45 +97,85 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
 
         public async Task CreateProcessMonitorAsync()
         {
-            ProcessMonitor = new ProcessMonitor(ArgumentStringBuilder);
+            try
+            {
+                ProcessMonitor = new ProcessMonitor(ArgumentStringBuilder);
 
-            await ProcessMonitor.ConfigureAsync(Directory, Path.Combine(Directory, await GetExecutableFileNameAsync()));
+                await ProcessMonitor.ConfigureAsync(Directory, Path.Combine(Directory, await GetExecutableFileNameAsync()));
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Error creating process monitor.");
+                throw;
+            }
         }
 
         public async Task CreateRconMonitorAsync(CancellationToken cancellationToken = default)
         {
-            RconMonitor = new BeRconMonitor();
+            try
+            {
 
-            await RconMonitor.ConfigureAsync(Settings.RconIp, Settings.RconPort, Settings.RconPassword);
+                RconMonitor = new BeRconMonitor();
+
+                await RconMonitor.ConfigureAsync(Settings.RconIp, Settings.RconPort, Settings.RconPassword);
+
+                Logger.Information("Created and configured rcon monitor.");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Error creating rcon monitor.");
+                throw;
+            }
         }
 
         public async Task CreateModKeyManagerAsync(CancellationToken cancellationToken = default)
-        {
-            ModKeyManager = new ModsKeyManager();
 
-            await ModKeyManager.ConfigureAsync(Path.Combine(Directory, "keys"), Directory, cancellationToken);
+        {
+            try
+            {
+                ModKeyManager = new ModsKeyManager();
+
+                await ModKeyManager.ConfigureAsync(Path.Combine(Directory, "keys"), Directory, cancellationToken);
+
+                Logger.Information("Created and configured mod keys manager.");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Error creating mod manager.");
+                throw;
+            }
         }
 
         public async Task WriteBattlEyeConfigAsync(CancellationToken cancellationToken = default)
         {
-            var bePath = await GetBattlEyePathAsync(cancellationToken);
-
-            var config32Path = Path.Combine(bePath, "beserver.cfg");
-            var config64Path = Path.Combine(bePath, "beserver_x64.cfg");
-
-            File.Delete(config32Path);
-            File.Delete(config64Path);
-
-            var contentLines = new List<string>
+            try
             {
-                $"// AUTO GENERATED - CHANGES WILL BE OVERWRITTEN",
-                $"RConPassword {Settings.RconPassword}",
-                $"RConPort {Settings.RconPort}",
-                $"RConIP {Settings.RconIp}"
-            };
+                var bePath = await GetBattlEyePathAsync(cancellationToken);
 
-            await File.WriteAllLinesAsync(config32Path, contentLines);
-            await File.WriteAllLinesAsync(config64Path, contentLines);
+                var config32Path = Path.Combine(bePath, "beserver.cfg");
+                var config64Path = Path.Combine(bePath, "beserver_x64.cfg");
+
+                File.Delete(config32Path);
+                File.Delete(config64Path);
+
+                var contentLines = new List<string>
+                {
+                    $"// AUTO GENERATED - CHANGES WILL BE OVERWRITTEN",
+                    $"RConPassword {Settings.RconPassword}",
+                    $"RConPort {Settings.RconPort}",
+                    $"RConIP {Settings.RconIp}"
+                };
+
+                await File.WriteAllLinesAsync(config32Path, contentLines);
+                await File.WriteAllLinesAsync(config64Path, contentLines);
+
+                Logger.Information($"Wrote BattlEye configuration to {bePath} with IP {Settings.RconIp}, port {Settings.RconPort}, password **REDACTED**");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, $"Error writing BattlEye configuration.");
+                throw;
+            }
         }
 
         public Task<string> GetProfilesPathAsync(CancellationToken cancellationToken = default)
@@ -177,13 +227,33 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
 
         public async Task StartAsync(CancellationToken cancellationToken = default)
         {
-            await RefreshSettingsAndReconfigureAsync();
-            await ProcessMonitor.RunAsync();
+            try
+            {
+                await RefreshSettingsAndReconfigureAsync();
+                await ProcessMonitor.RunAsync();
+
+                Logger.Information($"Started server.");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, $"Starting server failed.");
+                throw;
+            }
         }
 
         public async Task StopAsync(CancellationToken cancellationToken = default)
         {
-            await ProcessMonitor.ShutdownAsync(cancellationToken);
+            try
+            {
+                await ProcessMonitor.ShutdownAsync(cancellationToken);
+
+                Logger.Information($"Stopped server.");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, $"Stopping server failed.");
+                throw;
+            }
         }
 
         public async Task<bool> IsRunningAsync(CancellationToken cancellationToken = default)
@@ -199,7 +269,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
                 RequiresUpdate = false, // TODO: Make dynamic,
                 IsUpdating = IsUpdating,
                 UpdateProgress = ServerUpdateState?.Progress ?? 0,
-                FailureReason = ServerUpdateState.FailureException?.Message
+                FailureReason = ServerUpdateState?.FailureException?.Message
             });
         }
 
@@ -214,38 +284,49 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
 
         public async Task BeginInstallationOrUpdateAsync(CancellationToken cancellationToken = default)
         {
-            var appId = Settings.AppId.HasValue ? (uint)Settings.AppId.Value : DEDICATED_SERVER_APP_ID;
-
-            ServerUpdateState = (await Mediator.Send(new UpdateAppCmd
+            try
             {
-                Id = Id,
-                AppId = appId,
-                UseAnonymousUser = false,
-                Directory = Directory,
-                UpdateState = ServerUpdateState,
-                Branch = Settings.Branch ?? "public",
-                BranchPassword = null,
+                var appId = Settings.AppId.HasValue ? (uint)Settings.AppId.Value : DEDICATED_SERVER_APP_ID;
 
-                DepotCondition = depot =>
+                ServerUpdateState = (await Mediator.Send(new UpdateAppCmd
                 {
-                    return Settings.Server.TrackedDepots.Any(x => x.DepotId == depot.Id);
-                }
-            })).UpdateState;
+                    Id = Id,
+                    AppId = appId,
+                    UseAnonymousUser = false,
+                    Directory = Directory,
+                    UpdateState = ServerUpdateState,
+                    Branch = Settings.Branch ?? "public",
+                    BranchPassword = null,
 
-            _ = Task.Run(async () =>
+                    DepotCondition = depot =>
+                    {
+                        return Settings.Server.TrackedDepots.Any(x => x.DepotId == depot.Id);
+                    }
+                })).UpdateState;
+
+                _ = Task.Run(async () =>
+                {
+                    await ServerUpdateState.ProcessedEvent.WaitAsync(cancellationToken);
+
+                    if (ServerUpdateState.CancellationToken.IsCancellationRequested) return;
+                    if (ServerUpdateState.FailureException != default) return;
+
+                    await Mediator.Send(new MarkArmaServerAsInstalledCmd { Id = Id });
+                });
+
+                Logger.Information($"Beginning installation/update of server.");
+            }
+            catch (Exception ex)
             {
-                await ServerUpdateState.ProcessedEvent.WaitAsync(cancellationToken);
-
-                if (ServerUpdateState.CancellationToken.IsCancellationRequested) return;
-                if (ServerUpdateState.FailureException != default) return;
-
-                await Mediator.Send(new MarkArmaServerAsInstalledCmd { Id = Id });
-            });
+                Logger.Error(ex, $"Beginning installation/update of server failed.");
+                throw;
+            }
         }
 
         public Task CancelInstallationOrUpdateAsync(CancellationToken cancellationToken = default)
         {
             ServerUpdateState?.CancellationToken.Cancel();
+            Logger.Information($"Cancelled installation/update of server.");
 
             return Task.CompletedTask;
         }
@@ -308,48 +389,58 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
 
         public async Task BeginUpdatingWorkshopModsAsync(CancellationToken cancellationToken = default)
         {
-            _isUpdatingMods = true;
-
-            List<Task> modTasks = new List<Task>();
-
-            foreach (var trackedMod in (await Mediator.Send(new GetWorkshopModsQuery { ServerId = Id })).TrackedWorkshopMods)
+            try
             {
-                string modDirectory = await GetWorkshopModPathAsync(trackedMod, cancellationToken);
+                _isUpdatingMods = true;
 
-                var response = await Mediator.Send(new UpdatePublishedFileCmd
+                List<Task> modTasks = new List<Task>();
+
+                foreach (var trackedMod in (await Mediator.Send(new GetWorkshopModsQuery { ServerId = Id })).TrackedWorkshopMods)
                 {
-                    AppId = /*440,*/ trackedMod.OfAppId ?? 107410,
-                    PublishedFileId = trackedMod.PublishedFileId,
-                    Directory = modDirectory,
-                    //UseAnonymousUser = true
+                    string modDirectory = await GetWorkshopModPathAsync(trackedMod, cancellationToken);
+
+                    var response = await Mediator.Send(new UpdatePublishedFileCmd
+                    {
+                        AppId = /*440,*/ trackedMod.OfAppId ?? 107410,
+                        PublishedFileId = trackedMod.PublishedFileId,
+                        Directory = modDirectory,
+                        //UseAnonymousUser = true
+                    });
+
+                    WorkshopUpdateStates.AddOrUpdate(trackedMod.PublishedFileId, response.UpdateState, (key, value) => response.UpdateState);
+
+                    var modTask = Task.Run(async () =>
+                    {
+                        // Wait for the mod to finish downloading
+                        await response.UpdateState.ProcessedEvent.WaitAsync(cancellationToken);
+
+                        if (response.UpdateState.CancellationToken.IsCancellationRequested) return;
+
+                        // Do not continue if an exception occurred
+                        if (response.UpdateState.FailureException != default) return;
+
+                        // Activate the keys from this downloaded mod and deactivate old keys
+                        await ModKeyManager.DeactivateKeysAsync(trackedMod.PublishedFileId, response.UpdateState.CancellationToken.Token);
+                        await ModKeyManager.ActivateKeysAsync(trackedMod.PublishedFileId, modDirectory, response.UpdateState.CancellationToken.Token);
+                    });
+
+                    modTasks.Add(modTask);
+                }
+
+                _ = Task.Run(async () =>
+                {
+                    await Task.WhenAll(modTasks);
+
+                    _isUpdatingMods = false;
                 });
 
-                WorkshopUpdateStates.AddOrUpdate(trackedMod.PublishedFileId, response.UpdateState, (key, value) => response.UpdateState);
-
-                var modTask = Task.Run(async () =>
-                {
-                    // Wait for the mod to finish downloading
-                    await response.UpdateState.ProcessedEvent.WaitAsync(cancellationToken);
-
-                    if (response.UpdateState.CancellationToken.IsCancellationRequested) return;
-
-                    // Do not continue if an exception occurred
-                    if (response.UpdateState.FailureException != default) return;
-
-                    // Activate the keys from this downloaded mod and deactivate old keys
-                    await ModKeyManager.DeactivateKeysAsync(trackedMod.PublishedFileId, response.UpdateState.CancellationToken.Token);
-                    await ModKeyManager.ActivateKeysAsync(trackedMod.PublishedFileId, modDirectory, response.UpdateState.CancellationToken.Token);
-                });
-
-                modTasks.Add(modTask);
+                Logger.Information($"Beginning update of {modTasks.Count} workshop mods.");
             }
-
-            _ = Task.Run(async () =>
+            catch (Exception ex)
             {
-                await Task.WhenAll(modTasks);
-
-                _isUpdatingMods = false;
-            });
+                Logger.Error(ex, $"Beginning update of workshop mods failed.");
+                throw;
+            }
         }
 
         public Task CancelUpdatingWorkshopModsAsync(CancellationToken cancellationToken = default)
@@ -360,6 +451,8 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
             {
                 updateState.Value.CancellationToken.Cancel();
             }
+
+            Logger.Information($"Cancelled update of workshop mods.");
 
             return Task.CompletedTask;
         }
@@ -375,97 +468,121 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
 
         public async Task<List<LogSource>> GetLogSourcesAsync(CancellationToken cancellationToken = default)
         {
-            var profilesFolder = await GetProfilesPathAsync(cancellationToken);
-            if (!System.IO.Path.IsPathRooted(profilesFolder)) profilesFolder = System.IO.Path.Combine(Directory, profilesFolder);
-            if (!System.IO.Directory.Exists(profilesFolder)) return new List<LogSource>();
-
-            List<LogSource> sources = new List<LogSource>();
-
-            // console_xxxxx.log files
-            var consoleFiles = System.IO.Directory.GetFiles(profilesFolder, "*.log");
-
-            foreach (var consoleFilePath in consoleFiles)
+            try
             {
-                sources.Add(new LogSource
+                var profilesFolder = await GetProfilesPathAsync(cancellationToken);
+                if (!System.IO.Path.IsPathRooted(profilesFolder)) profilesFolder = System.IO.Path.Combine(Directory, profilesFolder);
+                if (!System.IO.Directory.Exists(profilesFolder)) return new List<LogSource>();
+
+                List<LogSource> sources = new List<LogSource>();
+
+                // console_xxxxx.log files
+                var consoleFiles = System.IO.Directory.GetFiles(profilesFolder, "*.log");
+
+                foreach (var consoleFilePath in consoleFiles)
                 {
-                    Type = "console_file",
-                    Name = Path.GetFileNameWithoutExtension(consoleFilePath),
-                    SizeInBytes = new FileInfo(consoleFilePath).Length,
-                    TimeLastUpdated = new DateTimeOffset(File.GetLastWriteTimeUtc(consoleFilePath), TimeSpan.Zero)
-                });
+                    sources.Add(new LogSource
+                    {
+                        Type = "console_file",
+                        Name = Path.GetFileNameWithoutExtension(consoleFilePath),
+                        SizeInBytes = new FileInfo(consoleFilePath).Length,
+                        TimeLastUpdated = new DateTimeOffset(File.GetLastWriteTimeUtc(consoleFilePath), TimeSpan.Zero)
+                    });
+                }
+
+                // RPT files
+                var rptFiles = System.IO.Directory.GetFiles(profilesFolder, "*.rpt");
+
+                foreach (var rptFilePath in rptFiles)
+                {
+                    sources.Add(new LogSource
+                    {
+                        Type = "rpt_file",
+                        Name = Path.GetFileNameWithoutExtension(rptFilePath),
+                        SizeInBytes = new FileInfo(rptFilePath).Length,
+                        TimeLastUpdated = new DateTimeOffset(File.GetLastWriteTimeUtc(rptFilePath), TimeSpan.Zero)
+                    });
+                }
+
+                return sources;
             }
-
-            // RPT files
-            var rptFiles = System.IO.Directory.GetFiles(profilesFolder, "*.rpt");
-
-            foreach (var rptFilePath in rptFiles)
+            catch (Exception ex)
             {
-                sources.Add(new LogSource
-                {
-                    Type = "rpt_file",
-                    Name = Path.GetFileNameWithoutExtension(rptFilePath),
-                    SizeInBytes = new FileInfo(rptFilePath).Length,
-                    TimeLastUpdated = new DateTimeOffset(File.GetLastWriteTimeUtc(rptFilePath), TimeSpan.Zero)
-                });
+                Logger.Error(ex, "Fetching log sources failed.");
+                throw;
             }
-
-            return sources;
         }
 
         public async Task<LogSource> GetPrimaryLogSourceOrDefaultAsync(CancellationToken cancellationToken = default)
         {
-            var primarySource = (await GetLogSourcesAsync(cancellationToken))
-                .Where(x => x.Type == "rpt_file")
-                .OrderByDescending(x => x.TimeLastUpdated)
-                .FirstOrDefault();
+            try
+            {
+                var primarySource = (await GetLogSourcesAsync(cancellationToken))
+                    .Where(x => x.Type == "rpt_file")
+                    .OrderByDescending(x => x.TimeLastUpdated)
+                    .FirstOrDefault();
 
-            return primarySource;
+                return primarySource;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Fetching primary log source failed.");
+                throw;
+            }
         }
 
         public async Task<LogContent> GetLogContentOrDefaultAsync(string logSourceName, int limitLines = 0, CancellationToken cancellationToken = default)
         {
-            var profilesFolder = await GetProfilesPathAsync(cancellationToken);
-            if (!System.IO.Path.IsPathRooted(profilesFolder)) profilesFolder = System.IO.Path.Combine(Directory, profilesFolder);
-
-            var sources = await GetLogSourcesAsync(cancellationToken);
-            var requestSource = sources.FirstOrDefault(x => x.Name == logSourceName);
-
-            if (requestSource == default) return default;
-
-            string fileToReadPath = default;
-
-            if (requestSource.Type == "console_file")
+            try
             {
-                var consoleFiles = System.IO.Directory.GetFiles(profilesFolder, "*.log");
-                var requestedConsoleFile = consoleFiles.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == requestSource.Name);
+                var profilesFolder = await GetProfilesPathAsync(cancellationToken);
+                if (!System.IO.Path.IsPathRooted(profilesFolder)) profilesFolder = System.IO.Path.Combine(Directory, profilesFolder);
 
-                fileToReadPath = requestedConsoleFile;
+                var sources = await GetLogSourcesAsync(cancellationToken);
+                var requestSource = sources.FirstOrDefault(x => x.Name == logSourceName);
+
+                if (requestSource == default) return default;
+
+                string fileToReadPath = default;
+
+                if (requestSource.Type == "console_file")
+                {
+                    var consoleFiles = System.IO.Directory.GetFiles(profilesFolder, "*.log");
+                    var requestedConsoleFile = consoleFiles.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == requestSource.Name);
+
+                    fileToReadPath = requestedConsoleFile;
+                }
+                else if (requestSource.Type == "rpt_file")
+                {
+                    var consoleFiles = System.IO.Directory.GetFiles(profilesFolder, "*.rpt");
+                    var requestedConsoleFile = consoleFiles.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == requestSource.Name);
+
+                    fileToReadPath = requestedConsoleFile;
+                }
+
+                if (!File.Exists(fileToReadPath)) return null;
+
+                using var fileStream = new FileStream(fileToReadPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                using var reader = new StreamReader(fileStream);
+
+                var content = await reader.ReadToEndAsync();
+                var lines = content.Split(Environment.NewLine).ToList();
+
+                if (limitLines > 0)
+                {
+                    lines = lines.TakeLast(limitLines).ToList();
+                }
+
+                return new LogContent
+                {
+                    Lines = lines
+                };
             }
-            else if (requestSource.Type == "rpt_file")
+            catch (Exception ex)
             {
-                var consoleFiles = System.IO.Directory.GetFiles(profilesFolder, "*.rpt");
-                var requestedConsoleFile = consoleFiles.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == requestSource.Name);
-
-                fileToReadPath = requestedConsoleFile;
+                Logger.Error(ex, "Fetching log content failed.");
+                throw;
             }
-
-            if (!File.Exists(fileToReadPath)) return null;
-
-            using var fileStream = new FileStream(fileToReadPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            using var reader = new StreamReader(fileStream);
-
-            var content = await reader.ReadToEndAsync();
-            var lines = content.Split(Environment.NewLine).ToList();
-
-            if (limitLines > 0)
-            {
-                lines = lines.TakeLast(limitLines).ToList();
-            }
-
-            return new LogContent
-            {
-                Lines = lines
-            };
         }
     }
 }

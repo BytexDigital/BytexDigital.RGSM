@@ -202,6 +202,7 @@ namespace BytexDigital.RGSM.Node
             {
                 Task.Run(async () =>
                 {
+                    await scope.ServiceProvider.GetRequiredService<NodeDbContext>().Database.MigrateAsync();
                     await scope.ServiceProvider.GetRequiredService<IMediator>().Send(new PerformStartupCmd());
                 }).GetAwaiter().GetResult();
 
