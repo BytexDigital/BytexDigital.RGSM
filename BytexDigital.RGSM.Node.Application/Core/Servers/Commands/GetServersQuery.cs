@@ -11,7 +11,7 @@ using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace BytexDigital.RGSM.Node.Application.Core.Commands
+namespace BytexDigital.RGSM.Node.Application.Core.Servers.Commands
 {
     public class GetServersQuery : IRequest<GetServersQuery.Response>
     {

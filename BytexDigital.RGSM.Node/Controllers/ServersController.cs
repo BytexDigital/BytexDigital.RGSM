@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 
 using BytexDigital.RGSM.Node.Application.Core.Authorization.Requirements;
-using BytexDigital.RGSM.Node.Application.Core.Commands;
+using BytexDigital.RGSM.Node.Application.Core.Servers.Commands;
 using BytexDigital.RGSM.Node.Domain.Entities;
 using BytexDigital.RGSM.Node.TransferObjects.Entities;
 
@@ -56,6 +56,19 @@ namespace BytexDigital.RGSM.Node.Controllers
         public async Task<ActionResult<List<ServerDto>>> GetServersAsync()
         {
             return _mapper.Map<List<ServerDto>>((await _mediator.Send(new GetServersQuery())).Servers);
+        }
+
+        [HttpPost("{serverId}")]
+        public async Task<ActionResult> DeleteServerAsync([FromRoute] string serverId, [FromQuery] bool deleteAllFiles = true)
+        {
+            if (!(await _authorizationService.AuthorizeAsync(HttpContext.User, null, new SystemAdministratorRequirement())).Succeeded)
+            {
+                return Unauthorized();
+            }
+
+            await _mediator.Send(new DeleteServerCmd { ServerId = serverId, DeleteAllFiles = deleteAllFiles });
+
+            return Ok();
         }
     }
 }

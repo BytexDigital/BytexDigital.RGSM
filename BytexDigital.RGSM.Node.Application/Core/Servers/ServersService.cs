@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -68,6 +69,31 @@ namespace BytexDigital.RGSM.Node.Application.Core.Servers
             server.Arma3Server = a3Server;
 
             await _nodeDbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteServerAsync(Server server, bool deleteAllFiles)
+        {
+            _nodeDbContext.Servers.Remove(server);
+            await _nodeDbContext.SaveChangesAsync();
+
+            if (!Directory.Exists(server.Directory)) return;
+
+            var files = Directory.GetFiles(server.Directory);
+
+            foreach (var file in files)
+            {
+                try
+                {
+                    File.Delete(file);
+                }
+                catch { }
+            }
+
+            try
+            {
+                Directory.Delete(server.Directory, true);
+            }
+            catch { }
         }
     }
 }
