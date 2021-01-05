@@ -47,7 +47,6 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
 
         private bool _isUpdatingMods = false;
 
-
         public ArmaServerState(IMediator mediator, string id, string directory) : base(mediator, id, directory)
         {
             WorkshopUpdateStates = new ConcurrentDictionary<PublishedFileId, UpdateState>();

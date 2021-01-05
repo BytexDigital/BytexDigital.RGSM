@@ -205,24 +205,6 @@ namespace BytexDigital.RGSM.Node
                     await scope.ServiceProvider.GetRequiredService<NodeDbContext>().Database.MigrateAsync();
                     await scope.ServiceProvider.GetRequiredService<IMediator>().Send(new PerformStartupCmd());
                 }).GetAwaiter().GetResult();
-
-                //Task.Run(async () =>
-                //{
-                //    // Migrate the database if necessary
-                //    scope.ServiceProvider.GetRequiredService<NodeDbContext>().Database.Migrate();
-
-                //    // Make sure we are connected to the masterserver with a valid api key
-                //    if (!await scope.ServiceProvider.GetRequiredService<ConnectivityService>().IsConnectedToMasterAsync())
-                //    {
-                //        throw new NoMasterConnectionException();
-                //    }
-
-                //    // Initialize services and other startup related jobs
-                //    await scope.ServiceProvider.GetRequiredService<ServerIntegrityService>().EnsureCorrectSetupAllAsync();
-                //    await scope.ServiceProvider.GetRequiredService<ServerStateRegister>().InitializeAsync();
-                //    await scope.ServiceProvider.GetRequiredService<SteamDownloadService>().InitializeAsync();
-                //    await scope.ServiceProvider.GetRequiredService<SchedulerHandler>().InitializeAsync();
-                //}).GetAwaiter().GetResult();
             }
 
             if (env.IsDevelopment())

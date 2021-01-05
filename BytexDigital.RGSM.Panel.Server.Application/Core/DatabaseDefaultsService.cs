@@ -28,6 +28,12 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core
             _userManager = userManager;
         }
 
+        public async Task PopulateAsync()
+        {
+            await EnsureSystemAdministratorGroupExistsAsync();
+            await EnsureRootAccountExistsAsync();
+        }
+
         public async Task<DatabaseDefaultsService> EnsureSystemAdministratorGroupExistsAsync()
         {
             if (await _storage.Groups.CountAsync(x => x.Id == GroupsConstants.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_ID) > 0) return this;

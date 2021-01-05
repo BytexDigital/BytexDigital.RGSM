@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using AutoMapper;
 
@@ -231,10 +232,12 @@ namespace BytexDigital.RGSM.Panel.Server
                 var dbDefaultsService = scope.ServiceProvider.GetRequiredService<DatabaseDefaultsService>();
                 var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-                db.Database.Migrate();
+                Task.Run(async () =>
+                {
+                    await db.Database.MigrateAsync();
 
-                dbDefaultsService.EnsureSystemAdministratorGroupExistsAsync().GetAwaiter().GetResult();
-                dbDefaultsService.EnsureRootAccountExistsAsync().GetAwaiter().GetResult();
+                    await dbDefaultsService.PopulateAsync();
+                }).GetAwaiter().GetResult();
             }
 
             if (env.IsDevelopment())
