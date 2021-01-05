@@ -21,10 +21,10 @@ namespace BytexDigital.RGSM.Node.Application.Core.Features.Workshop.Commands
         public class Handler : IRequestHandler<UpdateWorkshopModLoadStatusCmd>
         {
             private readonly ServerStateRegister _serverStateRegister;
-            private readonly ServersService _serversService;
+            private readonly ServerService _serversService;
             private readonly WorkshopManagerService _workshopService;
 
-            public Handler(ServerStateRegister serverStateRegister, ServersService serversService, WorkshopManagerService workshopService)
+            public Handler(ServerStateRegister serverStateRegister, ServerService serversService, WorkshopManagerService workshopService)
             {
                 _serverStateRegister = serverStateRegister;
                 _serversService = serversService;

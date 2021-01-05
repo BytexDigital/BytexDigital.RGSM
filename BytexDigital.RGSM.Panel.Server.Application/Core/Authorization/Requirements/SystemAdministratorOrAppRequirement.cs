@@ -14,9 +14,9 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Authorization.Requirem
     {
         public class Handler : AuthorizationHandler<SystemAdministratorOrAppRequirement>
         {
-            private readonly AccountsService _accountsService;
+            private readonly AccountService _accountsService;
 
-            public Handler(AccountsService accountsService)
+            public Handler(AccountService accountsService)
             {
                 _accountsService = accountsService;
             }

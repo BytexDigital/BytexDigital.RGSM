@@ -23,9 +23,9 @@ namespace BytexDigital.RGSM.Node.Application.Core.Features.FileSystem.Commands
         public class Handler : IRequestHandler<GetDirectoryContentQuery, Response>
         {
             private readonly FileSystemService _fileSystemService;
-            private readonly ServersService _serversService;
+            private readonly ServerService _serversService;
 
-            public Handler(FileSystemService fileSystemService, ServersService serversService)
+            public Handler(FileSystemService fileSystemService, ServerService serversService)
             {
                 _fileSystemService = fileSystemService;
                 _serversService = serversService;

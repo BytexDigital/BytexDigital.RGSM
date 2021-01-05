@@ -6,11 +6,11 @@ using BytexDigital.RGSM.Panel.Server.Persistence;
 
 namespace BytexDigital.RGSM.Panel.Server.Application.Core
 {
-    public class SteamCredentialsService
+    public class SteamCredentialService
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
-        public SteamCredentialsService(ApplicationDbContext applicationDbContext)
+        public SteamCredentialService(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
         }

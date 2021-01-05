@@ -18,9 +18,9 @@ namespace BytexDigital.RGSM.Panel.Server.Controllers
     public class AccountsController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly AccountsService _accountsService;
+        private readonly AccountService _accountsService;
 
-        public AccountsController(IMapper mapper, AccountsService accountsService)
+        public AccountsController(IMapper mapper, AccountService accountsService)
         {
             _mapper = mapper;
             _accountsService = accountsService;

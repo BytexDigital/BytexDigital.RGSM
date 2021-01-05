@@ -20,10 +20,10 @@ namespace BytexDigital.RGSM.Node.Application.Core.Authorization.Requirements
         public class Handler : AuthorizationHandler<PermissionRequirement>
         {
             private readonly PermissionsService _permissionsService;
-            private readonly ServersService _serversService;
+            private readonly ServerService _serversService;
             private readonly MasterApiService _masterApiService;
 
-            public Handler(PermissionsService permissionsService, ServersService serversService, MasterApiService masterApiService)
+            public Handler(PermissionsService permissionsService, ServerService serversService, MasterApiService masterApiService)
             {
                 _permissionsService = permissionsService;
                 _serversService = serversService;

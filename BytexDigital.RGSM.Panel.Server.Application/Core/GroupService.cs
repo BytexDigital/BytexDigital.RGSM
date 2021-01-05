@@ -6,11 +6,11 @@ using BytexDigital.RGSM.Panel.Server.Persistence;
 
 namespace BytexDigital.RGSM.Panel.Server.Application.Core
 {
-    public class GroupsService
+    public class GroupService
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
-        public GroupsService(ApplicationDbContext applicationDbContext)
+        public GroupService(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
         }

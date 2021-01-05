@@ -17,10 +17,10 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3.Commands
 
         public class Handler : IRequestHandler<MarkArmaServerAsInstalledCmd>
         {
-            private readonly ServersService _serversService;
+            private readonly ServerService _serversService;
             private readonly ArmaServerService _armaServerService;
 
-            public Handler(ServersService serversService, ArmaServerService armaServerService)
+            public Handler(ServerService serversService, ArmaServerService armaServerService)
             {
                 _serversService = serversService;
                 _armaServerService = armaServerService;

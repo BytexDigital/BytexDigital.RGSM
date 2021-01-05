@@ -25,13 +25,13 @@ namespace BytexDigital.RGSM.Panel.Server.Controllers
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
         private readonly IAuthorizationService _authorizationService;
-        private readonly NodesService _nodesService;
+        private readonly NodeService _nodesService;
 
         public NodesController(
             IMediator mediator,
             IMapper mapper,
             IAuthorizationService authorizationService,
-            NodesService nodesService)
+            NodeService nodesService)
         {
             _mediator = mediator;
             _mapper = mapper;

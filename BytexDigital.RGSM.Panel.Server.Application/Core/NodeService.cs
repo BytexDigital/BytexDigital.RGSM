@@ -7,11 +7,11 @@ using BytexDigital.RGSM.Panel.Server.Persistence;
 
 namespace BytexDigital.RGSM.Panel.Server.Application.Core
 {
-    public class NodesService
+    public class NodeService
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
-        public NodesService(ApplicationDbContext applicationDbContext)
+        public NodeService(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
         }

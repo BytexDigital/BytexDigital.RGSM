@@ -33,7 +33,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Servers
         {
             using (var scope = _lifetimeScope.BeginLifetimeScope())
             {
-                var serversService = scope.Resolve<ServersService>();
+                var serversService = scope.Resolve<ServerService>();
                 var permissionsService = scope.Resolve<PermissionsService>();
                 var setupService = scope.Resolve<ServerIntegrityService>();
 

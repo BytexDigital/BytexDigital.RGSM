@@ -16,9 +16,9 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Groups
 
         public class Handler : IRequestHandler<DeleteGroupCmd>
         {
-            private readonly GroupsService _groupsService;
+            private readonly GroupService _groupsService;
 
-            public Handler(GroupsService groupsService)
+            public Handler(GroupService groupsService)
             {
                 _groupsService = groupsService;
             }

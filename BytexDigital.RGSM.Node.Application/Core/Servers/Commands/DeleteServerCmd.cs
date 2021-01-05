@@ -22,9 +22,9 @@ namespace BytexDigital.RGSM.Node.Application.Core.Servers.Commands
         public class Handler : IRequestHandler<DeleteServerCmd>
         {
             private readonly ServerStateRegister _serverStateRegister;
-            private readonly ServersService _serversService;
+            private readonly ServerService _serversService;
 
-            public Handler(ServerStateRegister serverStateRegister, ServersService serversService)
+            public Handler(ServerStateRegister serverStateRegister, ServerService serversService)
             {
                 _serverStateRegister = serverStateRegister;
                 _serversService = serversService;

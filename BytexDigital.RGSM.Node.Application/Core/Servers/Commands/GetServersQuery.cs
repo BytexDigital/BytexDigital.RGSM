@@ -19,9 +19,9 @@ namespace BytexDigital.RGSM.Node.Application.Core.Servers.Commands
 
         public class Handler : IRequestHandler<GetServersQuery, Response>
         {
-            private readonly ServersService _serversService;
+            private readonly ServerService _serversService;
 
-            public Handler(ServersService serversService)
+            public Handler(ServerService serversService)
             {
                 _serversService = serversService;
             }

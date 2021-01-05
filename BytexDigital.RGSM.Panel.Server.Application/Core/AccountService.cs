@@ -6,11 +6,11 @@ using BytexDigital.RGSM.Panel.Server.Persistence;
 
 namespace BytexDigital.RGSM.Panel.Server.Application.Core
 {
-    public class AccountsService
+    public class AccountService
     {
         private readonly ApplicationDbContext _storage;
 
-        public AccountsService(ApplicationDbContext storage)
+        public AccountService(ApplicationDbContext storage)
         {
             _storage = storage;
         }

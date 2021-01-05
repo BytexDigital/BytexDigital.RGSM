@@ -19,11 +19,11 @@ namespace BytexDigital.RGSM.Node.Application.Core.Features.Workshop.Commands
 
         public class Handler : IRequestHandler<GetWorkshopModsQuery, Response>
         {
-            private readonly ServersService _serversService;
+            private readonly ServerService _serversService;
             private readonly ServerStateRegister _serverStateRegister;
             private readonly WorkshopManagerService _workshopService;
 
-            public Handler(ServersService serversService, ServerStateRegister serverStateRegister, WorkshopManagerService workshopService)
+            public Handler(ServerService serversService, ServerStateRegister serverStateRegister, WorkshopManagerService workshopService)
             {
                 _serversService = serversService;
                 _serverStateRegister = serverStateRegister;

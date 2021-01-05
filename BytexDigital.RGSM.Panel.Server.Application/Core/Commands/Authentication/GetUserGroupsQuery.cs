@@ -17,9 +17,9 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Authenticatio
 
         public class Handler : IRequestHandler<GetUserGroupsQuery, Response>
         {
-            private readonly AccountsService _accountsService;
+            private readonly AccountService _accountsService;
 
-            public Handler(AccountsService accountsService)
+            public Handler(AccountService accountsService)
             {
                 _accountsService = accountsService;
             }

@@ -14,9 +14,9 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Steam
     {
         public class Handler : IRequestHandler<GetSteamCredentialsQuery, Response>
         {
-            private readonly SteamCredentialsService _steamCredentialsService;
+            private readonly SteamCredentialService _steamCredentialsService;
 
-            public Handler(SteamCredentialsService steamCredentialsService)
+            public Handler(SteamCredentialService steamCredentialsService)
             {
                 _steamCredentialsService = steamCredentialsService;
             }

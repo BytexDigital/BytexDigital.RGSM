@@ -23,9 +23,9 @@ namespace BytexDigital.RGSM.Node.Application.Core.Servers.Commands
         {
             private readonly ServerStateRegister _serverStateRegister;
             private readonly ServerIntegrityService _serverIntegrityService;
-            private readonly ServersService _serversService;
+            private readonly ServerService _serversService;
 
-            public Handler(ServerStateRegister serverStateRegister, ServerIntegrityService serverIntegrityService, ServersService serversService)
+            public Handler(ServerStateRegister serverStateRegister, ServerIntegrityService serverIntegrityService, ServerService serversService)
             {
                 _serverStateRegister = serverStateRegister;
                 _serverIntegrityService = serverIntegrityService;

@@ -20,10 +20,10 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands
 
         public class Handler : IRequestHandler<ChangeServerStatusCmd>
         {
-            private readonly ServersService _serversService;
+            private readonly ServerService _serversService;
             private readonly ServerStateRegister _serverStateRegister;
 
-            public Handler(ServersService serversService, ServerStateRegister serverStateRegister)
+            public Handler(ServerService serversService, ServerStateRegister serverStateRegister)
             {
                 _serversService = serversService;
                 _serverStateRegister = serverStateRegister;

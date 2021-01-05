@@ -24,11 +24,11 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands
 
         public class Handler : IRequestHandler<GetPermissionsOfUserQuery, Response>
         {
-            private readonly ServersService _serversService;
+            private readonly ServerService _serversService;
             private readonly PermissionsService _permissionsService;
             private readonly MasterApiService _masterApiService;
 
-            public Handler(ServersService serversService, PermissionsService permissionsService, MasterApiService masterApiService)
+            public Handler(ServerService serversService, PermissionsService permissionsService, MasterApiService masterApiService)
             {
                 _serversService = serversService;
                 _permissionsService = permissionsService;

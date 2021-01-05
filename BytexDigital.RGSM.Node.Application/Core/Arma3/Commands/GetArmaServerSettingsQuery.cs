@@ -17,9 +17,9 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3.Commands
 
         public class Handler : IRequestHandler<GetArmaServerSettingsQuery, Response>
         {
-            private readonly ServersService _serversService;
+            private readonly ServerService _serversService;
 
-            public Handler(ServersService serversService)
+            public Handler(ServerService serversService)
             {
                 _serversService = serversService;
             }

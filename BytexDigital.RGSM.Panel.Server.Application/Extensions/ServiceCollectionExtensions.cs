@@ -10,12 +10,12 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Extensions
         {
             services
                 .AddScoped<DatabaseDefaultsService>()
-                .AddScoped<AccountsService>()
-                .AddScoped<SettingsService>()
-                .AddScoped<SteamCredentialsService>()
+                .AddScoped<AccountService>()
+                .AddScoped<SettingService>()
+                .AddScoped<SteamCredentialService>()
                 .AddScoped<AuthenticationService>()
-                .AddScoped<NodesService>()
-                .AddScoped<GroupsService>();
+                .AddScoped<NodeService>()
+                .AddScoped<GroupService>();
 
             return services;
         }

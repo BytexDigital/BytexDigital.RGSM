@@ -17,9 +17,9 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Nodes
 
         public class Handler : IRequestHandler<GetNodeKeyQuery, Response>
         {
-            private readonly NodesService _nodesService;
+            private readonly NodeService _nodesService;
 
-            public Handler(NodesService nodesService)
+            public Handler(NodeService nodesService)
             {
                 _nodesService = nodesService;
             }

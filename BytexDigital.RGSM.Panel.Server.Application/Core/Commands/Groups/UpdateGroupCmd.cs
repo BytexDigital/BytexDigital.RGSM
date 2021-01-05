@@ -21,9 +21,9 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Groups
 
         public class Handler : IRequestHandler<UpdateGroupCmd>
         {
-            private readonly GroupsService _groupsService;
+            private readonly GroupService _groupsService;
 
-            public Handler(GroupsService groupsService)
+            public Handler(GroupService groupsService)
             {
                 _groupsService = groupsService;
             }
@@ -51,7 +51,7 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Groups
 
         public class Validator : AbstractValidator<UpdateGroupCmd>
         {
-            public Validator(GroupsService groupsService)
+            public Validator(GroupService groupsService)
             {
                 RuleFor(x => x.DisplayName)
                     .NotEmpty();

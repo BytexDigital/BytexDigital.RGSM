@@ -21,11 +21,11 @@ namespace BytexDigital.RGSM.Node.Application.Core.Features.Scheduling.Commands
 
         public class Handler : IRequestHandler<GetSchedulerQuery, Response>
         {
-            private readonly ServersService _serversService;
+            private readonly ServerService _serversService;
             private readonly SchedulersService _schedulersService;
             private readonly NodeDbContext _nodeDbContext;
 
-            public Handler(ServersService serversService, SchedulersService schedulersService, NodeDbContext nodeDbContext)
+            public Handler(ServerService serversService, SchedulersService schedulersService, NodeDbContext nodeDbContext)
             {
                 _serversService = serversService;
                 _schedulersService = schedulersService;

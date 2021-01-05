@@ -10,11 +10,11 @@ using BytexDigital.RGSM.Shared.Enumerations;
 
 namespace BytexDigital.RGSM.Node.Application.Core.Servers
 {
-    public class ServersService
+    public class ServerService
     {
         private readonly NodeDbContext _nodeDbContext;
 
-        public ServersService(NodeDbContext nodeDbContext)
+        public ServerService(NodeDbContext nodeDbContext)
         {
             _nodeDbContext = nodeDbContext;
         }

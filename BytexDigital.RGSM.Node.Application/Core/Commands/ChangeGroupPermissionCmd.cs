@@ -21,10 +21,10 @@ namespace BytexDigital.RGSM.Node.Application.Core.Commands
 
         public class Handler : IRequestHandler<ChangeGroupPermissionCmd>
         {
-            private readonly ServersService _serversService;
+            private readonly ServerService _serversService;
             private readonly PermissionsService _permissionsService;
 
-            public Handler(ServersService serversService, PermissionsService permissionsService)
+            public Handler(ServerService serversService, PermissionsService permissionsService)
             {
                 _serversService = serversService;
                 _permissionsService = permissionsService;

@@ -17,11 +17,11 @@ namespace BytexDigital.RGSM.Node.Application.Core.Features.Scheduling.Commands
 
         public class Handler : IRequestHandler<UpdateSchedulerEnabledCmd>
         {
-            private readonly ServersService _serversService;
+            private readonly ServerService _serversService;
             private readonly SchedulersService _schedulersService;
             private readonly SchedulerHandler _schedulerHandler;
 
-            public Handler(ServersService serversService, SchedulersService schedulersService, SchedulerHandler schedulerHandler)
+            public Handler(ServerService serversService, SchedulersService schedulersService, SchedulerHandler schedulerHandler)
             {
                 _serversService = serversService;
                 _schedulersService = schedulersService;

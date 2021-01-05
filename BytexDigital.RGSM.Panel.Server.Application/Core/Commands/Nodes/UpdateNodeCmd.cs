@@ -21,9 +21,9 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Nodes
 
         public class Handler : IRequestHandler<UpdateNodeCmd>
         {
-            private readonly NodesService _nodesService;
+            private readonly NodeService _nodesService;
 
-            public Handler(NodesService nodesService)
+            public Handler(NodeService nodesService)
             {
                 _nodesService = nodesService;
             }
@@ -44,7 +44,7 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Nodes
 
         public class Validator : AbstractValidator<UpdateNodeCmd>
         {
-            public Validator(NodesService nodesService)
+            public Validator(NodeService nodesService)
             {
                 RuleFor(x => x.Id)
                     .MustAsync(async (id, cancelToken) => await nodesService.GetNode(id).AnyAsync())

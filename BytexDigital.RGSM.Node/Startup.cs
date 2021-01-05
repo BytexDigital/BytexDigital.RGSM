@@ -56,7 +56,7 @@ namespace BytexDigital.RGSM.Node
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddScoped<ServersService>()
+                .AddScoped<ServerService>()
                 .AddScoped<ConnectivityService>()
                 .AddScoped<ArmaServerService>()
                 .AddScoped<PermissionsService>()
