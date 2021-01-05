@@ -67,16 +67,13 @@ namespace BytexDigital.RGSM.Node
                 .AddSingleton<SteamDownloadService>()
                 .AddSingleton<ServerStateRegister>()
                 .AddSingleton<ScopeService>()
-                .AddSingleton<MasterApiService>();
-
-            services
+                .AddSingleton<MasterApiService>()
                 .AddSingleton<SchedulerHandler>()
                 .AddSingleton<IHostedService>(x => x.GetRequiredService<SchedulerHandler>());
 
             services.AddUniformCommonErrorResponses();
 
             // Authorization
-            // Add AuthorizationHandlers
             foreach (var handlerType in typeof(PermissionRequirement.Handler).Assembly.GetTypes().Where(x => x.IsAssignableTo(typeof(IAuthorizationHandler))))
             {
                 services.AddScoped(typeof(IAuthorizationHandler), handlerType);
@@ -210,25 +207,24 @@ namespace BytexDigital.RGSM.Node
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(options =>
-                {
-                    options.SwaggerEndpoint("/swagger/rgsm-node/swagger.json", "RGSM Node API"); ;
-                    options.OAuthClientId("rgsm-panel");
-                    options.OAuthClientSecret("");
-                    options.OAuthAppName("RGSM Node - Swagger");
-                    options.OAuthUsePkce();
-                });
             }
 
-            app.UseHttpsRedirection();
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/rgsm-node/swagger.json", "RGSM Node API"); ;
+                options.OAuthClientId("rgsm-panel");
+                options.OAuthClientSecret("");
+                options.OAuthAppName("RGSM Node - Swagger");
+                options.OAuthUsePkce();
+            });
 
+            app.UseHttpsRedirection();
             app.UseCors();
 
             app.UseRouting();
 
             app.UseAuthentication();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
