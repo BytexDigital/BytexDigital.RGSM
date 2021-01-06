@@ -354,7 +354,9 @@ namespace BytexDigital.RGSM.Node.Application.Core.Steam
                 client = new SteamClient(
                     new SteamCredentials(steamCredentials.Username, steamCredentials.Password),
                     new DefaultSteamAuthenticationCodesProvider(),
-                    new PersistedSteamAuthenticationFilesProvider(steamCredentials.LoginKey, Convert.FromBase64String(steamCredentials.Sentry)));
+                    new PersistedSteamAuthenticationFilesProvider(
+                        steamCredentials.LoginKey,
+                        steamCredentials.Sentry != null ? Convert.FromBase64String(steamCredentials.Sentry) : null));
             }
 
             var contentClient = new SteamContentClient(client);

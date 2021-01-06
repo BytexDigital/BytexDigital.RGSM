@@ -11,10 +11,8 @@ namespace BytexDigital.RGSM.Panel.Server.Domain.Entities
         [Required]
         public string Password { get; set; }
 
-        [Required]
         public string LoginKey { get; set; }
 
-        [Required]
         public string Sentry { get; set; }
 
         public virtual ICollection<SteamCredentialSupportedApp> SteamCredentialSupportedApps { get; set; }
