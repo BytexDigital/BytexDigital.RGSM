@@ -12,12 +12,10 @@ namespace BytexDigital.RGSM.Node.Application.Mediator
 {
     public class ScopeBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
-        private readonly ScopeService _scopeService;
         private readonly ILifetimeScope _lifetimeScope;
 
-        public ScopeBehavior(ScopeService scopeService, ILifetimeScope lifetimeScope)
+        public ScopeBehavior(ILifetimeScope lifetimeScope)
         {
-            _scopeService = scopeService;
             _lifetimeScope = lifetimeScope;
         }
 

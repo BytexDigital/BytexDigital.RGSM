@@ -66,7 +66,6 @@ namespace BytexDigital.RGSM.Node
                 .AddSingleton<FileSystemService>()
                 .AddSingleton<SteamDownloadService>()
                 .AddSingleton<ServerStateRegister>()
-                .AddSingleton<ScopeService>()
                 .AddSingleton<MasterApiService>()
                 .AddSingleton<SchedulerHandler>()
                 .AddSingleton<IHostedService>(x => x.GetRequiredService<SchedulerHandler>());
