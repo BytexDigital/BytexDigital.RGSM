@@ -9,11 +9,11 @@ using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
 
 namespace BytexDigital.RGSM.Panel.Client.Common.Core
 {
-    public class PermissionsService
+    public class PermissionService
     {
         private readonly HttpClient _httpClient;
 
-        public PermissionsService(HttpClient httpClient)
+        public PermissionService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }

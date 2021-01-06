@@ -8,11 +8,11 @@ using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
 
 namespace BytexDigital.RGSM.Panel.Client.Common.Core
 {
-    public class GroupsService
+    public class GroupService
     {
         private readonly HttpClient _httpClient;
 
-        public GroupsService(HttpClient httpClient)
+        public GroupService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }

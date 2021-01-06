@@ -18,7 +18,7 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Groups
     public partial class Index : Settings._Components.SettingsComponentBase
     {
         [Inject]
-        public GroupsService GroupsService { get; set; }
+        public GroupService GroupsService { get; set; }
 
         [Inject]
         public IModalService ModalService { get; set; }

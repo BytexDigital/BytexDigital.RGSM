@@ -21,10 +21,10 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Groups
         public string GroupId { get; set; }
 
         [Inject]
-        public GroupsService GroupsService { get; set; }
+        public GroupService GroupsService { get; set; }
 
         [Inject]
-        public ToastsService ToastsService { get; set; }
+        public ToastService ToastsService { get; set; }
 
         [Inject]
         public IMediator Mediator { get; set; }

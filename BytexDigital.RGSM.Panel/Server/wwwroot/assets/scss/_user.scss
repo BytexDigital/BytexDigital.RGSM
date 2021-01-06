@@ -42,6 +42,10 @@ $font-family-base: null !default;
     }
 }
 
+.nav-link.active {
+    border-bottom: 3px solid $blue;
+}
+
 .iziToast {
     font-family: $font-family-base;
 }

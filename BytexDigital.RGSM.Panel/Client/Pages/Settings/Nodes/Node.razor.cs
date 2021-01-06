@@ -28,7 +28,7 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Nodes
         public IModalService ModalService { get; set; }
 
         [Inject]
-        public ToastsService ToastsService { get; set; }
+        public ToastService ToastsService { get; set; }
 
         public NodeEditViewModel NodeModel { get; set; }
         public ManualFormValidator<NodeEditViewModel> NodeModelValidator { get; set; }

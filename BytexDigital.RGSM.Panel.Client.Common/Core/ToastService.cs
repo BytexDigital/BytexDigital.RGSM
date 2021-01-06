@@ -4,13 +4,13 @@ using Microsoft.JSInterop;
 
 namespace BytexDigital.RGSM.Panel.Client.Common.Core
 {
-    public class ToastsService
+    public class ToastService
     {
         private readonly IJSRuntime _jsRuntime;
         private Task<IJSObjectReference> _module;
         private Task<IJSObjectReference> Module => _module ?? _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/blazor.toasts.js").AsTask();
 
-        public ToastsService(IJSRuntime jsRuntime)
+        public ToastService(IJSRuntime jsRuntime)
         {
             _jsRuntime = jsRuntime;
         }

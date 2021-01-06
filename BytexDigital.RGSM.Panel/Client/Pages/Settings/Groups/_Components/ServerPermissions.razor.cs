@@ -24,10 +24,10 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Groups._Components
         public GroupDto Group { get; set; }
 
         [Inject]
-        public PermissionsService PermissionsService { get; set; }
+        public PermissionService PermissionsService { get; set; }
 
         [Inject]
-        public ToastsService ToastsService { get; set; }
+        public ToastService ToastsService { get; set; }
 
         public Dictionary<PermissionDto, bool> Permissions { get; set; }
 

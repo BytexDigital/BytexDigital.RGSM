@@ -9,11 +9,11 @@ using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
 
 namespace BytexDigital.RGSM.Panel.Client.Common.Core
 {
-    public class ServersService
+    public class ServerService
     {
         private readonly HttpClient _httpClient;
 
-        public ServersService(HttpClient httpClient)
+        public ServerService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }

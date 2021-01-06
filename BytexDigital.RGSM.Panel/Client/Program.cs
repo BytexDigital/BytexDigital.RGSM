@@ -44,12 +44,12 @@ namespace BytexDigital.RGSM.Panel.Client
             // Add custom services
             builder.Services
                 .AddScoped<AccountService>()
-                .AddScoped<PermissionsService>()
+                .AddScoped<PermissionService>()
                 .AddScoped<NodeRegisterService>()
                 .AddScoped<NodesService>()
-                .AddScoped<GroupsService>()
-                .AddScoped<ServersService>()
-                .AddScoped<ToastsService>();
+                .AddScoped<GroupService>()
+                .AddScoped<ServerService>()
+                .AddScoped<ToastService>();
 
             // Enable options pattern
             builder.Services.AddOptions();

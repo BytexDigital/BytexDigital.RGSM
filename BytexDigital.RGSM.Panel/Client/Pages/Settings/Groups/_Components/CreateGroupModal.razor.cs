@@ -21,7 +21,7 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Groups._Components
         public BlazoredModalInstance ModelInstance { get; set; }
 
         [Inject]
-        public GroupsService GroupsService { get; set; }
+        public GroupService GroupsService { get; set; }
 
         public string Id { get; set; } = Guid.NewGuid().ToString("N");
 

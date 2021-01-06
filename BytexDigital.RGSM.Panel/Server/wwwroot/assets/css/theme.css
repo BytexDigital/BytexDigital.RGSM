@@ -16981,5 +16981,8 @@ a:hover .text-hover-primary {
   .header .navbar-nav.navbar-nav-underlined .navbar-nav-item:first-child .nav-link {
     padding-left: 0.75rem !important; }
 
+.nav-link.active {
+  border-bottom: 3px solid #377dff; }
+
 .iziToast {
   font-family: "Segoe UI", sans-serif; }
