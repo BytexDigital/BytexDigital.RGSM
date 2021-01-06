@@ -82,7 +82,7 @@ namespace BytexDigital.RGSM.Node
             services.AddAutoMapper(typeof(NodeProfile).Assembly);
 
             // Settings
-            services.Configure<NodeOptions>(Configuration.GetSection("NodeSettings"));
+            services.Configure<NodeOptions>(Configuration.GetSection("Node"));
 
             // Mediator
             services.AddMediatR(typeof(UpdateAppCmd).Assembly)
@@ -91,8 +91,8 @@ namespace BytexDigital.RGSM.Node
 
             services.AddHttpClient("MasterApi", options =>
             {
-                options.DefaultRequestHeaders.TryAddWithoutValidation(ApiKeyAuthenticationHandler.HEADER_NAME, Configuration["NodeSettings:MasterOptions:ApiKey"]);
-                options.BaseAddress = new Uri(Configuration["NodeSettings:MasterOptions:BaseUri"]);
+                options.DefaultRequestHeaders.TryAddWithoutValidation(ApiKeyAuthenticationHandler.HEADER_NAME, Configuration["Node:Master:ApiKey"]);
+                options.BaseAddress = new Uri(Configuration["Node:Master:BaseUri"]);
             });
 
             services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("MasterApi"));
@@ -107,10 +107,10 @@ namespace BytexDigital.RGSM.Node
                 .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthenticationOptions.NODE_AUTHENTICATION_SCHEME, null)
                 .AddJwtBearer(options =>
                 {
-                    options.MetadataAddress = $"{Configuration["NodeSettings:MasterOptions:BaseUri"]}/.well-known/openid-configuration";
+                    options.MetadataAddress = $"{Configuration["Node:Master:BaseUri"]}/.well-known/openid-configuration";
                     options.Audience = "rgsm";
 
-                    options.TokenValidationParameters.ValidIssuer = Configuration["NodeSettings:MasterOptions:BaseUri"];
+                    options.TokenValidationParameters.ValidIssuer = Configuration["Node:Master:BaseUri"];
                     options.TokenValidationParameters.ValidAudience = "rgsm";
                 })
                 .AddPolicyScheme("API_KEY_OR_JWT", "API_KEY_OR_JWT", options =>
@@ -157,8 +157,8 @@ namespace BytexDigital.RGSM.Node
                     {
                         AuthorizationCode = new OpenApiOAuthFlow
                         {
-                            AuthorizationUrl = new Uri($"{Configuration["NodeSettings:MasterOptions:BaseUri"]}/connect/authorize"),
-                            TokenUrl = new Uri($"{Configuration["NodeSettings:MasterOptions:BaseUri"]}/connect/token"),
+                            AuthorizationUrl = new Uri($"{Configuration["Node:Master:BaseUri"]}/connect/authorize"),
+                            TokenUrl = new Uri($"{Configuration["Node:Master:BaseUri"]}/connect/token"),
                             Scopes = new Dictionary<string, string>
                             {
                                 { "openid", "ID" },
