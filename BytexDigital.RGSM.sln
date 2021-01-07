@@ -22,6 +22,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7DD8AA9C-7504-4C01-B204-93A594461F72}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BytexDigital.RGSM.Panel.Client.Common", "BytexDigital.RGSM.Panel.Client.Common\BytexDigital.RGSM.Panel.Client.Common.csproj", "{866ACBA7-C529-4D27-8CCF-030FE68BEDEE}"
