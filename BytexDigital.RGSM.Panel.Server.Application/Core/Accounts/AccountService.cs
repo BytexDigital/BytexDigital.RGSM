@@ -120,5 +120,17 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Accounts
                 await _storage.SaveChangesAsync();
             }
         }
+
+        public async Task<IdentityResult> UpdatePasswordAsync(ApplicationUser applicationUser, string oldPassword, string newPassword)
+        {
+            return await _userManager.ChangePasswordAsync(applicationUser, oldPassword, newPassword);
+        }
+
+        public async Task UpdateApplicationUserAsync(ApplicationUser applicationUser, string userName)
+        {
+            var result = await _userManager.SetUserNameAsync(applicationUser, userName);
+
+            if (!result.Succeeded) throw new InvalidOperationException("Could not update user.");
+        }
     }
 }

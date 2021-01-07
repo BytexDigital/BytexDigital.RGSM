@@ -89,5 +89,58 @@ namespace BytexDigital.RGSM.Panel.Server.Controllers
 
             return Ok();
         }
+
+        [HttpPost]
+        [Authorize(Policy = "Admin")]
+        public async Task<ActionResult> UpdateApplicationUserAsync([FromBody, Required] ApplicationUserDto applicationUserDto)
+        {
+            await _mediator.Send(new UpdateUserCmd
+            {
+                Id = applicationUserDto.Id,
+                UserName = applicationUserDto.UserName
+            });
+
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateSessionApplicationUserAsync([FromBody, Required] ApplicationUserDto applicationUserDto)
+        {
+            await _mediator.Send(new UpdateUserCmd
+            {
+                Id = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                UserName = applicationUserDto.UserName
+            });
+
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdatePasswordAsync([FromBody, Required] UpdatePasswordModel updatePasswordModel)
+        {
+            await _mediator.Send(new UpdateUserPasswordCmd
+            {
+                ApplicationUserId = updatePasswordModel.ApplicationUserId,
+                CurrentPassword = updatePasswordModel.CurrentPassword,
+                Password = updatePasswordModel.Password,
+                PasswordRepeat = updatePasswordModel.PasswordRepeat
+            });
+
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateSessionPasswordAsync([FromBody, Required] UpdatePasswordModel updatePasswordModel)
+        {
+            await _mediator.Send(new UpdateUserPasswordCmd
+            {
+                ApplicationUserId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                CurrentPassword = updatePasswordModel.CurrentPassword,
+                Password = updatePasswordModel.Password,
+                PasswordRepeat = updatePasswordModel.PasswordRepeat
+            });
+
+            return Ok();
+        }
     }
 }
