@@ -74,7 +74,7 @@ namespace BytexDigital.RGSM.Panel.Server.Controllers
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpPost]
         [Authorize(Policy = "Admin")]
         public async Task<ActionResult> DeleteGroupAsync([FromBody] GroupDto groupDto)
         {

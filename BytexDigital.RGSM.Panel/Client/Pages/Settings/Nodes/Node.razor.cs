@@ -28,7 +28,7 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Nodes
         public IModalService ModalService { get; set; }
 
         [Inject]
-        public ToastService ToastsService { get; set; }
+        public ToastService ToastService { get; set; }
 
         public NodeEditViewModel NodeModel { get; set; }
         public ManualFormValidator<NodeEditViewModel> NodeModelValidator { get; set; }
@@ -99,13 +99,13 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Nodes
 
                 await updateResult
                     .AsAsync()
-                    .ForServiceErrors(async x => await ToastsService.NotifyAsync(WebNotificationType.Error, "Application Error", x.Description))
+                    .ForServiceErrors(async x => await ToastService.NotifyAsync(WebNotificationType.Error, "Application Error", x.Description))
                     .WaitAsync();
             }
 
             if (updateResult.Succeeded)
             {
-                await ToastsService.NotifyAsync(WebNotificationType.Success, "Saved changes.");
+                await ToastService.NotifyAsync(WebNotificationType.Success, "Saved changes.");
             }
         }
 
@@ -121,6 +121,10 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Nodes
             if (deleteResult.Succeeded)
             {
                 Navigation.NavigateTo("/settings/nodes");
+            }
+            else
+            {
+                await ToastService.NotifyAsync(WebNotificationType.Error, "Node could not be deleted.");
             }
         }
 
