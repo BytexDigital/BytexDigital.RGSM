@@ -3,13 +3,14 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using BytexDigital.ErrorHandling.Shared;
+using BytexDigital.RGSM.Panel.Server.Application.Core.Accounts;
 using BytexDigital.RGSM.Panel.Server.Domain.Entities;
 
 using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Authentication
+namespace BytexDigital.RGSM.Panel.Server.Application.Core.Accounts.Commands
 {
     public class GetUserGroupsQuery : IRequest<GetUserGroupsQuery.Response>
     {

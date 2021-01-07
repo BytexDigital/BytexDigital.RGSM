@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 
-namespace BytexDigital.RGSM.Panel.Server.Application.Core.Authentication
+namespace BytexDigital.RGSM.Panel.Server.Application.Authentication
 {
     public class ApiKeyAuthenticationOptions : AuthenticationSchemeOptions
     {

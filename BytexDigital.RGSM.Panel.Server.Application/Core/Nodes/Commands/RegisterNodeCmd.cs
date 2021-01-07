@@ -10,7 +10,7 @@ using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Nodes
+namespace BytexDigital.RGSM.Panel.Server.Application.Core.Nodes.Commands
 {
 
     public class RegisterNodeCmd : IRequest<RegisterNodeCmd.Response>

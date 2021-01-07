@@ -23,5 +23,10 @@ namespace BytexDigital.RGSM.Panel.Client.Common.Core
         {
             return await _httpClient.GetFromJsonAsync<List<GroupDto>>("/API/Accounts/GetAssignedGroups");
         }
+
+        public async Task<List<ApplicationUserDto>> GetApplicationUsersAsync()
+        {
+            return await _httpClient
+        }
     }
 }

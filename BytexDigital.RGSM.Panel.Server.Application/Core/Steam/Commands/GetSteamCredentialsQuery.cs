@@ -8,7 +8,7 @@ using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Steam
+namespace BytexDigital.RGSM.Panel.Server.Application.Core.Steam.Commands
 {
     public class GetSteamCredentialsQuery : IRequest<GetSteamCredentialsQuery.Response>
     {

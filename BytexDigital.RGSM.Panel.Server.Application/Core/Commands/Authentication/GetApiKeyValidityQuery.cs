@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
+using BytexDigital.RGSM.Panel.Server.Application.Core.Authentication.ApiKeys;
 using BytexDigital.RGSM.Panel.Server.Domain.Models;
 
 using MediatR;
@@ -15,9 +16,9 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Authenticatio
 
         public class Handler : IRequestHandler<GetApiKeyValidityQuery, Response>
         {
-            private readonly AuthenticationService _authenticationService;
+            private readonly ApiKeyService _authenticationService;
 
-            public Handler(AuthenticationService authenticationService)
+            public Handler(ApiKeyService authenticationService)
             {
                 _authenticationService = authenticationService;
             }

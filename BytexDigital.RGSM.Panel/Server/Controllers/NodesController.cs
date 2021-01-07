@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 
 using AutoMapper;
 
+using BytexDigital.RGSM.Panel.Server.Application.Authorization.Requirements;
 using BytexDigital.RGSM.Panel.Server.Application.Core;
-using BytexDigital.RGSM.Panel.Server.Application.Core.Authorization.Requirements;
-using BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Nodes;
+using BytexDigital.RGSM.Panel.Server.Application.Core.Nodes.Commands;
 using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
 
 using MediatR;

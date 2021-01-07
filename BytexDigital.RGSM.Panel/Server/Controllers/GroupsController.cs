@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 using AutoMapper;
 
-using BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Authentication;
-using BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Groups;
+using BytexDigital.RGSM.Panel.Server.Application.Core.Accounts.Commands;
+using BytexDigital.RGSM.Panel.Server.Application.Core.Groups.Commands;
 using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
 
 using MediatR;

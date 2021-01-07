@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using AutoMapper;
 
-using BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Steam;
+using BytexDigital.RGSM.Panel.Server.Application.Core.Steam.Commands;
 using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
 
 using MediatR;

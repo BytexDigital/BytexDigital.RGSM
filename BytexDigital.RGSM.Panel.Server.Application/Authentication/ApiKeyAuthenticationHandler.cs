@@ -4,6 +4,9 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
+using BytexDigital.RGSM.Panel.Server.Application.Core;
+using BytexDigital.RGSM.Panel.Server.Application.Core.Authentication.ApiKeys;
+
 using MediatR;
 
 using Microsoft.AspNetCore.Authentication;
@@ -11,13 +14,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace BytexDigital.RGSM.Panel.Server.Application.Core.Authentication
+namespace BytexDigital.RGSM.Panel.Server.Application.Authentication
 {
     public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthenticationOptions>
     {
         public const string HEADER_NAME = "X-API-Key";
         private readonly IMediator _mediator;
-        private readonly AuthenticationService _authenticationService;
+        private readonly ApiKeyService _apiKeyService;
 
         public ApiKeyAuthenticationHandler(
             IOptionsMonitor<ApiKeyAuthenticationOptions> options,
@@ -25,10 +28,10 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Authentication
             UrlEncoder encoder,
             ISystemClock clock,
             IMediator mediator,
-            AuthenticationService authenticationService) : base(options, logger, encoder, clock)
+            ApiKeyService apiKeyService) : base(options, logger, encoder, clock)
         {
             _mediator = mediator;
-            _authenticationService = authenticationService;
+            _apiKeyService = apiKeyService;
         }
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -45,7 +48,7 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Authentication
                 return AuthenticateResult.NoResult();
             }
 
-            var apiKey = await _authenticationService.GetApiKey(keyValue).FirstOrDefaultAsync();
+            var apiKey = await _apiKeyService.GetApiKey(keyValue).FirstOrDefaultAsync();
 
             if (apiKey == null)
             {

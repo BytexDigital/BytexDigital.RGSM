@@ -1,13 +1,14 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 
+using BytexDigital.RGSM.Panel.Server.Application.Core.Accounts;
 using BytexDigital.RGSM.Panel.Server.Domain.Entities;
 using BytexDigital.RGSM.Shared;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
-namespace BytexDigital.RGSM.Panel.Server.Application.Core.Authorization.Requirements
+namespace BytexDigital.RGSM.Panel.Server.Application.Authorization.Requirements
 {
 
     public class SystemAdministratorOrAppRequirement : IAuthorizationRequirement
