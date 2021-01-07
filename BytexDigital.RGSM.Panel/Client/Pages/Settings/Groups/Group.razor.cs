@@ -114,7 +114,7 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Groups
 
         public async Task DeleteGroupAsync()
         {
-            var modalRef = ModalService.ShowConfirmation("Are you sure that you want to delete this node?");
+            var modalRef = ModalService.ShowConfirmation("Are you sure that you want to delete this gtoup?");
             var result = await modalRef.Result;
 
             if (result.Cancelled) return;
