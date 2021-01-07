@@ -1,17 +1,19 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 using AutoMapper;
 
 using BytexDigital.RGSM.Panel.Server.Application.Core.Accounts;
-using BytexDigital.RGSM.Panel.Server.Application.Core.Commands;
+using BytexDigital.RGSM.Panel.Server.Application.Core.Accounts.Commands;
 using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
+using BytexDigital.RGSM.Panel.Server.TransferObjects.Models;
 
 using MediatR;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BytexDigital.RGSM.Panel.Server.Controllers
 {
@@ -32,19 +34,60 @@ namespace BytexDigital.RGSM.Panel.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetAssignedGroupsAsync()
+        public async Task<ActionResult<List<GroupDto>>> GetAssignedGroupsAsync()
         {
-            var user = await _accountsService.GetUser(HttpContext.User).FirstOrDefaultAsync();
-            var groups = await _accountsService.GetAssignedGroups(user).ToListAsync();
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            return Ok(_mapper.Map<List<GroupDto>>(groups));
+            return _mapper.Map<List<GroupDto>>((await _mediator.Send(new GetUsersGroupsQuery { ApplicationUserId = userId })).Groups);
+        }
+
+        [HttpGet]
+        [Authorize(Policy = "Admin")]
+        public async Task<ActionResult<List<GroupDto>>> GetApplicationUsersGroupsAsync([FromQuery, Required] string applicationUserId)
+        {
+            return _mapper.Map<List<GroupDto>>((await _mediator.Send(new GetUsersGroupsQuery { ApplicationUserId = applicationUserId })).Groups);
         }
 
         [HttpGet]
         [Authorize(Policy = "Admin")]
         public async Task<ActionResult<List<ApplicationUserDto>>> GetApplicationUsersAsync()
         {
-            return _mapper.Map<List<ApplicationUserDto>>(await _mediator.Send(new GetApplicationUsersQuery()));
+            return _mapper.Map<List<ApplicationUserDto>>((await _mediator.Send(new GetUsersQuery())).ApplicationUsers);
+        }
+
+        [HttpPost]
+        [Authorize(Policy = "Admin")]
+        public async Task<ActionResult<ApplicationUserDto>> CreateApplicationUserAsync([FromBody, Required] CreateUserModel createUserModel)
+        {
+            return _mapper.Map<ApplicationUserDto>((await _mediator.Send(new CreateUserCmd
+            {
+                UserName = createUserModel.UserName,
+                Password = createUserModel.Password,
+                PasswordRepeat = createUserModel.PasswordRepeat
+            })).ApplicationUser);
+        }
+
+        [HttpPost]
+        [Authorize(Policy = "Admin")]
+        public async Task<ActionResult> DeleteApplicationUserAsync([FromBody] ApplicationUserDto applicationUserDto)
+        {
+            await _mediator.Send(new DeleteUserCmd { Id = applicationUserDto.Id });
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [Authorize(Policy = "Admin")]
+        public async Task<ActionResult> UpdateApplicationUserGroupAffinityAsync([FromBody] ApplicationUserGroupDto applicationUserGroupDto, [FromQuery, Required] bool isInGroup)
+        {
+            await _mediator.Send(new UpdateUserGroupAffinityCmd
+            {
+                ApplicationUserId = applicationUserGroupDto.ApplicationUserId,
+                GroupId = applicationUserGroupDto.GroupId,
+                IsInGroup = isInGroup
+            });
+
+            return Ok();
         }
     }
 }

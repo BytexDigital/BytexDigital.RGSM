@@ -14,10 +14,10 @@ namespace BytexDigital.RGSM.Panel.Client.Common.Core.Commands
     {
         public class Handler : IRequestHandler<GetAllServersQuery, Response>
         {
-            private readonly NodesService _nodesService;
+            private readonly NodeService _nodesService;
             private readonly ServerService _serversService;
 
-            public Handler(NodesService nodesService, ServerService serversService)
+            public Handler(NodeService nodesService, ServerService serversService)
             {
                 _nodesService = nodesService;
                 _serversService = serversService;

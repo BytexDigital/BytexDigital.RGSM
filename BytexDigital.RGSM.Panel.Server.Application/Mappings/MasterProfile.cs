@@ -16,7 +16,7 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Mappings
             CreateMap<Group, GroupDto>().ReverseMap();
             CreateMap<Node, NodeDto>().ReverseMap();
             CreateMap<ApiKey, ApiKeyDto>().ReverseMap();
-            CreateMap<ApiKeyDetails, ApiKeyDetailsDto>().ReverseMap();
+            CreateMap<ApiKeyDetails, ApiKeyDetailsModel>().ReverseMap();
         }
     }
 }

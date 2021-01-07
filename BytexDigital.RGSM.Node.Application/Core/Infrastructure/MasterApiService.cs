@@ -38,7 +38,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Infrastructure
             return await response.Content.ReadFromJsonAsync<List<ApplicationUserGroupDto>>();
         }
 
-        public async Task<ApiKeyDetailsDto> GetApiKeyValidityAsync(string key)
+        public async Task<ApiKeyDetailsModel> GetApiKeyValidityAsync(string key)
         {
             var response = await _httpClient.GetAsync($"/API/Authentication/GetApiKeyValidity?key={key}");
 
@@ -52,7 +52,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Infrastructure
                 response.EnsureSuccessStatusCode();
             }
 
-            return await response.Content.ReadFromJsonAsync<ApiKeyDetailsDto>();
+            return await response.Content.ReadFromJsonAsync<ApiKeyDetailsModel>();
         }
     }
 }

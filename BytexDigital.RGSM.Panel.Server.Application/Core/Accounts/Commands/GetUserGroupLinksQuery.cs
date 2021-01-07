@@ -12,11 +12,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BytexDigital.RGSM.Panel.Server.Application.Core.Accounts.Commands
 {
-    public class GetUserGroupsQuery : IRequest<GetUserGroupsQuery.Response>
+    public class GetUserGroupLinksQuery : IRequest<GetUserGroupLinksQuery.Response>
     {
-        public string UserId { get; set; }
+        public string ApplicationUserId { get; set; }
 
-        public class Handler : IRequestHandler<GetUserGroupsQuery, Response>
+        public class Handler : IRequestHandler<GetUserGroupLinksQuery, Response>
         {
             private readonly AccountService _accountsService;
 
@@ -25,12 +25,12 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Accounts.Commands
                 _accountsService = accountsService;
             }
 
-            public async Task<Response> Handle(GetUserGroupsQuery request, CancellationToken cancellationToken)
+            public async Task<Response> Handle(GetUserGroupLinksQuery request, CancellationToken cancellationToken)
             {
-                var user = await _accountsService.GetUser(request.UserId).FirstOrDefaultAsync();
+                var user = await _accountsService.GetUser(request.ApplicationUserId).FirstOrDefaultAsync();
 
                 if (user == null) throw new ServiceException()
-                        .AddServiceError().WithField(nameof(request.UserId)).WithDescription("User not found.");
+                        .AddServiceError().WithField(nameof(request.ApplicationUserId)).WithDescription("User not found.");
 
                 return new Response
                 {

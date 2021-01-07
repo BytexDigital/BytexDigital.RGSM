@@ -46,7 +46,7 @@ namespace BytexDigital.RGSM.Panel.Client
                 .AddScoped<AccountService>()
                 .AddScoped<PermissionService>()
                 .AddScoped<NodeRegisterService>()
-                .AddScoped<NodesService>()
+                .AddScoped<NodeService>()
                 .AddScoped<GroupService>()
                 .AddScoped<ServerService>()
                 .AddScoped<ToastService>();

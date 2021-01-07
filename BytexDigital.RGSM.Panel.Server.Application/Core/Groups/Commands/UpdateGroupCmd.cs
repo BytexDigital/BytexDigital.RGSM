@@ -30,7 +30,7 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Groups.Commands
 
             public async Task<Unit> Handle(UpdateGroupCmd request, CancellationToken cancellationToken)
             {
-                var group = await _groupsService.GetGroup(request.Id).FirstOrDefaultAsync();
+                var group = await _groupsService.GetGroupById(request.Id).FirstOrDefaultAsync();
 
                 if (group == null) throw new ServiceException().AddServiceError().WithField(nameof(request.Id)).WithDescription("Group does not exist.");
 

@@ -9,11 +9,11 @@ using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace BytexDigital.RGSM.Panel.Server.Application.Core.Commands
+namespace BytexDigital.RGSM.Panel.Server.Application.Core.Accounts.Commands
 {
-    public class GetApplicationUsersQuery : IRequest<GetApplicationUsersQuery.Response>
+    public class GetUsersQuery : IRequest<GetUsersQuery.Response>
     {
-        public class Handler : IRequestHandler<GetApplicationUsersQuery, Response>
+        public class Handler : IRequestHandler<GetUsersQuery, Response>
         {
             private readonly AccountService _accountService;
 
@@ -22,7 +22,7 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Commands
                 _accountService = accountService;
             }
 
-            public async Task<Response> Handle(GetApplicationUsersQuery request, CancellationToken cancellationToken)
+            public async Task<Response> Handle(GetUsersQuery request, CancellationToken cancellationToken)
             {
                 return new Response
                 {

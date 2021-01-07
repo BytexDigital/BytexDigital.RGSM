@@ -25,7 +25,7 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Groups.Commands
 
             public async Task<Response> Handle(GetGroupQuery request, CancellationToken cancellationToken)
             {
-                var group = await _groupsService.GetGroup(request.Id).FirstOrDefaultAsync();
+                var group = await _groupsService.GetGroupById(request.Id).FirstOrDefaultAsync();
 
                 if (group == null) throw ServiceException.ServiceError("Group not found.").WithField(nameof(request.Id));
 

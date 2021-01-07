@@ -23,7 +23,7 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Nodes._Components
         public NodeRegisterService NodeRegisterService { get; set; }
 
         [Inject]
-        public NodesService NodeService { get; set; }
+        public NodeService NodeService { get; set; }
 
         public RegisterNodeModel ViewModel { get; set; }
         public ManualFormValidator<RegisterNodeModel> Validator { get; set; }

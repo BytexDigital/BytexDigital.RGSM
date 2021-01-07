@@ -20,7 +20,7 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Groups
             return _applicationDbContext.Groups;
         }
 
-        public IQueryable<Group> GetGroup(string id)
+        public IQueryable<Group> GetGroupById(string id)
         {
             return _applicationDbContext.Groups.Where(x => x.Id == id);
         }
@@ -40,7 +40,7 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Groups
 
             await _applicationDbContext.SaveChangesAsync();
 
-            return GetGroup(newGroup.Id);
+            return GetGroupById(newGroup.Id);
         }
 
         public async Task UpdateGroupAsync(Group group, Group updatedFields)

@@ -26,15 +26,7 @@ namespace BytexDigital.RGSM.Panel.Client.Common.Core
         {
             var response = await _httpClient.PostAsJsonAsync("/API/Groups/CreateGroup", groupDto);
 
-            if (!response.IsSuccessStatusCode)
-            {
-                if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
-                {
-                    throw await response.Content.ReadFromJsonAsync<ApiProblemDetails>();
-                }
-
-                response.EnsureSuccessStatusCode();
-            }
+            await response.ThrowIfInvalidAsync();
 
             return await response.Content.ReadFromJsonAsync<GroupDto>();
         }
@@ -43,30 +35,14 @@ namespace BytexDigital.RGSM.Panel.Client.Common.Core
         {
             var response = await _httpClient.PostAsJsonAsync("/API/Groups/DeleteGroup", groupDto);
 
-            if (!response.IsSuccessStatusCode)
-            {
-                if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
-                {
-                    throw await response.Content.ReadFromJsonAsync<ApiProblemDetails>();
-                }
-
-                response.EnsureSuccessStatusCode();
-            }
+            await response.ThrowIfInvalidAsync();
         }
 
         public async Task<GroupDto> GetGroupAsync(string groupId)
         {
             var response = await _httpClient.GetAsync($"/API/Groups/GetGroup/{groupId}");
 
-            if (!response.IsSuccessStatusCode)
-            {
-                if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
-                {
-                    throw await response.Content.ReadFromJsonAsync<ApiProblemDetails>();
-                }
-
-                response.EnsureSuccessStatusCode();
-            }
+            await response.ThrowIfInvalidAsync();
 
             return await response.Content.ReadFromJsonAsync<GroupDto>();
         }
@@ -75,15 +51,7 @@ namespace BytexDigital.RGSM.Panel.Client.Common.Core
         {
             var response = await _httpClient.PostAsJsonAsync($"/API/Groups/UpdateGroup", groupDto);
 
-            if (!response.IsSuccessStatusCode)
-            {
-                if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
-                {
-                    throw await response.Content.ReadFromJsonAsync<ApiProblemDetails>();
-                }
-
-                response.EnsureSuccessStatusCode();
-            }
+            await response.ThrowIfInvalidAsync();
         }
     }
 }

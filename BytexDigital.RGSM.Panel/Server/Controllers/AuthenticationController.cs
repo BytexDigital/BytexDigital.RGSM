@@ -25,9 +25,9 @@ namespace BytexDigital.RGSM.Panel.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ApiKeyDetailsDto>> GetApiKeyValidityAsync([FromQuery] string key)
+        public async Task<ActionResult<ApiKeyDetailsModel>> GetApiKeyValidityAsync([FromQuery] string key)
         {
-            return _mapper.Map<ApiKeyDetailsDto>((await _mediator.Send(new GetApiKeyValidityQuery { KeyValue = key })).ApiKeyDetails);
+            return _mapper.Map<ApiKeyDetailsModel>((await _mediator.Send(new GetApiKeyValidityQuery { KeyValue = key })).ApiKeyDetails);
         }
     }
 }

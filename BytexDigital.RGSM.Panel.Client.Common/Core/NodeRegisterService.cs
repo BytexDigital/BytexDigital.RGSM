@@ -61,36 +61,16 @@ namespace BytexDigital.RGSM.Panel.Client.Common.Core
         {
             var response = await _httpClient.PostAsJsonAsync("/API/Nodes/RegisterNode", nodeDto);
 
-            if (response.IsSuccessStatusCode)
-            {
-                return await response.Content.ReadFromJsonAsync<NodeDto>();
-            }
+            await response.ThrowIfInvalidAsync();
 
-            if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
-            {
-                throw await response.Content.ReadFromJsonAsync<ApiProblemDetails>();
-            }
-
-            response.EnsureSuccessStatusCode();
-            throw new System.Exception();
+            return await response.Content.ReadFromJsonAsync<NodeDto>();
         }
 
         public async Task DeleteNodeAsync(NodeDto nodeDto)
         {
             var response = await _httpClient.DeleteAsync($"/API/Nodes/Delete/{nodeDto.Id}");
 
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-
-            if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
-            {
-                throw await response.Content.ReadFromJsonAsync<ApiProblemDetails>();
-            }
-
-            response.EnsureSuccessStatusCode();
-            throw new System.Exception();
+            await response.ThrowIfInvalidAsync();
         }
     }
 }

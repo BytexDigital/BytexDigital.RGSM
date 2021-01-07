@@ -2,7 +2,7 @@
 
 namespace BytexDigital.RGSM.Panel.Server.TransferObjects.Models
 {
-    public class ApiKeyDetailsDto
+    public class ApiKeyDetailsModel
     {
         public bool IsValid { get; set; }
         public NodeDto IssuedToNode { get; set; }

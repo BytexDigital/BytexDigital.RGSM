@@ -8,11 +8,11 @@ using BytexDigital.RGSM.Panel.Server.TransferObjects.Entities;
 
 namespace BytexDigital.RGSM.Panel.Client.Common.Core
 {
-    public class NodesService
+    public class NodeService
     {
         private readonly HttpClient _httpClient;
 
-        public NodesService(HttpClient httpClient)
+        public NodeService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
@@ -42,15 +42,7 @@ namespace BytexDigital.RGSM.Panel.Client.Common.Core
         {
             var response = await _httpClient.GetAsync("/API/Nodes/GetNodes");
 
-            if (!response.IsSuccessStatusCode)
-            {
-                if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
-                {
-                    throw await response.Content.ReadFromJsonAsync<ApiProblemDetails>();
-                }
-
-                response.EnsureSuccessStatusCode();
-            }
+            await response.ThrowIfInvalidAsync();
 
             return await response.Content.ReadFromJsonAsync<List<NodeDto>>();
         }
