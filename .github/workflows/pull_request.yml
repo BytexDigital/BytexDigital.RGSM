@@ -1,0 +1,20 @@
+name: Build and test on pull request to development
+on:
+  pull_request:
+    branches: [ development ]
+
+jobs:
+  heroku:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+      
+    - name: Add required nuget feeds
+      run: |
+        dotnet nuget add source https://nuget.bytex.digital/v3/index.json
+        dotnet nuget list source
+
+    - name: Run tests
+      run: dotnet test
