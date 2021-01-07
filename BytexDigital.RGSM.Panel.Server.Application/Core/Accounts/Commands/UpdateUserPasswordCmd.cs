@@ -68,6 +68,8 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Accounts.Commands
 
                     throw exceptionBuilder;
                 }
+
+                return Unit.Value;
             }
         }
 
