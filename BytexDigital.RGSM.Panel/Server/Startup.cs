@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using AutoMapper;
@@ -8,6 +9,7 @@ using BytexDigital.ErrorHandling.AspNetCore.Server.Extensions;
 using BytexDigital.ErrorHandling.MediatR;
 using BytexDigital.RGSM.Panel.Server.Application.Authentication;
 using BytexDigital.RGSM.Panel.Server.Application.Authorization.Requirements;
+using BytexDigital.RGSM.Panel.Server.Application.Behaviors;
 using BytexDigital.RGSM.Panel.Server.Application.Core;
 using BytexDigital.RGSM.Panel.Server.Application.Core.Commands.Authentication;
 using BytexDigital.RGSM.Panel.Server.Application.Core.Nodes.Commands;
@@ -62,11 +64,14 @@ namespace BytexDigital.RGSM.Panel.Server
             services.AddMediatR(typeof(LoginCmd).Assembly);
 
             services
-                //.AddScoped(typeof(IPipelineBehavior<,>), typeof(DbTransactionBehavior<,>))
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(DbTransactionBehavior<,>))
                 .AddScoped(typeof(IPipelineBehavior<,>), typeof(FluentValidationPipelineBehavior<,>));
 
-            services.AddScoped<IAuthorizationHandler, SystemAdministratorRequirement.Handler>();
-            services.AddScoped<IAuthorizationHandler, SystemAdministratorOrAppRequirement.Handler>();
+            // Authorization
+            foreach (var handlerType in typeof(SystemAdministratorRequirement.Handler).Assembly.GetTypes().Where(x => x.IsAssignableTo(typeof(IAuthorizationHandler))))
+            {
+                services.AddScoped(typeof(IAuthorizationHandler), handlerType);
+            }
 
             services.AddAutoMapper(typeof(MasterProfile).Assembly);
 
@@ -212,7 +217,7 @@ namespace BytexDigital.RGSM.Panel.Server
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("Admin", o => o.AddRequirements(new SystemAdministratorOrAppRequirement()));
+                options.AddPolicy("Admin", o => o.AddRequirements(new SystemAdministratorRequirement()));
             });
 
             services
