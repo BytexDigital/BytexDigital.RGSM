@@ -34,5 +34,10 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Accounts
         {
             return _storage.ApplicationUserGroups.Where(x => x.ApplicationUserId == applicationUser.Id);
         }
+
+        public IQueryable<ApplicationUser> GetApplicationUsers()
+        {
+            return _storage.Users;
+        }
     }
 }

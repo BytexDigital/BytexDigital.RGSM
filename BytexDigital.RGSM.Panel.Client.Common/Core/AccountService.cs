@@ -26,7 +26,7 @@ namespace BytexDigital.RGSM.Panel.Client.Common.Core
 
         public async Task<List<ApplicationUserDto>> GetApplicationUsersAsync()
         {
-            return await _httpClient
+            return await _httpClient.GetFromJsonAsync<List<ApplicationUserDto>>("/API/Accounts/GetApplicationUsers");
         }
     }
 }

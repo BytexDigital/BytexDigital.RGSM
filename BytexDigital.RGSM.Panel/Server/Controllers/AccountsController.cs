@@ -41,6 +41,7 @@ namespace BytexDigital.RGSM.Panel.Server.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "Admin")]
         public async Task<ActionResult<List<ApplicationUserDto>>> GetApplicationUsersAsync()
         {
             return _mapper.Map<List<ApplicationUserDto>>(await _mediator.Send(new GetApplicationUsersQuery()));
