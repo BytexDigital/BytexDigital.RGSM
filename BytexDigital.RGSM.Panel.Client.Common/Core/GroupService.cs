@@ -41,7 +41,7 @@ namespace BytexDigital.RGSM.Panel.Client.Common.Core
 
         public async Task DeleteGroupAsync(GroupDto groupDto)
         {
-            var response = await _httpClient.PostAsJsonAsync("/API/Groups/CreateGroup", groupDto);
+            var response = await _httpClient.PostAsJsonAsync("/API/Groups/DeleteGroup", groupDto);
 
             if (!response.IsSuccessStatusCode)
             {

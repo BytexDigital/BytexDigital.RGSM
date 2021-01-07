@@ -114,7 +114,7 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Groups
 
         public async Task DeleteGroupAsync()
         {
-            var modalRef = ModalService.ShowConfirmation("Are you sure that you want to delete this gtoup?");
+            var modalRef = ModalService.ShowConfirmation("Are you sure that you want to delete this group?");
             var result = await modalRef.Result;
 
             if (result.Cancelled) return;
@@ -123,7 +123,7 @@ namespace BytexDigital.RGSM.Panel.Client.Pages.Settings.Groups
 
             if (deleteResult.Succeeded)
             {
-                Navigation.NavigateTo("/settings/nodes");
+                Navigation.NavigateTo("/settings/groups");
             }
             else
             {
