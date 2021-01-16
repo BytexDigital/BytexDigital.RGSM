@@ -1,1 +1,36 @@
-﻿@page "/settings/accounts" 
+﻿@page "/settings/accounts"
+
+@if (ApplicationUsers == null)
+{
+    <Spinner class="mt-5"></Spinner>
+}
+else
+{
+    <h2 class="mb-0"><span class="text-primary">Accounts</span></h2>
+
+    <div class="table-responsive mt-3">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in ApplicationUsers.OrderBy(x => x.UserName))
+                {
+                    <tr>
+                        <th>
+                            <p class="m-0">
+                                <strong>@user.UserName</strong><br />
+                                <small class="text-muted">@user.Id</small>
+                            </p>
+                        </th>
+                        <td>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
