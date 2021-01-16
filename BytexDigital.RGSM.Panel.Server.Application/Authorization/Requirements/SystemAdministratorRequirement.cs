@@ -24,6 +24,12 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Authorization.Requirements
 
             protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, SystemAdministratorRequirement requirement)
             {
+                if (context.User.Claims.Any(x => x.Type == "scope" && x.Value == "rgsm.app"))
+                {
+                    context.Succeed(requirement);
+                    return;
+                }
+
                 var user = await _accountsService.GetUser(context.User).FirstAsync();
 
                 if (user.Groups.Any(x => x.Group.Name == GroupsConstants.DEFAULT_SYSTEM_ADMINISTRATOR_GROUP_NAME))
