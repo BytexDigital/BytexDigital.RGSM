@@ -52,7 +52,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Features.BattlEye
                 IsVerified = x.IsVerified,
                 Name = x.Name,
                 Ping = x.Ping,
-                RemoteEndpoint = x.RemoteEndpoint
+                RemoteEndpoint = x.RemoteEndpoint.ToString()
             }).ToList() ?? new List<BeRconPlayer>();
         }
 

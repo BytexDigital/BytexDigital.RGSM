@@ -5,7 +5,7 @@ namespace BytexDigital.RGSM.Node.Domain.Models.BattlEye
     public class BeRconPlayer
     {
         public int Id { get; set; }
-        public IPEndPoint RemoteEndpoint { get; set; }
+        public string RemoteEndpoint { get; set; }
         public int Ping { get; set; }
         public string Guid { get; set; }
         public string Name { get; set; }
