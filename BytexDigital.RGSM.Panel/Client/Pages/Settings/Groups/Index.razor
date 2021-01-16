@@ -1,7 +1,12 @@
 ﻿@page "/settings/groups"
-@inherits Settings._Components.SettingsComponentBase 
+@inherits Settings._Components.SettingsComponentBase
 
-<h2 class="mb-5">User Groups</h2>
+<div class="mb-5">
+    <h2 class="text-primary">User Groups</h2>
+    <p class="text-secondary">
+        Groups are used to associate users with permissions for specific servers. Changes are instantly applied.
+    </p>
+</div>
 
 @if (Groups == null)
 {

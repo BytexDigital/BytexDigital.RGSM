@@ -1,13 +1,18 @@
 ﻿@page "/settings/accounts"
 
+<div class="mb-5">
+    <h2 class="text-primary">Accounts</h2>
+    <p class="text-secondary">
+        Create edit user accounts and assign them permissions.
+    </p>
+</div>
+
 @if (ApplicationUsers == null)
 {
     <Spinner class="mt-5"></Spinner>
 }
 else
 {
-    <h2 class="mb-0"><span class="text-primary">Accounts</span></h2>
-
     <div class="table-responsive mt-3">
         <table class="table">
             <thead>
@@ -27,6 +32,9 @@ else
                             </p>
                         </th>
                         <td>
+                            <div class="d-flex justify-content-end">
+                                <button role="button" class="btn btn-ghost-primary btn-sm"><i class="fas fa-pen mr-2"></i> Edit</button>
+                            </div>
                         </td>
                     </tr>
                 }
