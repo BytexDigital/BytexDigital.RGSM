@@ -34,7 +34,7 @@ namespace BytexDigital.RGSM.Panel.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<GroupDto>>> GetAssignedGroupsAsync()
+        public async Task<ActionResult<List<GroupDto>>> GetSessionApplicationUsersGroupsAsync()
         {
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
