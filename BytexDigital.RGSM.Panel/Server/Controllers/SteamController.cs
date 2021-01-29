@@ -28,9 +28,9 @@ namespace BytexDigital.RGSM.Panel.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<SteamCredentialDto>>> GetCredentialsAsync()
+        public async Task<ActionResult<List<SteamLoginDto>>> GetLoginsAsync()
         {
-            return _mapper.Map<List<SteamCredentialDto>>((await _mediator.Send(new GetSteamCredentialsQuery())).Credentials);
+            return _mapper.Map<List<SteamLoginDto>>((await _mediator.Send(new GetSteamLoginsQuery())).Credentials);
         }
     }
 }

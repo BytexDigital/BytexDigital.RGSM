@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BytexDigital.RGSM.Panel.Server.Domain.Entities
 {
-    public class SteamCredential : Entity
+    public class SteamLogin : Entity
     {
         [Required]
         public string Username { get; set; }
@@ -15,6 +15,8 @@ namespace BytexDigital.RGSM.Panel.Server.Domain.Entities
 
         public string Sentry { get; set; }
 
-        public virtual ICollection<SteamCredentialSupportedApp> SteamCredentialSupportedApps { get; set; }
+        public string WebApiKey { get; set; }
+
+        public virtual ICollection<SteamLoginSupportedApp> SteamLoginSupportedApps { get; set; }
     }
 }

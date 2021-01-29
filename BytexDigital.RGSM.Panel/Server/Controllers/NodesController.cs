@@ -13,7 +13,6 @@ using MediatR;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BytexDigital.RGSM.Panel.Server.Controllers
 {
@@ -61,7 +60,7 @@ namespace BytexDigital.RGSM.Panel.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<List<NodeDto>>> GetNodesAsync()
         {
-            return _mapper.Map<List<NodeDto>>(await _nodesService.GetNodes().ToListAsync());
+            return _mapper.Map<List<NodeDto>>((await _mediator.Send(new GetAllNodesQuery())).Nodes);
         }
 
         [HttpGet("{nodeId}")]

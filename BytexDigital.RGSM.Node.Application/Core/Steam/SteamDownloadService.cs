@@ -32,8 +32,8 @@ namespace BytexDigital.RGSM.Node.Application.Core.Steam
         private readonly ConcurrentQueue<UpdateItem> _downloadQueue;
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly HttpClient _httpClient;
-        private List<SteamCredentialDto> _steamCredentials;
-        private ConcurrentDictionary<string, (SteamCredentialDto Credentials, SteamClient Client, SteamContentClient ContentClient)> _steamClients;
+        private List<SteamLoginDto> _steamCredentials;
+        private ConcurrentDictionary<string, (SteamLoginDto Credentials, SteamClient Client, SteamContentClient ContentClient)> _steamClients;
         private ConcurrentDictionary<string, DateTimeOffset> _rateLimitedAccounts;
         private ConcurrentBag<string> _invalidLoginKeys;
         private Task _workTask;
@@ -45,7 +45,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Steam
             _clientsLock = new AsyncLock();
             _downloadQueue = new ConcurrentQueue<UpdateItem>();
             _invalidLoginKeys = new ConcurrentBag<string>();
-            _steamClients = new ConcurrentDictionary<string, (SteamCredentialDto Credentials, SteamClient Client, SteamContentClient ContentClient)>();
+            _steamClients = new ConcurrentDictionary<string, (SteamLoginDto Credentials, SteamClient Client, SteamContentClient ContentClient)>();
             _rateLimitedAccounts = new ConcurrentDictionary<string, DateTimeOffset>();
             _httpClient = httpClient;
         }
@@ -57,11 +57,11 @@ namespace BytexDigital.RGSM.Node.Application.Core.Steam
 
         public async Task RefreshCredentialsAsync()
         {
-            var response = await _httpClient.GetAsync("API/Steam/GetCredentials");
+            var response = await _httpClient.GetAsync("API/Steam/GetLogins");
 
             var str = await response.Content.ReadAsStringAsync();
 
-            _steamCredentials = await _httpClient.GetFromJsonAsync<List<SteamCredentialDto>>("API/Steam/GetCredentials");
+            _steamCredentials = await _httpClient.GetFromJsonAsync<List<SteamLoginDto>>("API/Steam/GetLogins");
         }
 
         public void Dispose()
@@ -148,7 +148,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Steam
 
                 try
                 {
-                    (SteamCredentialDto credentials, SteamClient client, SteamContentClient contentClient)
+                    (SteamLoginDto credentials, SteamClient client, SteamContentClient contentClient)
                         = await GetSteamClientAsync(item.AppId, item.UseAnonymousUser);
 
                     item.UpdateState.State = UpdateState.Status.Processing;
@@ -187,7 +187,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Steam
             }
         }
 
-        private async Task<(SteamCredentialDto Credentials, SteamClient Client, SteamContentClient ContentClient)>
+        private async Task<(SteamLoginDto Credentials, SteamClient Client, SteamContentClient ContentClient)>
             GetSteamClientAsync(AppId appId, bool useAnonymous)
         {
             using (var lockRef = await _clientsLock.LockAsync())
@@ -207,7 +207,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Steam
                     // Determine the Steam user we need to use to download this item
                     var usernameQuery = _steamCredentials
                         // Find credentials that support this appid
-                        .Where(x => x.SteamCredentialSupportedApps.Any(app => app.AppId == appId))
+                        .Where(x => x.SteamLoginSupportedApps.Any(app => app.AppId == appId))
                         // Find credentials that have not been rate limited recently
                         .Where(x => !_rateLimitedAccounts.ContainsKey(x.Username))
                         // Find crednetials that have not been marked as broken
@@ -228,11 +228,11 @@ namespace BytexDigital.RGSM.Node.Application.Core.Steam
 
                 if (!hadEntry || steamInfo.Client.IsFaulted)
                 {
-                    SteamCredentialDto credentials = null;
+                    SteamLoginDto credentials = null;
 
                     if (usernameToUse == "anonymous")
                     {
-                        credentials = new SteamCredentialDto { Username = "anonymous" };
+                        credentials = new SteamLoginDto { Username = "anonymous" };
                     }
                     else
                     {
@@ -338,7 +338,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Steam
         }
 
         private async Task<(SteamClient client, SteamContentClient contentClient)> CreateSteamClientAsync(
-            SteamCredentialDto steamCredentials, CancellationToken cancellationToken = default)
+            SteamLoginDto steamCredentials, CancellationToken cancellationToken = default)
         {
             SteamClient client = default;
 

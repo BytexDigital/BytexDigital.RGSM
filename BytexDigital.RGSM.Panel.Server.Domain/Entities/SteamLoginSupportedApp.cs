@@ -2,7 +2,7 @@
 
 namespace BytexDigital.RGSM.Panel.Server.Domain.Entities
 {
-    public class SteamCredentialSupportedApp : Entity
+    public class SteamLoginSupportedApp : Entity
     {
         [Required]
         public string SteamCredentialId { get; set; }
