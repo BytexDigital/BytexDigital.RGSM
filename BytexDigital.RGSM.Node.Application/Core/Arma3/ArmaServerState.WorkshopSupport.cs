@@ -76,8 +76,9 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
                         if (response.UpdateState.FailureException != default) return;
 
                         // Activate the keys from this downloaded mod and deactivate old keys
-                        await ModKeyManager.DeactivateKeysAsync(mod.Id, response.UpdateState.CancellationToken.Token);
-                        await ModKeyManager.ActivateKeysAsync(mod.Id, mod.Directory, response.UpdateState.CancellationToken.Token);
+                        // -- MOVED TO WHEN THE SERVER STARTS
+                        //await ModKeyManager.DeactivateKeysAsync(mod.Id, response.UpdateState.CancellationToken.Token);
+                        //await ModKeyManager.ActivateKeysAsync(mod.Id, mod.Directory, response.UpdateState.CancellationToken.Token);
                     });
 
                     modTasks.Add(modTask);

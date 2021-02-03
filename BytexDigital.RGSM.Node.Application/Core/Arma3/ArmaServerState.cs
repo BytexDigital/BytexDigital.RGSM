@@ -12,6 +12,8 @@ using BytexDigital.RGSM.Node.Application.Core.Features.ServerLogs;
 using BytexDigital.RGSM.Node.Application.Core.Generic;
 using BytexDigital.RGSM.Node.Application.Core.Steam;
 using BytexDigital.RGSM.Node.Domain.Models.Arma;
+using BytexDigital.RGSM.Node.Domain.Models.Workshop;
+using BytexDigital.RGSM.Shared;
 using BytexDigital.Steam.Core.Structs;
 
 using MediatR;
@@ -90,7 +92,8 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
         {
             await ProcessMonitor.ConfigureAsync(BaseDirectory, Path.Combine(BaseDirectory, await GetExecutableFileNameAsync()));
             await RconMonitor.ConfigureAsync(Settings.RconIp, Settings.RconPort, Settings.RconPassword);
-            await ModKeyManager.ConfigureAsync(Path.Combine(BaseDirectory, "keys"), BaseDirectory);
+            await ModKeyManager.ConfigureAsync();
+            await ModKeyManager.SynchronizeAllAsync(this);
             await WriteBattlEyeConfigAsync();
         }
 
@@ -204,6 +207,47 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
         public Task<string> GetExecutableFileNameAsync(CancellationToken cancellationToken = default)
         {
             return Task.FromResult(Settings.ExecutableFileName ?? "arma3server_x64.exe");
+        }
+
+        public async Task<List<(WorkshopMod WorkshopMod, string Path, bool LoadOnlyOnServer)>> GetModsAsync(CancellationToken cancellationToken = default)
+        {
+            List<(WorkshopMod, string, bool)> mods = new List<(WorkshopMod, string, bool)>();
+
+            var workshopMods = Settings.WorkshopMods;
+
+            foreach (var workshopMod in workshopMods)
+            {
+                if (!workshopMod.Enabled) continue;
+
+                mods.Add((workshopMod, workshopMod.Directory, workshopMod.Metadata != null & workshopMod.Metadata.ContainsKey("server")));
+            }
+
+            // Merge with unmanaged mods
+            var customArguments = await ArgumentsHelper.GetArgumentsListAsync(Settings.AdditionalArguments, cancellationToken);
+            var modArguments = customArguments.FirstOrDefault(x => x.StartsWith("-mod="));
+            var serverModArguments = customArguments.FirstOrDefault(x => x.ToLower().StartsWith("-servermod="));
+
+            if (!string.IsNullOrEmpty(modArguments))
+            {
+                var paths = modArguments.Substring(5).Split(";", System.StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (var path in paths)
+                {
+                    mods.Add((null, path, false));
+                }
+            }
+
+            if (!string.IsNullOrEmpty(serverModArguments))
+            {
+                var paths = serverModArguments.Substring(5).Split(";", System.StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (var path in paths)
+                {
+                    mods.Add((null, path, true));
+                }
+            }
+
+            return mods;
         }
 
         public async ValueTask DisposeAsync()

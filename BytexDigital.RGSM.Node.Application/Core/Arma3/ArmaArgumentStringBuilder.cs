@@ -40,7 +40,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
             arguments.Add($"-profiles={await _armaServerState.GetProfilesPathAsync(cancellationToken)}");
 
             // Get mods that should be loaded as -mod
-            var mods = (await GetModPathsAsync(cancellationToken));
+            var mods = (await _armaServerState.GetModsAsync(cancellationToken));
             var globalMods = mods.Where(x => !x.LoadOnlyOnServer).ToList();
 
             arguments.Add($"-mod={string.Join(";", globalMods.Select(x => x.Path))}");
@@ -60,47 +60,6 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
             }
 
             return await Task.FromResult(string.Join(" ", arguments.Select(x => $"\"{x}\"")));
-        }
-
-        public async Task<List<(WorkshopMod WorkshopMod, string Path, bool LoadOnlyOnServer)>> GetModPathsAsync(CancellationToken cancellationToken = default)
-        {
-            List<(WorkshopMod, string, bool)> mods = new List<(WorkshopMod, string, bool)>();
-
-            var workshopMods = _armaServerState.Settings.WorkshopMods;
-
-            foreach (var workshopMod in workshopMods)
-            {
-                if (!workshopMod.Enabled) continue;
-
-                mods.Add((workshopMod, workshopMod.Directory, workshopMod.Metadata != null & workshopMod.Metadata.ContainsKey("server")));
-            }
-
-            // Merge with unmanaged mods
-            var customArguments = await ArgumentsHelper.GetArgumentsListAsync(_armaServerState.Settings.AdditionalArguments, cancellationToken);
-            var modArguments = customArguments.FirstOrDefault(x => x.StartsWith("-mod="));
-            var serverModArguments = customArguments.FirstOrDefault(x => x.ToLower().StartsWith("-servermod="));
-
-            if (!string.IsNullOrEmpty(modArguments))
-            {
-                var paths = modArguments.Substring(5).Split(";", System.StringSplitOptions.RemoveEmptyEntries);
-
-                foreach (var path in paths)
-                {
-                    mods.Add((null, path, false));
-                }
-            }
-
-            if (!string.IsNullOrEmpty(serverModArguments))
-            {
-                var paths = serverModArguments.Substring(5).Split(";", System.StringSplitOptions.RemoveEmptyEntries);
-
-                foreach (var path in paths)
-                {
-                    mods.Add((null, path, true));
-                }
-            }
-
-            return mods;
         }
     }
 }

@@ -1,62 +1,45 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-using BytexDigital.Steam.Core.Structs;
-
 namespace BytexDigital.RGSM.Node.Application.Core.Arma3
 {
-    public class ModsKeyManager
+    public class ModsKeyManager : IAsyncDisposable
     {
         private string _keysDirectory;
         private string _serverDirectory;
 
+        private Options _options;
+        private readonly ArmaServerState _armaServerState;
+
         private string OptionsPath => Path.Combine(_serverDirectory, ".rgsm", "keys.json");
 
-        public Task ConfigureAsync(string keysDirectory, string serverDirectory, CancellationToken cancellationToken = default)
+        public ModsKeyManager(ArmaServerState armaServerState)
         {
-            _keysDirectory = keysDirectory;
-            _serverDirectory = serverDirectory;
-
-            return Task.CompletedTask;
+            _armaServerState = armaServerState;
         }
 
-        public async Task ActivateKeysAsync(string identifier, string directory, CancellationToken cancellationToken = default)
+        public async Task ConfigureAsync(string keysDirectory, string serverDirectory, CancellationToken cancellationToken = default)
         {
-            var keys = Directory.GetFiles(directory, "*.bikey", SearchOption.AllDirectories);
-            var options = await GetOptionsAsync(cancellationToken);
+            _keysDirectory = Path.Combine(_armaServerState.BaseDirectory, "keys");
+            _serverDirectory = _armaServerState.BaseDirectory;
 
-            foreach (var keyPath in keys)
-            {
-                var keyFileName = Path.GetFileName(keyPath);
-                var keyGeneralizedFileName = $"{identifier}_{keyFileName}";
-
-                if (options.IgnoredKeys != null && options.IgnoredKeys.Contains(keyFileName)) continue;
-                if (options.TrackedKeys.Any(x => x.FileName == keyGeneralizedFileName)) continue;
-
-                options.TrackedKeys.Add(new TrackedKey
-                {
-                    FileName = keyGeneralizedFileName,
-                    Identifier = identifier
-                });
-
-                File.Copy(keyPath, Path.Combine(_keysDirectory, keyGeneralizedFileName));
-            }
-
-            await WriteOptionsAsync(options, cancellationToken);
+            _options = await GetOptionsAsync(cancellationToken);
         }
 
-        public async Task DeactivateKeysAsync(string identifier, CancellationToken cancellationToken = default)
+        public async Task SynchronizeAllAsync(CancellationToken cancellationToken = default)
         {
+            var mods = await _armaServerState.GetModsAsync(cancellationToken);
+
+            // Deactivate the keys of all mods
             var options = await GetOptionsAsync(cancellationToken);
 
             foreach (var trackedKey in options.TrackedKeys.ToList())
             {
-                if (trackedKey.Identifier != identifier) continue;
-
                 var keyPath = Path.Combine(_keysDirectory, trackedKey.FileName);
 
                 if (File.Exists(keyPath)) File.Delete(keyPath);
@@ -64,7 +47,50 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
                 options.TrackedKeys.Remove(trackedKey);
             }
 
-            await WriteOptionsAsync(options, cancellationToken);
+            // Add all keys of the mods that are going to be loaded that are NOT only serversided, as these mods do not require their bikeys in the key directory
+            foreach (var mod in mods.Where(x => !x.LoadOnlyOnServer))
+            {
+                string identifier = default;
+
+                if (mod.WorkshopMod != null)
+                {
+                    // Use the workshop ID to keep track of the loaded keys belonging to this mod
+                    identifier = mod.WorkshopMod.Id.ToString();
+                }
+                else
+                {
+                    string idFilePath = Path.Combine(mod.Path, ".rgsm-id");
+
+                    if (!File.Exists(idFilePath))
+                    {
+                        await File.WriteAllTextAsync(idFilePath, Guid.NewGuid().ToString(), cancellationToken);
+                    }
+
+                    identifier = await File.ReadAllTextAsync(idFilePath, cancellationToken);
+                }
+
+                // Find all bikeys
+                var keys = Directory.GetFiles(mod.Path, "*.bikey", SearchOption.AllDirectories);
+
+                // Add all bikeys to the keys directory of the server and add an entry in the Options to track which keys we have loaded so we can remove
+                // them next time to ensure an up-to-date keys directory that doesn't accidentally allow mods we are no longer running on the server!
+                foreach (var keyPath in keys)
+                {
+                    var keyFileName = Path.GetFileName(keyPath);
+                    var keyGeneralizedFileName = $"{identifier}_{keyFileName}";
+
+                    if (options.IgnoredKeys != null && options.IgnoredKeys.Contains(keyFileName)) continue;
+                    if (options.TrackedKeys.Any(x => x.FileName == keyGeneralizedFileName)) continue;
+
+                    options.TrackedKeys.Add(new TrackedKey
+                    {
+                        FileName = keyGeneralizedFileName,
+                        ModIdentifier = identifier
+                    });
+
+                    File.Copy(keyPath, Path.Combine(_keysDirectory, keyGeneralizedFileName));
+                }
+            }
         }
 
         private async Task<Options> GetOptionsAsync(CancellationToken cancellationToken = default)
@@ -88,9 +114,14 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
             }));
         }
 
+        public async ValueTask DisposeAsync()
+        {
+            await WriteOptionsAsync(_options);
+        }
+
         private class TrackedKey
         {
-            public string Identifier { get; set; }
+            public string ModIdentifier { get; set; }
             public string FileName { get; set; }
         }
 
