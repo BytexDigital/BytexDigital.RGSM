@@ -62,7 +62,6 @@ namespace BytexDigital.RGSM.Node
                 .AddScoped<PermissionsService>()
                 .AddScoped<ServerIntegrityService>()
                 .AddScoped<SchedulersService>()
-                .AddScoped<WorkshopManagerService>()
                 .AddSingleton<FileSystemService>()
                 .AddSingleton<SteamDownloadService>()
                 .AddSingleton<ServerStateRegister>()

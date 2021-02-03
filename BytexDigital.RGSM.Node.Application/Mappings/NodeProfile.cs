@@ -26,7 +26,6 @@ namespace BytexDigital.RGSM.Node.Application.Mappings
             CreateMap<KeyValue, KeyValueDto>().ReverseMap();
 
             CreateMap<Server, ServerDto>().ReverseMap();
-            //CreateMap<Arma3Server, Arma3ServerDto>().ReverseMap();
             CreateMap<ServerStatus, ServerStatusDto>().ReverseMap();
             CreateMap<ServerInstallationStatus, ServerInstallationStatusDto>().ReverseMap();
 
@@ -40,7 +39,8 @@ namespace BytexDigital.RGSM.Node.Application.Mappings
             CreateMap<BeRconMessage, BeRconMessageDto>().ReverseMap();
             CreateMap<BeRconStatus, BeRconStatusDto>().ReverseMap();
 
-            CreateMap<WorkshopItem, WorkshopItemDto>().ReverseMap();
+            CreateMap<WorkshopMod, WorkshopModDto>().ReverseMap();
+            CreateMap<WorkshopModState, WorkshopModStateDto>().ReverseMap();
 
             CreateMap<Permission, PermissionDto>().ReverseMap();
             CreateMap<GroupReference, GroupReferenceDto>().ReverseMap();

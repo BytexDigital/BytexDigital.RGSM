@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using BytexDigital.RGSM.Node.Domain.Entities;
-using BytexDigital.RGSM.Node.Domain.Entities.Arma3;
 using BytexDigital.RGSM.Node.Persistence;
 using BytexDigital.RGSM.Shared.Enumerations;
 
@@ -21,7 +20,6 @@ namespace BytexDigital.RGSM.Node.Application.Core.Servers
 
         public IQueryable<Server> GetServers() => _nodeDbContext.Servers;
         public IQueryable<Server> GetServer(string id) => _nodeDbContext.Servers.Where(x => x.Id == id);
-        public IQueryable<Arma3Server> GetArmaServer(string id) => _nodeDbContext.Arma3Server.Where(x => x.Server.Id == id);
         public IQueryable<Permission> GetServerPermissions(Server server)
             => _nodeDbContext.Permissions.Where(x => x.ServerId == server.Id);
 
@@ -44,7 +42,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Servers
             {
                 case ServerType.Arma3:
                 {
-                    await CreateArmaServerAsync(server, displayName);
+                    //await CreateArmaServerAsync(server, displayName);
                 }
                 break;
 
@@ -55,21 +53,21 @@ namespace BytexDigital.RGSM.Node.Application.Core.Servers
             return GetServer(server.Id);
         }
 
-        private async Task CreateArmaServerAsync(Server server, string displayName)
-        {
-            var a3Server = _nodeDbContext.CreateEntity(x => x.Arma3Server);
+        //private async Task CreateArmaServerAsync(Server server, string displayName)
+        //{
+        //    var a3Server = _nodeDbContext.CreateEntity(x => x.Arma3Server);
 
-            a3Server.IsInstalled = false;
-            a3Server.Port = 2302;
+        //    a3Server.IsInstalled = false;
+        //    a3Server.Port = 2302;
 
-            a3Server.RconIp = "0.0.0.0";
-            a3Server.RconPort = a3Server.Port + 10;
-            a3Server.RconPassword = Guid.NewGuid().ToString();
+        //    a3Server.RconIp = "0.0.0.0";
+        //    a3Server.RconPort = a3Server.Port + 10;
+        //    a3Server.RconPassword = Guid.NewGuid().ToString();
 
-            server.Arma3Server = a3Server;
+        //    server.Arma3Server = a3Server;
 
-            await _nodeDbContext.SaveChangesAsync();
-        }
+        //    await _nodeDbContext.SaveChangesAsync();
+        //}
 
         public async Task DeleteServerAsync(Server server, bool deleteAllFiles)
         {

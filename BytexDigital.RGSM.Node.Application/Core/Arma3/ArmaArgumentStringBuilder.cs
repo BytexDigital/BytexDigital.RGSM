@@ -38,12 +38,10 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
         {
             List<(bool, string)> mods = new List<(bool, string)>();
 
-            var workshopMods = await _armaServerState.Mediator.Send(new GetWorkshopModsQuery { ServerId = _armaServerState.Id });
+            var workshopMods = _armaServerState.Settings.WorkshopMods;
 
-            foreach (var workshopMod in workshopMods.TrackedWorkshopMods.Where(x => x.Load))
+            foreach (var workshopMod in workshopMods)
             {
-                var path = await _armaServerState.GetWorkshopModPathAsync(workshopMod, cancellationToken);
-
                 mods.Add((true, workshopMod.Directory));
             }
 

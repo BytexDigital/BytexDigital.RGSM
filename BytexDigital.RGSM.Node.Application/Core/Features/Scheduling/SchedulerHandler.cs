@@ -299,11 +299,11 @@ namespace BytexDigital.RGSM.Node.Application.Core.Features.Scheduling
             {
                 await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
 
-                var workshopItemsResponse = await _mediator.Send(new GetWorkshopItemStatusQuery { Id = schedulerPlan.ServerId }, cancellationToken);
+                var workshopItemsResponse = await _mediator.Send(new GetWorkshopModStatesQuery { Id = schedulerPlan.ServerId }, cancellationToken);
 
-                if (workshopItemsResponse.WorkshopItems.All(x => !x.IsUpdating))
+                if (workshopItemsResponse.WorkshopModStates.All(x => !x.IsUpdating))
                 {
-                    var faultedItems = workshopItemsResponse.WorkshopItems.Where(x => x.UpdateFailureReason != default);
+                    var faultedItems = workshopItemsResponse.WorkshopModStates.Where(x => x.UpdateFailureReason != default);
 
                     var exceptions = new List<Exception>();
 

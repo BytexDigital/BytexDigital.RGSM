@@ -45,7 +45,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Servers.Commands
 
                 if (state is IWorkshopSupport workshopSupport)
                 {
-                    if ((await workshopSupport.GetWorkshopModsAsync(cancellationToken)).Any(x => x.IsUpdating))
+                    if ((await workshopSupport.GetWorkshopModStatesAsync(cancellationToken)).Any(x => x.IsUpdating))
                     {
                         throw ServiceException.ServiceError("Server cannot be deleted because it is updating workshop mods.");
                     }

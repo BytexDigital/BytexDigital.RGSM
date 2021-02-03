@@ -1,13 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
 
-namespace BytexDigital.RGSM.Node.Domain.Entities.Arma3
+namespace BytexDigital.RGSM.Node.TransferObjects.Models.Arma
 {
-    public class Arma3Server : Entity
+    public class ArmaServerDto
     {
-        [Required]
-        public string ServerId { get; set; }
-
-        [Required]
         public bool IsInstalled { get; set; }
 
         public int? AppId { get; set; }
@@ -22,21 +18,16 @@ namespace BytexDigital.RGSM.Node.Domain.Entities.Arma3
 
         public string BattlEyePath { get; set; }
 
-        [Required]
         public string RconIp { get; set; }
 
-        [Required]
         public int RconPort { get; set; }
 
-        [Required]
         public string RconPassword { get; set; }
 
         public string AdditionalArguments { get; set; }
 
-        [Required]
         public int Port { get; set; }
 
-
-        public virtual Server Server { get; set; }
+        public List<uint> Depots { get; set; }
     }
 }

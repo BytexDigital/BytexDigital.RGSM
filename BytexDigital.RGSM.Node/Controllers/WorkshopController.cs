@@ -33,7 +33,7 @@ namespace BytexDigital.RGSM.Node.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddModAsync([FromRoute] string serverId, [FromQuery, Required] ulong publishedFileId)
+        public async Task<ActionResult> AddModAsync([FromRoute] string serverId, [FromBody, Required] WorkshopModDto workshopModDto)
         {
             if (!(await _authorizationService.AuthorizeAsync(HttpContext.User, null, new PermissionRequirement
             {
@@ -44,13 +44,18 @@ namespace BytexDigital.RGSM.Node.Controllers
                 return Unauthorized();
             }
 
-            await _mediator.Send(new AddWorkshopModCmd { Id = serverId, PublishedFileId = publishedFileId });
+            await _mediator.Send(new AddOrUpdateWorkshopModCmd
+            {
+                Id = serverId,
+                PublishedFileId = workshopModDto.Id,
+                Metadata = workshopModDto.Metadata
+            });
 
             return Ok();
         }
 
         [HttpPost]
-        public async Task<ActionResult> RemoveModAsync([FromRoute] string serverId, [FromQuery, Required] ulong publishedFileId)
+        public async Task<ActionResult> RemoveModAsync([FromRoute] string serverId, [FromBody, Required] WorkshopModDto workshopModDto)
         {
             if (!(await _authorizationService.AuthorizeAsync(HttpContext.User, null, new PermissionRequirement
             {
@@ -61,17 +66,17 @@ namespace BytexDigital.RGSM.Node.Controllers
                 return Unauthorized();
             }
 
-            await _mediator.Send(new RemoveWorkshopModCmd { Id = serverId, PublishedFileId = publishedFileId });
+            await _mediator.Send(new RemoveWorkshopModCmd { Id = serverId, PublishedFileId = workshopModDto.Id });
 
             return Ok();
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<WorkshopItemDto>>> GetModsAsync([FromRoute] string serverId)
+        public async Task<ActionResult<List<WorkshopModStateDto>>> GetModsAsync([FromRoute] string serverId)
         {
-            var response = await _mediator.Send(new GetWorkshopItemStatusQuery { Id = serverId });
+            var response = await _mediator.Send(new GetWorkshopModStatesQuery { Id = serverId });
 
-            return _mapper.Map<List<WorkshopItemDto>>(response.WorkshopItems);
+            return _mapper.Map<List<WorkshopModStateDto>>(response.WorkshopModStates);
         }
 
         [HttpPost]
@@ -92,10 +97,10 @@ namespace BytexDigital.RGSM.Node.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> EnableOrDisableLoadOfWorkshopModAsync(
+        public async Task<ActionResult> EnableOrDisableWorkshopModAsync(
             [FromRoute] string serverId,
             [FromQuery, Required] ulong publishedFileId,
-            [FromQuery, Required] bool load)
+            [FromQuery, Required] bool enabled)
         {
             if (!(await _authorizationService.AuthorizeAsync(HttpContext.User, null, new PermissionRequirement
             {
@@ -106,11 +111,11 @@ namespace BytexDigital.RGSM.Node.Controllers
                 return Unauthorized();
             }
 
-            await _mediator.Send(new UpdateWorkshopModLoadStatusCmd
+            await _mediator.Send(new EnableOrDisableWorkshopModCmd
             {
                 ServerId = serverId,
                 PublishedFileId = publishedFileId,
-                Load = load
+                Enabled = enabled
             });
 
             return Ok();
