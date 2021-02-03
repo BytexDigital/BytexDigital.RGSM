@@ -93,7 +93,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
             await ProcessMonitor.ConfigureAsync(BaseDirectory, Path.Combine(BaseDirectory, await GetExecutableFileNameAsync()));
             await RconMonitor.ConfigureAsync(Settings.RconIp, Settings.RconPort, Settings.RconPassword);
             await ModKeyManager.ConfigureAsync();
-            await ModKeyManager.SynchronizeAllAsync(this);
+            await ModKeyManager.SynchronizeAllAsync();
             await WriteBattlEyeConfigAsync();
         }
 
@@ -135,9 +135,9 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
         {
             try
             {
-                ModKeyManager = new ModsKeyManager();
+                ModKeyManager = new ModsKeyManager(this);
 
-                await ModKeyManager.ConfigureAsync(Path.Combine(BaseDirectory, "keys"), BaseDirectory, cancellationToken);
+                await ModKeyManager.ConfigureAsync(cancellationToken);
 
                 Logger.Information("Created and configured mod keys manager.");
             }

@@ -23,7 +23,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
             _armaServerState = armaServerState;
         }
 
-        public async Task ConfigureAsync(string keysDirectory, string serverDirectory, CancellationToken cancellationToken = default)
+        public async Task ConfigureAsync(CancellationToken cancellationToken = default)
         {
             _keysDirectory = Path.Combine(_armaServerState.BaseDirectory, "keys");
             _serverDirectory = _armaServerState.BaseDirectory;
