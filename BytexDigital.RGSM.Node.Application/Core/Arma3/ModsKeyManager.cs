@@ -24,7 +24,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
             return Task.CompletedTask;
         }
 
-        public async Task ActivateKeysAsync(PublishedFileId publishedFileId, string directory, CancellationToken cancellationToken = default)
+        public async Task ActivateKeysAsync(string identifier, string directory, CancellationToken cancellationToken = default)
         {
             var keys = Directory.GetFiles(directory, "*.bikey", SearchOption.AllDirectories);
             var options = await GetOptionsAsync(cancellationToken);
@@ -32,7 +32,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
             foreach (var keyPath in keys)
             {
                 var keyFileName = Path.GetFileName(keyPath);
-                var keyGeneralizedFileName = $"{publishedFileId}_{keyFileName}";
+                var keyGeneralizedFileName = $"{identifier}_{keyFileName}";
 
                 if (options.IgnoredKeys != null && options.IgnoredKeys.Contains(keyFileName)) continue;
                 if (options.TrackedKeys.Any(x => x.FileName == keyGeneralizedFileName)) continue;
@@ -40,7 +40,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
                 options.TrackedKeys.Add(new TrackedKey
                 {
                     FileName = keyGeneralizedFileName,
-                    PublishedFileId = publishedFileId
+                    Identifier = identifier
                 });
 
                 File.Copy(keyPath, Path.Combine(_keysDirectory, keyGeneralizedFileName));
@@ -49,13 +49,13 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
             await WriteOptionsAsync(options, cancellationToken);
         }
 
-        public async Task DeactivateKeysAsync(PublishedFileId publishedFileId, CancellationToken cancellationToken = default)
+        public async Task DeactivateKeysAsync(string identifier, CancellationToken cancellationToken = default)
         {
             var options = await GetOptionsAsync(cancellationToken);
 
             foreach (var trackedKey in options.TrackedKeys.ToList())
             {
-                if (trackedKey.PublishedFileId != publishedFileId) continue;
+                if (trackedKey.Identifier != identifier) continue;
 
                 var keyPath = Path.Combine(_keysDirectory, trackedKey.FileName);
 
@@ -90,7 +90,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
 
         private class TrackedKey
         {
-            public ulong PublishedFileId { get; set; }
+            public string Identifier { get; set; }
             public string FileName { get; set; }
         }
 
