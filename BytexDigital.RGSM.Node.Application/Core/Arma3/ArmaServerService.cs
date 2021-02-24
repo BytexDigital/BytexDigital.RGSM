@@ -63,8 +63,6 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
             armaServer.AppId = appId;
             armaServer.Branch = branch;
             armaServer.ExecutableFileName = executableFileName;
-            armaServer.ProfilesPath = profilesPath;
-            armaServer.BattlEyePath = battlEyePath;
             armaServer.RconIp = rconIp;
             armaServer.RconPort = rconPort;
             armaServer.RconPassword = rconPassword;
