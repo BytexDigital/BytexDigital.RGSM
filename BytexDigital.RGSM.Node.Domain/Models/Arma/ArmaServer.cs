@@ -16,10 +16,6 @@ namespace BytexDigital.RGSM.Node.Domain.Models.Arma
 
         public string ExecutableFileName { get; set; }
 
-        public string ProfilesPath { get; set; }
-
-        public string BattlEyePath { get; set; }
-
         public string RconIp { get; set; }
 
         public int RconPort { get; set; }

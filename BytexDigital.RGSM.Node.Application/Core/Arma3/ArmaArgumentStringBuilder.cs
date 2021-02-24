@@ -36,7 +36,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
             arguments.Add("-server");
             arguments.Add($"-port={_armaServerState.Settings.Port}");
             arguments.Add($"-bepath={await _armaServerState.GetBattlEyePathAsync(cancellationToken)}");
-            arguments.Add($"-config={Path.Combine(".rgsm", "server.cfg")}");
+            arguments.Add($"-config={await _armaServerState.GetServerCfgPathAsync(cancellationToken)}");
             arguments.Add($"-profiles={await _armaServerState.GetProfilesPathAsync(cancellationToken)}");
 
             // Get mods that should be loaded as -mod

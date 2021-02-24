@@ -54,6 +54,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
             await CreateProcessMonitorAsync();
             await CreateRconMonitorAsync();
             await CreateModKeyManagerAsync();
+            await CreateDefaultServerCfgIfNecessaryAsync();
         }
 
         public async Task LoadOrCreateSettingsAsync()
@@ -85,8 +86,18 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
                 RconIp = "0.0.0.0",
                 RconPort = 2302 + 10,
                 RconPassword = Guid.NewGuid().ToString(),
+
                 Depots = new List<uint> { 233781, 233782 }
             };
+        }
+
+        public async Task CreateDefaultServerCfgIfNecessaryAsync()
+        {
+            var path = await GetServerCfgPathAsync();
+
+            if (File.Exists(path)) return;
+
+            // TODO: Create default server.cfg
         }
 
         public async Task SaveSettingsAsync()
@@ -188,26 +199,17 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
 
         public Task<string> GetProfilesPathAsync(CancellationToken cancellationToken = default)
         {
-            var path = Settings.ProfilesPath ?? "profiles";
-
-            if (!Path.IsPathRooted(path))
-            {
-                path = Path.Combine(BaseDirectory, path);
-            }
-
-            return Task.FromResult(path);
+            return Task.FromResult(Path.Combine(BaseDirectory, "profiles"));
         }
 
         public Task<string> GetBattlEyePathAsync(CancellationToken cancellationToken = default)
         {
-            var path = Settings.BattlEyePath ?? "battleye";
+            return Task.FromResult(Path.Combine(BaseDirectory, "battleye"));
+        }
 
-            if (!Path.IsPathRooted(path))
-            {
-                path = Path.Combine(BaseDirectory, path);
-            }
-
-            return Task.FromResult(path);
+        public Task<string> GetServerCfgPathAsync(CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(Path.Combine(BaseDirectory, "server.cfg"));
         }
 
         public Task<string> GetExecutableFileNameAsync(CancellationToken cancellationToken = default)
