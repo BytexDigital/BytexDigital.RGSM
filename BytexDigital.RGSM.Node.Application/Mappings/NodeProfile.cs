@@ -4,6 +4,7 @@ using BytexDigital.RGSM.Node.Domain.Entities;
 using BytexDigital.RGSM.Node.Domain.Entities.Scheduling;
 using BytexDigital.RGSM.Node.Domain.Enumerations;
 using BytexDigital.RGSM.Node.Domain.Models.BattlEye;
+using BytexDigital.RGSM.Node.Domain.Models.Configs;
 using BytexDigital.RGSM.Node.Domain.Models.FileSystem;
 using BytexDigital.RGSM.Node.Domain.Models.Logs;
 using BytexDigital.RGSM.Node.Domain.Models.Status;
@@ -12,6 +13,7 @@ using BytexDigital.RGSM.Node.TransferObjects.Entities;
 using BytexDigital.RGSM.Node.TransferObjects.Entities.Scheduling;
 using BytexDigital.RGSM.Node.TransferObjects.Enumerations;
 using BytexDigital.RGSM.Node.TransferObjects.Models.BattlEye;
+using BytexDigital.RGSM.Node.TransferObjects.Models.Configs;
 using BytexDigital.RGSM.Node.TransferObjects.Models.FileSystem;
 using BytexDigital.RGSM.Node.TransferObjects.Models.ServerLogs;
 using BytexDigital.RGSM.Node.TransferObjects.Models.Status;
@@ -49,6 +51,8 @@ namespace BytexDigital.RGSM.Node.Application.Mappings
             CreateMap<ScheduleGroup, ScheduleGroupDto>().ReverseMap();
             CreateMap<ScheduleAction, ScheduleActionDto>().ReverseMap();
             CreateMap<ScheduleActionType, ScheduleActionTypeDto>().ReverseMap();
+
+            CreateMap<ConfigurationFile, ConfigurationFileDto>().ReverseMap();
         }
     }
 }
