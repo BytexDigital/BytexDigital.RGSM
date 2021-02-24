@@ -30,7 +30,6 @@
 
 	<ItemGroup>
 		<Folder Include="Core\BattlEye\" />
-		<Folder Include="Core\Scheduling\" />
 	</ItemGroup>
 
 </Project>

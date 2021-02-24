@@ -29,6 +29,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Servers
             _mediator = mediator;
         }
 
+
         public async Task InitializeAsync()
         {
             using (var scope = _lifetimeScope.BeginLifetimeScope())
@@ -41,6 +42,22 @@ namespace BytexDigital.RGSM.Node.Application.Core.Servers
                 {
                     await RegisterAsync(server);
                 }
+            }
+        }
+
+        public async Task ShutdownAsync()
+        {
+            foreach (var state in _serverStates)
+            {
+                await state.Value.ShutdownAsync();
+            }
+        }
+
+        public async Task PreserveConfigurationsAsync()
+        {
+            foreach (var state in _serverStates)
+            {
+                await state.Value.PreserveConfigurationAsync();
             }
         }
 

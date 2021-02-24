@@ -30,8 +30,8 @@ namespace BytexDigital.RGSM.Node.Domain.Models.Arma
 
         public int Port { get; set; }
 
-        public List<uint> Depots { get; set; }
+        public List<uint> Depots { get; set; } = new List<uint>();
 
-        public List<WorkshopMod> WorkshopMods { get; set; }
+        public List<WorkshopMod> WorkshopMods { get; set; } = new List<WorkshopMod>();
     }
 }

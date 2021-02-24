@@ -8,7 +8,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using BytexDigital.RGSM.Node.Application.Core.Features.BattlEye;
-using BytexDigital.RGSM.Node.Application.Core.Features.ServerLogs;
 using BytexDigital.RGSM.Node.Application.Core.Generic;
 using BytexDigital.RGSM.Node.Application.Core.Steam;
 using BytexDigital.RGSM.Node.Domain.Models.Arma;
@@ -250,9 +249,15 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
             return mods;
         }
 
-        public async ValueTask DisposeAsync()
+        public override async Task PreserveConfigurationAsync()
         {
             await SaveSettingsAsync();
+        }
+
+        public override async ValueTask DisposeAsync()
+        {
+            await SaveSettingsAsync();
+            await base.DisposeAsync();
         }
     }
 }

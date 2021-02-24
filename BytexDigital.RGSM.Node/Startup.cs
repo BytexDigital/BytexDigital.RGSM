@@ -11,7 +11,6 @@ using AutoMapper;
 using BytexDigital.ErrorHandling.AspNetCore.Server.Extensions;
 using BytexDigital.ErrorHandling.MediatR;
 using BytexDigital.RGSM.Node.Application.Authentication;
-using BytexDigital.RGSM.Node.Application.Core;
 using BytexDigital.RGSM.Node.Application.Core.Arma3;
 using BytexDigital.RGSM.Node.Application.Core.Authorization.Requirements;
 using BytexDigital.RGSM.Node.Application.Core.Commands;
@@ -67,7 +66,8 @@ namespace BytexDigital.RGSM.Node
                 .AddSingleton<ServerStateRegister>()
                 .AddSingleton<MasterApiService>()
                 .AddSingleton<SchedulerHandler>()
-                .AddSingleton<IHostedService>(x => x.GetRequiredService<SchedulerHandler>());
+                .AddSingleton<IHostedService>(x => x.GetRequiredService<SchedulerHandler>())
+                .AddSingleton<IHostedService, ConfigurationPreservationService>();
 
             services.AddUniformCommonErrorResponses();
 
@@ -191,8 +191,15 @@ namespace BytexDigital.RGSM.Node
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime applicationLifetime)
         {
+            applicationLifetime.ApplicationStopping.Register(() =>
+            {
+                using var scope = app.ApplicationServices.GetRequiredService<IServiceProvider>().CreateScope();
+
+                scope.ServiceProvider.GetRequiredService<IMediator>().Send(new PerformShutdownCmd());
+            });
+
             using (var scope = app.ApplicationServices.GetRequiredService<IServiceProvider>().CreateScope())
             {
                 Task.Run(async () =>

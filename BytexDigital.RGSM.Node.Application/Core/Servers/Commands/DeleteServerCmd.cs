@@ -56,9 +56,11 @@ namespace BytexDigital.RGSM.Node.Application.Core.Servers.Commands
                     if ((await updatable.GetInstallationStatusAsync(cancellationToken)).IsUpdating)
                     {
                         throw ServiceException.ServiceError("Server cannot be deleted because it is updating.");
+                 
                     }
                 }
 
+                await state.ShutdownAsync();
                 await _serversService.DeleteServerAsync(server, request.DeleteAllFiles);
 
                 return Unit.Value;
