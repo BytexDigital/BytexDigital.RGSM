@@ -17,6 +17,8 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Mappings
             CreateMap<Node, NodeDto>().ReverseMap();
             CreateMap<ApiKey, ApiKeyDto>().ReverseMap();
             CreateMap<ApiKeyDetails, ApiKeyDetailsModel>().ReverseMap();
+            CreateMap<SteamLogin, SteamLoginDto>().ReverseMap();
+            CreateMap<SteamLoginSupportedApp, SteamLoginSupportedAppDto>().ReverseMap();
         }
     }
 }

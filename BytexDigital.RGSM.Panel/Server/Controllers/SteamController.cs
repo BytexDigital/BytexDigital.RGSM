@@ -30,7 +30,9 @@ namespace BytexDigital.RGSM.Panel.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<List<SteamLoginDto>>> GetLoginsAsync()
         {
-            return _mapper.Map<List<SteamLoginDto>>((await _mediator.Send(new GetSteamLoginsQuery())).Credentials);
+            var credentials = (await _mediator.Send(new GetSteamLoginsQuery())).Credentials;
+
+            return _mapper.Map<List<SteamLoginDto>>(credentials);
         }
     }
 }

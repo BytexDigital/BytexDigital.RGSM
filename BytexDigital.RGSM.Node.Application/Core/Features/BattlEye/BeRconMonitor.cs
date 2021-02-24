@@ -9,20 +9,29 @@ using BytexDigital.BattlEye.Rcon;
 using BytexDigital.BattlEye.Rcon.Commands;
 using BytexDigital.RGSM.Node.Domain.Models.BattlEye;
 
+using Serilog.Core;
+
 namespace BytexDigital.RGSM.Node.Application.Core.Features.BattlEye
 {
     public class BeRconMonitor
     {
         private RconClient _rconClient;
         private List<BeRconMessage> _messages;
+        private readonly Logger _logger;
 
-        public BeRconMonitor()
+        public BeRconMonitor(Logger logger)
         {
             _messages = new List<BeRconMessage>();
+            _logger = logger;
         }
 
         public Task ConfigureAsync(string host, int port, string password)
         {
+            if (_rconClient != null)
+            {
+                try { _rconClient.Disconnect(); } catch { }
+            }
+
             if (host == "localhost" || host == "0.0.0.0")
             {
                 host = "127.0.0.1";
@@ -34,14 +43,30 @@ namespace BytexDigital.RGSM.Node.Application.Core.Features.BattlEye
             _rconClient = new RconClient(endpoint, password);
 
             _rconClient.MessageReceived += RconClient_MessageReceived;
+            _rconClient.Connected += RconClient_Connected;
+            _rconClient.PlayerDisconnected += RconClient_PlayerDisconnected;
 
-            _ = _rconClient.Connect();
+            bool initialConnectionAttemptResult = _rconClient.Connect();
+
+            _logger.Information($"Created rcon client to ip {host}:{port} = {initialConnectionAttemptResult}");
 
             return Task.CompletedTask;
         }
 
+        private void RconClient_PlayerDisconnected(object sender, BytexDigital.BattlEye.Rcon.Events.PlayerDisconnectedArgs e)
+        {
+            _logger.Information("Disconnected from rcon server.");
+        }
+
+        private void RconClient_Connected(object sender, EventArgs e)
+        {
+            _logger.Information("Connected to rcon server.");
+        }
+
         public async Task<List<BeRconPlayer>> GetPlayersAsync(CancellationToken cancellationToken = default)
         {
+            if (!_rconClient.IsConnected) return new List<BeRconPlayer>();
+
             (bool success, var playerList) = await _rconClient.Fetch<List<BytexDigital.BattlEye.Rcon.Domain.Player>>(new GetPlayersRequest(), cancellationToken);
 
             return playerList?.Select(x => new BeRconPlayer

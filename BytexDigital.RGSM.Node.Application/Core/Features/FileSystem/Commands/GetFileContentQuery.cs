@@ -79,10 +79,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Features.FileSystem.Commands
                     .NotNull()
 
                     .Must(path => File.Exists(path))
-                    .WithMessage("File does not exist.")
-
-                    .Must(path => !System.IO.Path.IsPathRooted(path))
-                    .WithMessage("Path may not be rooted.");
+                    .WithMessage("File does not exist.");
             }
         }
     }

@@ -74,10 +74,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Features.FileSystem.Commands
                 RuleFor(x => x.Path)
                     .Cascade(CascadeMode.Stop)
 
-                    .NotNull()
-
-                    .Must(path => !System.IO.Path.IsPathRooted(path))
-                    .WithMessage("Path may not be rooted.");
+                    .NotNull();
             }
         }
     }

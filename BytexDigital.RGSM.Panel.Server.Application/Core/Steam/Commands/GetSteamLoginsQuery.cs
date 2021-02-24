@@ -23,9 +23,11 @@ namespace BytexDigital.RGSM.Panel.Server.Application.Core.Steam.Commands
 
             public async Task<Response> Handle(GetSteamLoginsQuery request, CancellationToken cancellationToken)
             {
+                var credentials = await _steamCredentialsService.GetLogins().ToListAsync();
+
                 return new Response
                 {
-                    Credentials = await _steamCredentialsService.GetLogins().ToListAsync()
+                    Credentials = credentials
                 };
             }
         }

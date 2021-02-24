@@ -64,7 +64,14 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
             }
             else
             {
-                Settings = JsonSerializer.Deserialize<ArmaServer>(await File.ReadAllTextAsync(SettingsPath));
+                try
+                {
+                    Settings = JsonSerializer.Deserialize<ArmaServer>(await File.ReadAllTextAsync(SettingsPath));
+                }
+                catch
+                {
+                    CreateDefaultSettings();
+                }
             }
         }
 
@@ -116,7 +123,7 @@ namespace BytexDigital.RGSM.Node.Application.Core.Arma3
             try
             {
 
-                RconMonitor = new BeRconMonitor();
+                RconMonitor = new BeRconMonitor(Logger);
 
                 await RconMonitor.ConfigureAsync(Settings.RconIp, Settings.RconPort, Settings.RconPassword);
 
